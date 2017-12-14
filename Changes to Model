@@ -19,3 +19,6 @@ Component diagram:
     PaymentInformation -> PaymentMethod
 
     PaymentServiceIF -> Aufteilen in 2 Methoden
+
+
+    Test for tagged release
