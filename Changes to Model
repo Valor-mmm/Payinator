@@ -1,0 +1,21 @@
+Changes to Model:
+
+
+    User:
+        Address: number -> streetNumber
+        City: now embeddable
+
+
+    BigDouble -> BigDecimal
+
+
+    Account:
+        Payment: create message attribute
+
+
+
+Component diagram:
+    BigDouble -> BigDecimal
+    PaymentInformation -> PaymentMethod
+
+    PaymentServiceIF -> Aufteilen in 2 Methoden
