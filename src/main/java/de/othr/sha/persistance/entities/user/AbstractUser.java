@@ -30,7 +30,6 @@ public class AbstractUser extends GeneratedIDEntity{
     // References
 
     @OneToOne
-    @Column(nullable = false)
     private Email email;
 
     @OneToMany
@@ -38,7 +37,6 @@ public class AbstractUser extends GeneratedIDEntity{
     private Set<AbstractPaymentMethod> paymentMethods;
 
     @OneToOne
-    @Column(nullable = false)
     private PersonalInformation personalInformation;
 
     @OneToOne

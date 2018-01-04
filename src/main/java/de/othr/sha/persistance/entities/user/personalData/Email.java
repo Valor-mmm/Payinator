@@ -22,7 +22,6 @@ public class Email extends GeneratedIDEntity {
     // References
 
     @OneToOne()
-    @Column(nullable = false)
     private AbstractUser user;
 
 

@@ -25,7 +25,6 @@ public class PersonalInformation extends GeneratedIDEntity{
     // References
 
     @ManyToOne
-    @Column(nullable = false)
     private Address address;
 
 
