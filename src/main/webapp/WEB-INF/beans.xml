@@ -4,5 +4,9 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
                       http://xmlns.jcp.org/xml/ns/javaee/beans_1_1.xsd"
-    bean-discovery-mode="all">
+    bean-discovery-mode="annotated">
+
+    <interceptors>
+        <class>de.othr.has44540.logic.services.auth.LoginInterceptor.CheckLoginInterceptor</class>
+    </interceptors>
 </beans>
