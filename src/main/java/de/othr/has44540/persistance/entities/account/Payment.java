@@ -1,10 +1,12 @@
 package de.othr.has44540.persistance.entities.account;
 
 import de.othr.has44540.persistance.entities.account.impl.SimpleAccount;
+import de.othr.has44540.persistance.entities.user.paymentInformation.AbstractPaymentMethod;
 import de.othr.has44540.persistance.util.GeneratedIDEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
 
@@ -28,6 +30,18 @@ public class Payment extends GeneratedIDEntity {
 
     @ManyToOne
     private SimpleAccount toAccount;
+
+    @ManyToOne
+    private AbstractPaymentMethod paymentMethod;
+
+    public Payment() {
+
+    }
+
+    public Payment(AbstractAccount fromAccount, AbstractPaymentMethod paymentMethod) {
+        this.fromAccount = fromAccount;
+        this.paymentMethod = paymentMethod;
+    }
 
 
     // Attributes - getter/setter
@@ -74,5 +88,13 @@ public class Payment extends GeneratedIDEntity {
 
     public void setToAccount(SimpleAccount toAccount) {
         this.toAccount = toAccount;
+    }
+
+    public AbstractPaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(AbstractPaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 }
