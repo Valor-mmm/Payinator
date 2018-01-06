@@ -12,6 +12,8 @@ Changes to Model:
     Account:
         Payment: create message attribute
 
+        Payment: need reference to payment method
+
 
 
 Component diagram:
@@ -21,4 +23,6 @@ Component diagram:
     PaymentServiceIF -> Aufteilen in 2 Methoden
 
 
-    Test for tagged release
+    PaymentInformationIF -> PaymentInfoServiceIF
+
+    Added AuthenticationService
