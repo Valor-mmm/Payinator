@@ -10,6 +10,8 @@ import javax.persistence.OneToOne;
 @Entity
 public class Email extends GeneratedIDEntity {
 
+    private static transient final String atSymbol = "@";
+
     // Attributes
 
     @Column(nullable = false)
@@ -24,6 +26,12 @@ public class Email extends GeneratedIDEntity {
     @OneToOne()
     private AbstractUser user;
 
+
+    @org.jetbrains.annotations.NotNull
+    @org.jetbrains.annotations.Contract(pure = true)
+    public static String getEmailString(String localPart, String domain) {
+        return localPart + atSymbol + domain;
+    }
 
     // Attributes - getter/setter
 
