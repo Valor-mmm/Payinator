@@ -1,14 +1,15 @@
 package de.othr.has44540.logic.services.auth.token;
 
-import de.othr.sw.sample.services.AuthTestService;
+import de.othr.has44540.logic.services.auth.UserSession;
 
 import javax.ejb.Schedule;
 import javax.ejb.Stateless;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 
 @Stateless
@@ -16,47 +17,49 @@ public class AuthTokenManager implements Serializable {
 
     private static final Logger logger = Logger.getLogger(AuthTokenManager.class.getName());
 
-    private List<AuthToken> authTokens;
+    private Map<AuthToken, UserSession> tokenUserMap;
 
     public AuthTokenManager() {
-        authTokens = new ArrayList<>();
+        tokenUserMap = new TreeMap<>();
     }
 
     public boolean checkToken(AuthToken token) throws IllegalTokenChangeException{
-        boolean result = authTokens.contains(token);
+        boolean result = tokenUserMap.containsKey(token);
         logger.config("Token found: " + result);
         if (result) {
-            AuthToken expectedToken = authTokens.get(authTokens.indexOf(authTokens));
-            String changeErrMessage = "Token with id [" + token.getId() + "] has been changed. Field: ";
-            if (!token.getCreationTime().equals(expectedToken.getCreationTime())) {
-                logger.warning(changeErrMessage + "creationTime");
-               throw new IllegalTokenChangeException(expectedToken.getId(), "creationTime");
-            }
-            if (!expectedToken.equalsByKey(token)) {
-                logger.warning(changeErrMessage + "key");
-                throw new IllegalTokenChangeException(expectedToken.getId(), "key");
+            Set<AuthToken> tokenSet = tokenUserMap.keySet();
+            for (AuthToken expectedToken : tokenSet) {
+                expectedToken.checkToken(token);
             }
         }
         logger.info("Token check. Valid: " + result);
         return result;
     }
 
-    protected void addToken(AuthToken token) {
-        authTokens.add(token);
+    protected void addToken(AuthToken token, UserSession userSession) {
+        tokenUserMap.put(token, userSession);
     }
 
     @Schedule(minute = "*/5", hour = "*", persistent = false)
     private void removeExpiredTokens() {
         logger.info("Removing expired tokens.");
         LocalDateTime now = LocalDateTime.now();
-        for (AuthToken token : authTokens) {
+        Set<AuthToken> tokenSet = tokenUserMap.keySet();
+        for (AuthToken token : tokenSet) {
             long timeDifference = ChronoUnit.MINUTES.between(token.getCreationTime(), now);
             if (timeDifference < AuthToken.expirationMinutes) {
                 continue;
             }
             logger.info("Token with id [" + token.getId().toString() + "] expired.");
-            authTokens.remove(token);
+            tokenUserMap.remove(token);
         }
         logger.info("Finished removing expired tokens.");
+    }
+
+    protected UserSession getUserForToken(AuthToken token) throws IllegalTokenChangeException {
+        if (!checkToken(token)) {
+            return null;
+        }
+        return tokenUserMap.get(token);
     }
 }
