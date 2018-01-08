@@ -25,4 +25,6 @@ Component diagram:
 
     PaymentInformationIF -> PaymentInfoServiceIF
 
-    Added AuthenticationService
+    Added AuthenticationService (2 different services)
+
+    UnknownAccountException -> InvalidAccountException
