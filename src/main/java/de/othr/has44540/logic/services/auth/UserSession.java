@@ -8,11 +8,11 @@ public class UserSession {
 
     private AbstractUser onBehalfOf;
 
-    protected UserSession(AbstractUser user) {
+    public UserSession(AbstractUser user) {
         this.user = user;
     }
 
-    protected UserSession(AbstractUser user, AbstractUser onBehalfOf) {
+    public UserSession(AbstractUser user, AbstractUser onBehalfOf) {
         this(user);
         this.onBehalfOf = onBehalfOf;
     }

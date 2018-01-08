@@ -3,10 +3,13 @@ package de.othr.has44540.logic.services.auth.service;
 import de.othr.has44540.logic.services.auth.UserSession;
 import de.othr.has44540.logic.services.auth.token.AuthToken;
 import de.othr.has44540.persistance.entities.user.AbstractUser;
+import de.othr.has44540.persistance.entities.user.personalData.Email;
+import org.jetbrains.annotations.NotNull;
 
 import javax.enterprise.context.SessionScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.util.logging.Logger;
 
@@ -16,6 +19,7 @@ public class StandardAuthService implements AuthServiceIF {
     private static final Logger logger = Logger.getLogger(StandardAuthService.class.getName());
 
     private UserSession session;
+    private AuthToken authToken;
 
     @PersistenceContext
     private EntityManager em;
@@ -37,20 +41,32 @@ public class StandardAuthService implements AuthServiceIF {
 
     @Override
     @Transactional
-    public AuthToken login(String email, String password) {
-        //TypedQuery<Email> emailQuery = em.createQuery("SELECT e FROM Email AS e WHERE Email.localPart+'@'+Email" +
-        //                                                        ".domain = :email", Email.class);
-        return null;
+    public AuthToken login(@NotNull String email, @NotNull String password) {
+        Email foundEmail = AuthServiceCommons.queryEmail(email, em);
+        if (foundEmail == null) {
+            // TODO: email not found
+        }
+
+        AbstractUser user = foundEmail.getUser();
+
+        // TODO: korbis part
+
+        UserSession newSession = new UserSession(user);
+        this.session = newSession;
+        AuthToken token = new AuthToken();
+        this.authToken = token;
+        return authToken;
     }
 
     @Override
     public AuthToken login() {
+        // TODO: implement method
         return null;
     }
 
     @Override
     public void setAuthToken(AuthToken token) {
-
+        this.authToken = token;
     }
 
     public void setSession(UserSession session) {

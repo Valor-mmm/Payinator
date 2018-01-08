@@ -23,7 +23,7 @@ public class AuthTokenManager implements Serializable {
         tokenUserMap = new TreeMap<>();
     }
 
-    public boolean checkToken(AuthToken token) throws IllegalTokenChangeException{
+    public boolean checkToken(AuthToken token) throws IllegalTokenChangeException {
         boolean result = tokenUserMap.containsKey(token);
         logger.config("Token found: " + result);
         if (result) {
@@ -36,8 +36,15 @@ public class AuthTokenManager implements Serializable {
         return result;
     }
 
-    protected void addToken(AuthToken token, UserSession userSession) {
+    public void addToken(AuthToken token, UserSession userSession) {
         tokenUserMap.put(token, userSession);
+    }
+
+    public UserSession getSessionForToken(AuthToken token) throws IllegalTokenChangeException{
+        if (!checkToken(token)) {
+            return null;
+        }
+        return tokenUserMap.get(token);
     }
 
     @Schedule(minute = "*/5", hour = "*", persistent = false)
