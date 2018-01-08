@@ -1,4 +1,4 @@
-package de.othr.has44540.logic.services.auth.service;
+package de.othr.has44540.logic.services.auth.service.factory;
 
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;

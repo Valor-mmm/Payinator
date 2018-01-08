@@ -30,7 +30,7 @@ public class UserSession {
      * If the logged in user acts on behalf of another user,
      * this user will be returned.
      *
-     * @return
+     * @return the user which authorises queries
      */
     public AbstractUser getExecutiveUser() {
         return onBehalfOf != null ? onBehalfOf : user;

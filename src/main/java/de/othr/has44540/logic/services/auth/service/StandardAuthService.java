@@ -4,11 +4,13 @@ import de.othr.has44540.logic.services.auth.UserSession;
 import de.othr.has44540.logic.services.auth.token.AuthToken;
 import de.othr.has44540.persistance.entities.user.AbstractUser;
 
+import javax.enterprise.context.SessionScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.logging.Logger;
 
+@SessionScoped
 public class StandardAuthService implements AuthServiceIF {
 
     private static final Logger logger = Logger.getLogger(StandardAuthService.class.getName());
@@ -36,7 +38,7 @@ public class StandardAuthService implements AuthServiceIF {
     @Override
     @Transactional
     public AuthToken login(String email, String password) {
-        //TypedQuery<Email> emailQuerry = em.createQuery("SELECT e FROM Email AS e WHERE Email.localPart+'@'+Email" +
+        //TypedQuery<Email> emailQuery = em.createQuery("SELECT e FROM Email AS e WHERE Email.localPart+'@'+Email" +
         //                                                        ".domain = :email", Email.class);
         return null;
     }

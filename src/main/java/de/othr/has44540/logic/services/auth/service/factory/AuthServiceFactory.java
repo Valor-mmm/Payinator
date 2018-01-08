@@ -1,4 +1,8 @@
-package de.othr.has44540.logic.services.auth.service;
+package de.othr.has44540.logic.services.auth.service.factory;
+
+import de.othr.has44540.logic.services.auth.service.AuthServiceIF;
+import de.othr.has44540.logic.services.auth.service.StandardAuthService;
+import de.othr.has44540.logic.services.auth.service.TokenBasedAuthService;
 
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
@@ -31,6 +35,7 @@ public class AuthServiceFactory implements Serializable {
     }
 
     @Produces
+    @DetectAutomatically
     public AuthServiceIF getServiceAutomatically(StandardAuthService standardAuthService,
                                                  TokenBasedAuthService tokenBasedAuthService) {
         if (serviceMemory.getServiceCase() == null) {
