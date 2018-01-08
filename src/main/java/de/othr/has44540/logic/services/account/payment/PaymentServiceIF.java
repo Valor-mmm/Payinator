@@ -10,13 +10,13 @@ import java.math.BigDecimal;
 
 public interface PaymentServiceIF {
 
-    public Payment payDefault(AbstractAccount toAccount, BigDecimal amount)
+    Payment payDefault(AbstractAccount toAccount, BigDecimal amount)
             throws UnknownAccountException, UnknownPaymentMethodException;
 
-    public Payment createPayment(AbstractAccount fromAccount, AbstractPaymentMethod paymentMethod)
+    Payment createPayment(AbstractAccount fromAccount, AbstractPaymentMethod paymentMethod)
             throws UnknownAccountException, UnknownPaymentMethodException;
 
-    public Payment initiatePayment(AbstractAccount toAccount, BigDecimal amount)
+    Payment initiatePayment(AbstractAccount toAccount, BigDecimal amount)
             throws UnknownAccountException, UnknownPaymentMethodException;
 
 }

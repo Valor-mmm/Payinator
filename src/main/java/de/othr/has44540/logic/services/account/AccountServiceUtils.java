@@ -1,7 +1,8 @@
 package de.othr.has44540.logic.services.account;
 
-import de.othr.has44540.logic.services.auth.AuthServiceIF;
 import de.othr.has44540.logic.services.auth.LoginInterceptor.CheckLogin;
+import de.othr.has44540.logic.services.auth.service.AuthServiceIF;
+import de.othr.has44540.logic.services.auth.service.factory.DetectAutomatically;
 import de.othr.has44540.persistance.entities.account.AbstractAccount;
 import de.othr.has44540.persistance.entities.user.AbstractUser;
 import de.othr.has44540.persistance.entities.user.paymentInformation.AbstractPaymentMethod;
@@ -17,7 +18,7 @@ public class AccountServiceUtils implements Serializable{
     @PersistenceContext
     private EntityManager em;
 
-    @Inject
+    @Inject @DetectAutomatically
     private AuthServiceIF authService;
 
     public AccountServiceUtils() {

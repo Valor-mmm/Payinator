@@ -6,7 +6,6 @@ import de.othr.has44540.persistance.util.GeneratedIDEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
 

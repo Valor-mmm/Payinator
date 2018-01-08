@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface AccountServiceIF {
 
-    public List<AbstractAccount> getAccounts();
+    List<AbstractAccount> getAccounts();
 
-    public AbstractAccount searchAccount(String alias);
+    AbstractAccount searchAccount(String alias);
 
 }

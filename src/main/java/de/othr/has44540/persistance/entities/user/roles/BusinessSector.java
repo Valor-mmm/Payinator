@@ -6,5 +6,5 @@ public enum BusinessSector {
     MEDICAL,
     TECHNICAL,
     SOCIAL,
-    SALES;
+    SALES
 }

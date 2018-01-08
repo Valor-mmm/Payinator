@@ -18,7 +18,7 @@ public class GeneratedIDEntity extends SingleIdEntity<Long> {
         }
 
         if (toCompare.getId() == null) {
-            throw new NullPointerException("Object toCompare has to have a ID for comparation");
+            throw new IllegalArgumentException("Object toCompare has to have a ID for comparision");
         }
 
         if (this.getId() == null) {
