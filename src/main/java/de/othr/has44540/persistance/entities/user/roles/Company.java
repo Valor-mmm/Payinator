@@ -1,6 +1,9 @@
 package de.othr.has44540.persistance.entities.user.roles;
 
+import de.othr.has44540.persistance.entities.account.AbstractAccount;
 import de.othr.has44540.persistance.entities.account.impl.CompanyAccount;
+import de.othr.has44540.persistance.entities.account.impl.SimpleAccount;
+import de.othr.has44540.persistance.entities.user.AbstractUser;
 import de.othr.has44540.persistance.util.GeneratedIDEntity;
 
 import javax.persistence.Column;
@@ -10,7 +13,7 @@ import java.util.Collections;
 import java.util.Set;
 
 @Entity
-public class Company extends GeneratedIDEntity{
+public class Company extends AbstractUser {
 
     // Attributes
 
@@ -26,6 +29,25 @@ public class Company extends GeneratedIDEntity{
     @OneToMany(mappedBy = "company")
     private Set<CompanyAccount> companyAccounts;
 
+    // Methods
+
+    @Override
+    public AbstractAccount getDefaultAccount() {
+        if (companyAccounts == null) {
+            return null;
+        }
+        for (CompanyAccount account : companyAccounts) {
+            if (account.getDefault()) {
+                return account;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public boolean containsAccount(AbstractAccount account) {
+        return companyAccounts != null && companyAccounts.contains(account);
+    }
 
     // Attributes - getter/setter
 

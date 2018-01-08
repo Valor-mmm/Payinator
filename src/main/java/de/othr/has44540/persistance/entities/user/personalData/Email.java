@@ -2,6 +2,8 @@ package de.othr.has44540.persistance.entities.user.personalData;
 
 import de.othr.has44540.persistance.entities.user.AbstractUser;
 import de.othr.has44540.persistance.util.GeneratedIDEntity;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,10 +29,30 @@ public class Email extends GeneratedIDEntity {
     private AbstractUser user;
 
 
-    @org.jetbrains.annotations.NotNull
-    @org.jetbrains.annotations.Contract(pure = true)
+    @NotNull
+    @Contract(pure = true)
     public static String getEmailString(String localPart, String domain) {
         return localPart + atSymbol + domain;
+    }
+
+    @NotNull
+    public static String getLocalPart(@NotNull String email) {
+        int atIndex = email.indexOf(atSymbol);
+        int atLastIndex = email.lastIndexOf(atSymbol);
+        if (atIndex == -1 || atIndex != atLastIndex) {
+            throw new IllegalArgumentException("Email String is not valid as it contains no @ or more than one.");
+        }
+        return email.substring(0, atIndex);
+    }
+
+    @NotNull
+    public static String getDomain(@NotNull String email) {
+        int atIndex = email.indexOf(atSymbol);
+        int atLastIndex = email.lastIndexOf(atSymbol);
+        if (atIndex == -1 || atIndex != atLastIndex) {
+            throw new IllegalArgumentException("Email String is not valid as it contains no @ or more than one.");
+        }
+        return email.substring(atIndex + 1, email.length());
     }
 
     // Attributes - getter/setter

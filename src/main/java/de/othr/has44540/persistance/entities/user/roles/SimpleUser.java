@@ -1,16 +1,42 @@
 package de.othr.has44540.persistance.entities.user.roles;
 
+import de.othr.has44540.persistance.entities.account.AbstractAccount;
 import de.othr.has44540.persistance.entities.account.impl.SimpleAccount;
+import de.othr.has44540.persistance.entities.user.AbstractUser;
 
+import javax.persistence.Entity;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import java.util.Set;
 
-public class SimpleUser {
+@Entity
+public class SimpleUser extends AbstractUser {
 
     // Relations
 
     @OneToMany
     private Set<SimpleAccount> simpleAccounts;
+
+    // Methods
+
+    @Override
+    public AbstractAccount getDefaultAccount() {
+        if (simpleAccounts == null) {
+            return null;
+        }
+        for (SimpleAccount account : simpleAccounts) {
+            if (account.getDefault()) {
+                return account;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public boolean containsAccount(AbstractAccount account) {
+        return simpleAccounts != null && simpleAccounts.contains(account);
+
+    }
 
     // Relations -getter/setter
 

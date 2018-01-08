@@ -1,6 +1,8 @@
 package de.othr.has44540.persistance.entities.user.roles;
 
+import de.othr.has44540.persistance.entities.account.AbstractAccount;
 import de.othr.has44540.persistance.entities.account.impl.CharityAccount;
+import de.othr.has44540.persistance.entities.user.AbstractUser;
 import de.othr.has44540.persistance.util.GeneratedIDEntity;
 
 import javax.persistence.Column;
@@ -9,7 +11,7 @@ import javax.persistence.OneToMany;
 import java.util.Set;
 
 @Entity
-public class CharityOrganisation extends GeneratedIDEntity{
+public class CharityOrganisation extends AbstractUser {
 
     // Attributes
 
@@ -24,6 +26,25 @@ public class CharityOrganisation extends GeneratedIDEntity{
     @OneToMany
     private Set<CharityAccount> charityAccounts;
 
+    // Methods
+
+    @Override
+    public AbstractAccount getDefaultAccount() {
+        if (charityAccounts == null) {
+            return null;
+        }
+        for (CharityAccount account : charityAccounts) {
+            if (account.getDefault()) {
+                return account;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public boolean containsAccount(AbstractAccount account) {
+        return charityAccounts != null && charityAccounts.contains(account);
+    }
 
     // Attributes - getter/setter
 

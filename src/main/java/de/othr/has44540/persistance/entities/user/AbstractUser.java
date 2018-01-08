@@ -1,5 +1,6 @@
 package de.othr.has44540.persistance.entities.user;
 
+import de.othr.has44540.persistance.entities.account.AbstractAccount;
 import de.othr.has44540.persistance.entities.account.impl.DonorAccount;
 import de.othr.has44540.persistance.entities.user.paymentInformation.AbstractPaymentMethod;
 import de.othr.has44540.persistance.entities.user.personalData.Email;
@@ -7,10 +8,11 @@ import de.othr.has44540.persistance.entities.user.personalData.PersonalInformati
 import de.othr.has44540.persistance.util.GeneratedIDEntity;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
-public class AbstractUser extends GeneratedIDEntity{
+public abstract class AbstractUser extends GeneratedIDEntity{
 
     // Attributes
 
@@ -42,6 +44,21 @@ public class AbstractUser extends GeneratedIDEntity{
     @OneToOne
     private DonorAccount donorAccount;
 
+
+    // Methods
+
+    public abstract AbstractAccount getDefaultAccount();
+
+    public AbstractPaymentMethod getDefaultPaymentMethod() {
+        for (AbstractPaymentMethod paymentMethod : paymentMethods) {
+            if (paymentMethod.getDefault()) {
+                return paymentMethod;
+            }
+        }
+        return null;
+    }
+
+    public abstract boolean containsAccount(AbstractAccount account);
 
     // Attributes - getter/setter
 
