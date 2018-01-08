@@ -7,8 +7,10 @@ import de.othr.has44540.persistance.entities.user.personalData.Email;
 import de.othr.has44540.persistance.entities.user.personalData.PersonalInformation;
 import de.othr.has44540.persistance.util.GeneratedIDEntity;
 
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.util.Set;
 
 @Entity

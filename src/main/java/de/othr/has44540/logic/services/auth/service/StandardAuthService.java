@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.enterprise.context.SessionScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.util.logging.Logger;
 
@@ -47,7 +46,12 @@ public class StandardAuthService implements AuthServiceIF {
             // TODO: email not found
         }
 
-        AbstractUser user = foundEmail.getUser();
+        AbstractUser user;
+        user = foundEmail != null ? foundEmail.getUser() : null;
+        if (user == null) {
+            // TODO: better err handling
+            return null;
+        }
 
         // TODO: korbis part
 

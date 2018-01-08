@@ -3,7 +3,6 @@ package de.othr.has44540.persistance.entities.user.roles;
 import de.othr.has44540.persistance.entities.account.AbstractAccount;
 import de.othr.has44540.persistance.entities.account.impl.CharityAccount;
 import de.othr.has44540.persistance.entities.user.AbstractUser;
-import de.othr.has44540.persistance.util.GeneratedIDEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -43,7 +42,13 @@ public class CharityOrganisation extends AbstractUser {
 
     @Override
     public boolean containsAccount(AbstractAccount account) {
-        return charityAccounts != null && charityAccounts.contains(account);
+        if (charityAccounts == null) {
+            return false;
+        }
+        if (!(account instanceof CharityAccount)) {
+            return false;
+        }
+        return charityAccounts.contains(account);
     }
 
     // Attributes - getter/setter

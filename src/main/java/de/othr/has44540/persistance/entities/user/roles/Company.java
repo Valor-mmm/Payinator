@@ -2,9 +2,7 @@ package de.othr.has44540.persistance.entities.user.roles;
 
 import de.othr.has44540.persistance.entities.account.AbstractAccount;
 import de.othr.has44540.persistance.entities.account.impl.CompanyAccount;
-import de.othr.has44540.persistance.entities.account.impl.SimpleAccount;
 import de.othr.has44540.persistance.entities.user.AbstractUser;
-import de.othr.has44540.persistance.util.GeneratedIDEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -46,7 +44,10 @@ public class Company extends AbstractUser {
 
     @Override
     public boolean containsAccount(AbstractAccount account) {
-        return companyAccounts != null && companyAccounts.contains(account);
+        if (companyAccounts == null) {
+            return false;
+        }
+        return account instanceof CompanyAccount && companyAccounts.contains(account);
     }
 
     // Attributes - getter/setter

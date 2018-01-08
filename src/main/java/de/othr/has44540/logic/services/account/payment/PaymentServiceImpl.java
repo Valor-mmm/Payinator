@@ -14,7 +14,6 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -40,7 +39,7 @@ public class PaymentServiceImpl implements PaymentServiceIF, Serializable {
         if (fromAccount == null) {
             throw new InvalidAccountException("User does not have a default account.");
         }
-        AbstractPaymentMethod paymentMethod = accountUtils.getDefaultPaymentMethod();;
+        AbstractPaymentMethod paymentMethod = accountUtils.getDefaultPaymentMethod();
         if (paymentMethod == null) {
             throw new UnknownPaymentMethodException("User does not have a default payment method.");
         }

@@ -5,7 +5,6 @@ import de.othr.has44540.persistance.entities.account.impl.SimpleAccount;
 import de.othr.has44540.persistance.entities.user.AbstractUser;
 
 import javax.persistence.Entity;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import java.util.Set;
 
@@ -34,7 +33,10 @@ public class SimpleUser extends AbstractUser {
 
     @Override
     public boolean containsAccount(AbstractAccount account) {
-        return simpleAccounts != null && simpleAccounts.contains(account);
+        if (simpleAccounts == null) {
+            return false;
+        }
+        return account instanceof SimpleAccount && simpleAccounts.contains(account);
 
     }
 
