@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <h:outputStylesheet library="css" name="app.css"/>
+    <h:outputStylesheet library="css" name="spectre.min.css"/>
+    <h:outputStylesheet library="css" name="spectre-exp.min.css"/>
+    <h:outputStylesheet library="css" name="spectre-icons.min.css"/>
+</h:head>
+<h:body>
+    <div id="site-header">
+        <ui:insert name="header_component">
+            <ui:include src="default_header.xhtml"/>
+        </ui:insert>
+    </div>
+    <div id="site-content">
+        <ui:insert name="content_component">
+            <ui:include src="default_content.xhtml"/>
+        </ui:insert>
+    </div>
+    <div id="site-footer">
+        <ui:insert name="footer_component">
+            <ui:include src="default_footer.xhtml"/>
+        </ui:insert>
+    </div>
+</h:body>
+</html>
