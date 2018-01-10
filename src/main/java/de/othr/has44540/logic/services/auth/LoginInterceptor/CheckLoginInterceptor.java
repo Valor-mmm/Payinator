@@ -13,12 +13,13 @@ import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
+import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Interceptor
 @CheckLogin
-public class CheckLoginInterceptor {
+public class CheckLoginInterceptor implements Serializable{
 
     private static final Logger logger = Logger.getLogger(CheckLoginInterceptor.class.getName());
 
