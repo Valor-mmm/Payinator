@@ -4,6 +4,9 @@ import de.othr.has44540.logic.services.auth.UserSession;
 import de.othr.has44540.logic.services.auth.token.AuthToken;
 import de.othr.has44540.logic.services.auth.token.AuthTokenManager;
 import de.othr.has44540.logic.services.auth.token.IllegalTokenChangeException;
+import de.othr.has44540.logic.services.exceptions.auth.InvalidLinkObjectException;
+import de.othr.has44540.logic.services.exceptions.auth.InvalidLoginDataException;
+import de.othr.has44540.logic.services.exceptions.auth.InvalidTokenException;
 import de.othr.has44540.persistance.entities.user.AbstractUser;
 
 import javax.ejb.EJB;
@@ -49,19 +52,19 @@ public class TokenBasedAuthService implements AuthServiceIF {
     }
 
     @Override
-    public AuthToken login(String email, String password) {
+    public AuthToken login(String email, String password) throws InvalidLoginDataException {
         // TODO: when standard is finished
         return null;
     }
 
     @Override
-    public AuthToken login() {
+    public AuthToken login() throws InvalidLinkObjectException {
         // TODO: when standard is finished;
         return null;
     }
 
     @Override
-    public void setAuthToken(AuthToken token) {
+    public void setAuthToken(AuthToken token) throws InvalidTokenException {
         this.authToken = token;
     }
 

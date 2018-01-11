@@ -1,19 +1,19 @@
-package de.othr.has44540.logic.services.error;
+package de.othr.has44540.logic.services.exceptions;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-public class ApplicationError implements Serializable {
+public class AppException extends RuntimeException implements Serializable {
 
     private String title;
 
     private String description;
 
-    public ApplicationError() {
+    public AppException() {
 
     }
 
-    public ApplicationError(String title, String description) {
+    public AppException(String title, String description) {
         this.title = title;
         this.description = description;
     }
@@ -22,9 +22,9 @@ public class ApplicationError implements Serializable {
     public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (!(o instanceof ApplicationError))
+        if (!(o instanceof AppException))
             return false;
-        ApplicationError that = (ApplicationError) o;
+        AppException that = (AppException) o;
         return Objects.equals(title, that.title) && Objects.equals(description, that.description);
     }
 

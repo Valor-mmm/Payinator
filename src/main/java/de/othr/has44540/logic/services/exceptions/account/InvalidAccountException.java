@@ -1,14 +1,16 @@
-package de.othr.has44540.logic.services;
+package de.othr.has44540.logic.services.exceptions.account;
 
 import de.othr.has44540.persistance.entities.account.AbstractAccount;
 
-public class InvalidAccountException extends RuntimeException {
+public class InvalidAccountException extends AccountException {
 
     private Long primaryKey;
     private AbstractAccount account;
 
+    private static final String excName = "Given account was invalid";
+
     public InvalidAccountException(String message) {
-        super(message);
+        super(excName, message);
     }
 
     public InvalidAccountException(Long primaryKey) {

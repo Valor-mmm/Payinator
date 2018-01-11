@@ -1,13 +1,15 @@
-package de.othr.has44540.logic.services;
+package de.othr.has44540.logic.services.exceptions.account;
 
 import de.othr.has44540.persistance.entities.user.paymentInformation.AbstractPaymentMethod;
 
-public class UnknownPaymentMethodException extends RuntimeException {
+public class UnknownPaymentMethodException extends AccountException {
 
     private Long primaryKey;
 
+    private static final String excName = "Given payment method was not found.";
+
     public UnknownPaymentMethodException(String message) {
-        super(message);
+        super(excName, message);
     }
 
     public UnknownPaymentMethodException(Long primaryKey) {

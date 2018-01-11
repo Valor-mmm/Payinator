@@ -1,11 +1,12 @@
 package de.othr.has44540.logic.services.account.payment;
 
-import de.othr.has44540.logic.services.InvalidAccountException;
-import de.othr.has44540.logic.services.UnknownPaymentMethodException;
 import de.othr.has44540.logic.services.account.AccountServiceUtils;
-import de.othr.has44540.logic.services.auth.InvalidLoginException;
 import de.othr.has44540.logic.services.auth.LoginInterceptor.CheckLogin;
 import de.othr.has44540.logic.services.auth.token.AuthToken;
+import de.othr.has44540.logic.services.exceptions.account.AccountException;
+import de.othr.has44540.logic.services.exceptions.account.InvalidAccountException;
+import de.othr.has44540.logic.services.exceptions.account.UnknownPaymentMethodException;
+import de.othr.has44540.logic.services.exceptions.auth.AuthException;
 import de.othr.has44540.persistance.entities.account.AbstractAccount;
 import de.othr.has44540.persistance.entities.account.Payment;
 import de.othr.has44540.persistance.entities.account.impl.SimpleAccount;
@@ -16,7 +17,6 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 @SessionScoped
@@ -33,9 +33,8 @@ public class PaymentServiceImpl implements PaymentServiceIF {
     @CheckLogin
     @Transactional
     public Payment payDefault(AuthToken authToken, AbstractAccount toAccount, BigDecimal amount) throws
-                                                                                                 InvalidAccountException,
-                                                                                                 UnknownPaymentMethodException,
-                                                                                                 InvalidLoginException {
+                                                                                                 AuthException,
+                                                                                                 AccountException {
         accountUtils.checkSimpleAccount(toAccount);
         AbstractAccount fromAccount = accountUtils.getDefaultAccount();
         if (fromAccount == null) {
@@ -46,35 +45,29 @@ public class PaymentServiceImpl implements PaymentServiceIF {
             throw new UnknownPaymentMethodException("User does not have a default payment method.");
         }
 
-        Payment payment = createPayment(authToken, fromAccount, paymentMethod);
-        return initiatePayment(authToken, payment, toAccount, amount);
+        return makePayment(authToken, fromAccount, toAccount, paymentMethod, amount);
     }
 
     @Override
     @CheckLogin
     @Transactional
-    public Payment createPayment(AuthToken authToken, AbstractAccount fromAccount,
-                                 AbstractPaymentMethod paymentMethod) throws
-                                                                      InvalidAccountException,
-                                                                      UnknownPaymentMethodException,
-                                                                      InvalidLoginException {
+    public Payment makePayment(AuthToken authToken, AbstractAccount fromAccount, AbstractAccount toAccount,
+                               AbstractPaymentMethod paymentMethod, BigDecimal amount) throws
+                                                                                       AuthException,
+                                                                                       AccountException {
         accountUtils.checkAccount(fromAccount);
         accountUtils.checkAccountOwner(fromAccount);
         if (!accountUtils.verifyPaymentMethodOfUser(paymentMethod)) {
             throw new UnknownPaymentMethodException("No paymentMethod for user with id found.", paymentMethod);
         }
 
-        return new Payment(fromAccount, paymentMethod);
+        Payment payment = new Payment(fromAccount, paymentMethod);
+        return initiatePayment(payment, toAccount, amount);
     }
 
-    @Override
-    @CheckLogin
-    @Transactional
-    public Payment initiatePayment(AuthToken authToken, Payment payment, AbstractAccount toAccount,
-                                   BigDecimal amount) throws
-                                                      InvalidAccountException,
-                                                      UnknownPaymentMethodException,
-                                                      InvalidLoginException {
+    private Payment initiatePayment(Payment payment, AbstractAccount toAccount, BigDecimal amount) throws
+                                                                                                   AccountException,
+                                                                                                   AuthException {
         accountUtils.checkSimpleAccount(toAccount);
 
         SimpleAccount simpleAccount = (SimpleAccount) toAccount;

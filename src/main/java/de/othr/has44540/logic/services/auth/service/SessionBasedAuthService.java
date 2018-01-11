@@ -2,6 +2,9 @@ package de.othr.has44540.logic.services.auth.service;
 
 import de.othr.has44540.logic.services.auth.UserSession;
 import de.othr.has44540.logic.services.auth.token.AuthToken;
+import de.othr.has44540.logic.services.exceptions.auth.InvalidLoginDataException;
+import de.othr.has44540.logic.services.exceptions.auth.InvalidLinkObjectException;
+import de.othr.has44540.logic.services.exceptions.auth.InvalidTokenException;
 import de.othr.has44540.persistance.entities.user.AbstractUser;
 import de.othr.has44540.persistance.entities.user.personalData.Email;
 import org.jetbrains.annotations.NotNull;
@@ -40,7 +43,7 @@ public class SessionBasedAuthService implements AuthServiceIF {
 
     @Override
     @Transactional
-    public AuthToken login(@NotNull String email, @NotNull String password) {
+    public AuthToken login(@NotNull String email, @NotNull String password) throws InvalidLoginDataException {
         Email foundEmail = AuthServiceCommons.queryEmail(email, em);
         if (foundEmail == null) {
             // TODO: email not found
@@ -63,13 +66,13 @@ public class SessionBasedAuthService implements AuthServiceIF {
     }
 
     @Override
-    public AuthToken login() {
+    public AuthToken login() throws InvalidLinkObjectException {
         // TODO: implement method
         return null;
     }
 
     @Override
-    public void setAuthToken(AuthToken token) {
+    public void setAuthToken(AuthToken token) throws InvalidTokenException {
         this.authToken = token;
     }
 

@@ -2,9 +2,10 @@ package de.othr.has44540.logic.services.auth.LoginInterceptor;
 
 import de.othr.has44540.logic.services.auth.service.factory.AuthServiceCase;
 import de.othr.has44540.logic.services.auth.service.AuthServiceIF;
-import de.othr.has44540.logic.services.auth.InvalidLoginException;
+import de.othr.has44540.logic.services.exceptions.auth.AuthException;
 import de.othr.has44540.logic.services.auth.service.factory.AuthServiceQualifierImpl;
 import de.othr.has44540.logic.services.auth.token.AuthToken;
+import de.othr.has44540.logic.services.exceptions.auth.InvalidTokenException;
 import org.jetbrains.annotations.Contract;
 
 import javax.enterprise.inject.Any;
@@ -20,7 +21,7 @@ import java.util.logging.Logger;
 
 @Interceptor
 @CheckLogin
-public class CheckLoginInterceptor implements Serializable{
+public class CheckLoginInterceptor implements Serializable {
 
     private static final Logger logger = Logger.getLogger(CheckLoginInterceptor.class.getName());
 
@@ -43,13 +44,13 @@ public class CheckLoginInterceptor implements Serializable{
         }
 
         if (authService.getLoggedInUser() == null) {
-            throw new InvalidLoginException();
+            throw new AuthException();
         }
 
         return context.proceed();
     }
 
-    private void submitAuthToken(Object[] parameters) {
+    private void submitAuthToken(Object[] parameters) throws InvalidTokenException {
         if (parameters == null) {
             return;
         }
@@ -80,6 +81,7 @@ public class CheckLoginInterceptor implements Serializable{
 
     /**
      * Method to set the auth service property dynamically by the given serviceCase
+     *
      * @param serviceCase The service case to select the authService implementation
      * @throws UnsatisfiedResolutionException if could not select the desired authService
      */

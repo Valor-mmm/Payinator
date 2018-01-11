@@ -1,6 +1,6 @@
 package de.othr.has44540.logic.services.user;
 
-import de.othr.has44540.logic.services.auth.InvalidLoginException;
+import de.othr.has44540.logic.services.exceptions.auth.AuthException;
 import de.othr.has44540.logic.services.auth.LoginInterceptor.CheckLogin;
 import de.othr.has44540.logic.services.auth.token.AuthToken;
 import de.othr.has44540.persistance.entities.user.paymentInformation.AbstractPaymentMethod;
@@ -19,7 +19,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoServiceIF {
 
     @Override
     @CheckLogin
-    public List<AbstractPaymentMethod> getPaymentMethods(AuthToken authToken) throws InvalidLoginException{
+    public List<AbstractPaymentMethod> getPaymentMethods(AuthToken authToken) throws AuthException {
         TypedQuery<AbstractPaymentMethod> paymentMethodQuery = em
                 .createQuery("SELECT pm FROM AbstractPaymentMethod AS pm", AbstractPaymentMethod.class);
         return paymentMethodQuery.getResultList();

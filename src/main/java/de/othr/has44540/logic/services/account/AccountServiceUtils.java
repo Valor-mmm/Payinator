@@ -1,6 +1,6 @@
 package de.othr.has44540.logic.services.account;
 
-import de.othr.has44540.logic.services.InvalidAccountException;
+import de.othr.has44540.logic.services.exceptions.account.InvalidAccountException;
 import de.othr.has44540.logic.services.auth.service.AuthServiceIF;
 import de.othr.has44540.logic.services.auth.service.factory.DetectAutomatically;
 import de.othr.has44540.persistance.entities.account.AbstractAccount;
