@@ -9,6 +9,14 @@
     <ui:composition template="../template/template.xhtml">
         <ui:define name="content_component">
             <h3>Error</h3>
+
+            <div id="error-details">
+                <h4>
+                    <h:outputText value="#{errorModel.title}"/>
+                </h4>
+                <hr/>
+                <h:outputText value="#{errorModel.message}"/>
+            </div>
         </ui:define>
     </ui:composition>
 </h:body>

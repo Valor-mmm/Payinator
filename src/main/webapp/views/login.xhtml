@@ -14,11 +14,11 @@
                         <h:form>
                             <div class="form-group">
                                 <label for="emailInput" class="form-label">Email</label>
-                                <h:inputText id="emailInput" styleClass="form-input"/>
+                                <h:inputText id="emailInput" styleClass="form-input" value="#{authModel.email}"/>
                                 <label for="passwordInput" class="form-label">Password</label>
-                                <h:inputSecret id="passwordInput" styleClass="form-input"/>
+                                <h:inputSecret id="passwordInput" styleClass="form-input" value="#{authModel.password}"/>
                             </div>
-                            <h:commandButton styleClass="btn" action="index" value="Submit"/>
+                            <h:commandButton styleClass="btn" action="#{authModel.login}" value="Submit"/>
                         </h:form>
                     </div>
                 </div>
