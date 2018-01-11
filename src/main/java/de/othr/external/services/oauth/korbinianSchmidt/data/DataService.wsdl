@@ -1,0 +1,286 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://impl.service.sw.kschmidt.de/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="DataServiceService" targetNamespace="http://impl.service.sw.kschmidt.de/">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://impl.service.sw.kschmidt.de/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://impl.service.sw.kschmidt.de/">
+  <xs:element name="creditCardPaymentMethod" type="tns:creditCardPaymentMethod"/>
+  <xs:element name="getPaymentMethods" type="tns:getPaymentMethods"/>
+  <xs:element name="getPaymentMethodsResponse" type="tns:getPaymentMethodsResponse"/>
+  <xs:element name="getPersonalData" type="tns:getPersonalData"/>
+  <xs:element name="getPersonalDataResponse" type="tns:getPersonalDataResponse"/>
+  <xs:element name="getPrimaryPaymentMethod" type="tns:getPrimaryPaymentMethod"/>
+  <xs:element name="getPrimaryPaymentMethodResponse" type="tns:getPrimaryPaymentMethodResponse"/>
+  <xs:element name="getPrimaryShippingData" type="tns:getPrimaryShippingData"/>
+  <xs:element name="getPrimaryShippingDataResponse" type="tns:getPrimaryShippingDataResponse"/>
+  <xs:element name="getShippingData" type="tns:getShippingData"/>
+  <xs:element name="getShippingDataResponse" type="tns:getShippingDataResponse"/>
+  <xs:element name="paymentMethod" type="tns:paymentMethod"/>
+  <xs:element name="wireTransferPaymentMethod" type="tns:wireTransferPaymentMethod"/>
+  <xs:complexType name="getPersonalData">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="sessionToken" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getPersonalDataResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:personalDataDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="personalDataDTO">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="firstName" type="xs:string"/>
+      <xs:element minOccurs="0" name="lastName" type="xs:string"/>
+      <xs:element minOccurs="0" name="dayOfBirth" type="xs:string"/>
+      <xs:element minOccurs="0" name="primaryAddress" type="tns:address"/>
+      <xs:element name="age" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="address">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="country" type="xs:string"/>
+      <xs:element minOccurs="0" name="name" type="xs:string"/>
+      <xs:element minOccurs="0" name="place" type="xs:string"/>
+      <xs:element minOccurs="0" name="street" type="xs:string"/>
+      <xs:element minOccurs="0" name="streetNo" type="xs:string"/>
+      <xs:element minOccurs="0" name="zipCode" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getPrimaryShippingData">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="sessionToken" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getPrimaryShippingDataResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:shippingData"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="shippingData">
+    <xs:sequence>
+      <xs:element name="isPrimary" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="name" type="xs:string"/>
+      <xs:element name="primary" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="shippingAddress" type="tns:address"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getShippingData">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="sessionToken" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getShippingDataResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:shippingData"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getPrimaryPaymentMethod">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="sessionToken" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getPrimaryPaymentMethodResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:paymentMethod"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType abstract="true" name="paymentMethod">
+    <xs:sequence>
+      <xs:element name="isPrimary" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="name" type="xs:string"/>
+      <xs:element minOccurs="0" name="paymentAddress" type="tns:address"/>
+      <xs:element name="primary" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="creditCardPaymentMethod">
+    <xs:complexContent>
+      <xs:extension base="tns:paymentMethod">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="cardProvider" type="xs:string"/>
+          <xs:element minOccurs="0" name="securityCode" type="xs:string"/>
+          <xs:element minOccurs="0" name="securityNumber" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="wireTransferPaymentMethod">
+    <xs:complexContent>
+      <xs:extension base="tns:paymentMethod">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="accountName" type="xs:string"/>
+          <xs:element minOccurs="0" name="bic" type="xs:string"/>
+          <xs:element minOccurs="0" name="iban" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="getPaymentMethods">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="sessionToken" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getPaymentMethodsResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:paymentMethod"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DataServiceException" type="tns:DataServiceException"/>
+  <xs:complexType name="DataServiceException">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="getPersonalData">
+    <wsdl:part element="tns:getPersonalData" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPersonalDataResponse">
+    <wsdl:part element="tns:getPersonalDataResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPrimaryShippingDataResponse">
+    <wsdl:part element="tns:getPrimaryShippingDataResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPrimaryPaymentMethodResponse">
+    <wsdl:part element="tns:getPrimaryPaymentMethodResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPrimaryShippingData">
+    <wsdl:part element="tns:getPrimaryShippingData" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPaymentMethodsResponse">
+    <wsdl:part element="tns:getPaymentMethodsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="DataServiceException">
+    <wsdl:part element="tns:DataServiceException" name="DataServiceException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getShippingData">
+    <wsdl:part element="tns:getShippingData" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPrimaryPaymentMethod">
+    <wsdl:part element="tns:getPrimaryPaymentMethod" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPaymentMethods">
+    <wsdl:part element="tns:getPaymentMethods" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getShippingDataResponse">
+    <wsdl:part element="tns:getShippingDataResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="DataService">
+    <wsdl:operation name="getPersonalData">
+      <wsdl:input message="tns:getPersonalData" name="getPersonalData">
+    </wsdl:input>
+      <wsdl:output message="tns:getPersonalDataResponse" name="getPersonalDataResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:DataServiceException" name="DataServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getPrimaryShippingData">
+      <wsdl:input message="tns:getPrimaryShippingData" name="getPrimaryShippingData">
+    </wsdl:input>
+      <wsdl:output message="tns:getPrimaryShippingDataResponse" name="getPrimaryShippingDataResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:DataServiceException" name="DataServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getShippingData">
+      <wsdl:input message="tns:getShippingData" name="getShippingData">
+    </wsdl:input>
+      <wsdl:output message="tns:getShippingDataResponse" name="getShippingDataResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:DataServiceException" name="DataServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getPrimaryPaymentMethod">
+      <wsdl:input message="tns:getPrimaryPaymentMethod" name="getPrimaryPaymentMethod">
+    </wsdl:input>
+      <wsdl:output message="tns:getPrimaryPaymentMethodResponse" name="getPrimaryPaymentMethodResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:DataServiceException" name="DataServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getPaymentMethods">
+      <wsdl:input message="tns:getPaymentMethods" name="getPaymentMethods">
+    </wsdl:input>
+      <wsdl:output message="tns:getPaymentMethodsResponse" name="getPaymentMethodsResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:DataServiceException" name="DataServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="DataServiceServiceSoapBinding" type="tns:DataService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getPersonalData">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getPersonalData">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getPersonalDataResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="DataServiceException">
+        <soap:fault name="DataServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getPrimaryShippingData">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getPrimaryShippingData">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getPrimaryShippingDataResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="DataServiceException">
+        <soap:fault name="DataServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getShippingData">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getShippingData">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getShippingDataResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="DataServiceException">
+        <soap:fault name="DataServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getPrimaryPaymentMethod">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getPrimaryPaymentMethod">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getPrimaryPaymentMethodResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="DataServiceException">
+        <soap:fault name="DataServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getPaymentMethods">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getPaymentMethods">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getPaymentMethodsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="DataServiceException">
+        <soap:fault name="DataServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="DataServiceService">
+    <wsdl:port binding="tns:DataServiceServiceSoapBinding" name="DataServicePort">
+      <soap:address location="http://im-lamport:8080/KSchmidtUserManager/DataService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
