@@ -1,5 +1,6 @@
 package de.othr.has44540.logic.services.account.accountsvc;
 
+import de.othr.has44540.logic.services.auth.InvalidLoginException;
 import de.othr.has44540.logic.services.auth.LoginInterceptor.CheckLogin;
 import de.othr.has44540.logic.services.auth.token.AuthToken;
 import de.othr.has44540.persistance.entities.account.AbstractAccount;
@@ -13,7 +14,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @SessionScoped
-public class AccountServiceImpl implements AccountServiceIF, Serializable {
+public class AccountServiceImpl implements AccountServiceIF {
 
     @PersistenceContext
     private EntityManager em;
@@ -25,7 +26,7 @@ public class AccountServiceImpl implements AccountServiceIF, Serializable {
     @Override
     @CheckLogin
     @Transactional
-    public List<AbstractAccount> getAccounts(AuthToken authToken) {
+    public List<AbstractAccount> getAccounts(AuthToken authToken) throws InvalidLoginException{
         TypedQuery<AbstractAccount> findAllQ = em.createQuery("SELECT a FROM AbstractAccount AS a",
                 AbstractAccount.class);
         return findAllQ.getResultList();
@@ -34,7 +35,7 @@ public class AccountServiceImpl implements AccountServiceIF, Serializable {
     @Override
     @CheckLogin
     @Transactional
-    public AbstractAccount searchAccount(AuthToken authToken, String alias) {
+    public AbstractAccount searchAccount(AuthToken authToken, String alias) throws InvalidLoginException{
         TypedQuery<AbstractAccount> searchQ = em.createQuery("SELECT a FROM AbstractAccount AS a WHERE a.alias = :alias"
                 , AbstractAccount.class);
         searchQ.setParameter("alias", alias);

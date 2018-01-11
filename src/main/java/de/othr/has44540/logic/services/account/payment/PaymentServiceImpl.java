@@ -3,6 +3,7 @@ package de.othr.has44540.logic.services.account.payment;
 import de.othr.has44540.logic.services.InvalidAccountException;
 import de.othr.has44540.logic.services.UnknownPaymentMethodException;
 import de.othr.has44540.logic.services.account.AccountServiceUtils;
+import de.othr.has44540.logic.services.auth.InvalidLoginException;
 import de.othr.has44540.logic.services.auth.LoginInterceptor.CheckLogin;
 import de.othr.has44540.logic.services.auth.token.AuthToken;
 import de.othr.has44540.persistance.entities.account.AbstractAccount;
@@ -19,7 +20,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 @SessionScoped
-public class PaymentServiceImpl implements PaymentServiceIF, Serializable {
+public class PaymentServiceImpl implements PaymentServiceIF {
 
 
     @PersistenceContext
@@ -33,7 +34,8 @@ public class PaymentServiceImpl implements PaymentServiceIF, Serializable {
     @Transactional
     public Payment payDefault(AuthToken authToken, AbstractAccount toAccount, BigDecimal amount) throws
                                                                                                  InvalidAccountException,
-                                                                                                 UnknownPaymentMethodException {
+                                                                                                 UnknownPaymentMethodException,
+                                                                                                 InvalidLoginException {
         accountUtils.checkSimpleAccount(toAccount);
         AbstractAccount fromAccount = accountUtils.getDefaultAccount();
         if (fromAccount == null) {
@@ -54,7 +56,8 @@ public class PaymentServiceImpl implements PaymentServiceIF, Serializable {
     public Payment createPayment(AuthToken authToken, AbstractAccount fromAccount,
                                  AbstractPaymentMethod paymentMethod) throws
                                                                       InvalidAccountException,
-                                                                      UnknownPaymentMethodException {
+                                                                      UnknownPaymentMethodException,
+                                                                      InvalidLoginException {
         accountUtils.checkAccount(fromAccount);
         accountUtils.checkAccountOwner(fromAccount);
         if (!accountUtils.verifyPaymentMethodOfUser(paymentMethod)) {
@@ -68,7 +71,10 @@ public class PaymentServiceImpl implements PaymentServiceIF, Serializable {
     @CheckLogin
     @Transactional
     public Payment initiatePayment(AuthToken authToken, Payment payment, AbstractAccount toAccount,
-                                   BigDecimal amount) throws InvalidAccountException, UnknownPaymentMethodException {
+                                   BigDecimal amount) throws
+                                                      InvalidAccountException,
+                                                      UnknownPaymentMethodException,
+                                                      InvalidLoginException {
         accountUtils.checkSimpleAccount(toAccount);
 
         SimpleAccount simpleAccount = (SimpleAccount) toAccount;
