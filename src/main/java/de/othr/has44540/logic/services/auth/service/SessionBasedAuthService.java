@@ -13,9 +13,9 @@ import javax.transaction.Transactional;
 import java.util.logging.Logger;
 
 @SessionScoped
-public class StandardAuthService implements AuthServiceIF {
+public class SessionBasedAuthService implements AuthServiceIF {
 
-    private static final Logger logger = Logger.getLogger(StandardAuthService.class.getName());
+    private static final Logger logger = Logger.getLogger(SessionBasedAuthService.class.getName());
 
     private UserSession session;
     private AuthToken authToken;

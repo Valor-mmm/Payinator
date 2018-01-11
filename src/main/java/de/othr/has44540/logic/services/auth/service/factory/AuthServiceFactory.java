@@ -1,7 +1,7 @@
 package de.othr.has44540.logic.services.auth.service.factory;
 
 import de.othr.has44540.logic.services.auth.service.AuthServiceIF;
-import de.othr.has44540.logic.services.auth.service.StandardAuthService;
+import de.othr.has44540.logic.services.auth.service.SessionBasedAuthService;
 import de.othr.has44540.logic.services.auth.service.TokenBasedAuthService;
 
 import javax.enterprise.context.SessionScoped;
@@ -19,11 +19,11 @@ public class AuthServiceFactory implements Serializable {
     private AuthServiceMemory serviceMemory;
 
     @Produces
-    @AuthServiceQualifier(AuthServiceCase.STANDARD)
+    @AuthServiceQualifier(AuthServiceCase.SESSION_BASED)
     @SessionScoped
-    public AuthServiceIF getStandardService(StandardAuthService standardAuthService) {
-        serviceMemory.setServiceCase(AuthServiceCase.STANDARD);
-        return standardAuthService;
+    public AuthServiceIF getSessionBasedService(SessionBasedAuthService sessionBasedAuthService) {
+        serviceMemory.setServiceCase(AuthServiceCase.SESSION_BASED);
+        return sessionBasedAuthService;
     }
 
     @Produces
@@ -36,7 +36,7 @@ public class AuthServiceFactory implements Serializable {
 
     @Produces
     @DetectAutomatically
-    public AuthServiceIF getServiceAutomatically(StandardAuthService standardAuthService,
+    public AuthServiceIF getServiceAutomatically(SessionBasedAuthService sessionBasedAuthService,
                                                  TokenBasedAuthService tokenBasedAuthService) {
         if (serviceMemory.getServiceCase() == null) {
             logger.config("Assuming session management is not available, creating token based service.");
@@ -44,8 +44,8 @@ public class AuthServiceFactory implements Serializable {
         }
 
         switch (serviceMemory.getServiceCase()) {
-            case STANDARD:
-                return getStandardService(standardAuthService);
+            case SESSION_BASED:
+                return getSessionBasedService(sessionBasedAuthService);
             case TOKEN_BASED:
                 return getTokenBasedService(tokenBasedAuthService);
             default:

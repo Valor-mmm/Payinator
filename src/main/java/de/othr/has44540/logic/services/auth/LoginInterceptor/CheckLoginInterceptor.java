@@ -65,15 +65,15 @@ public class CheckLoginInterceptor implements Serializable{
 
     private AuthServiceCase determineAuthService(Object[] parameters) {
         if (parameters == null) {
-            return AuthServiceCase.STANDARD;
+            return AuthServiceCase.SESSION_BASED;
         }
         if (parameters.length <= 0 || parameters[0] == null) {
-            return AuthServiceCase.STANDARD;
+            return AuthServiceCase.SESSION_BASED;
         }
         if (parameters[0] instanceof AuthToken) {
             return AuthServiceCase.TOKEN_BASED;
         }
-        return AuthServiceCase.STANDARD;
+        return AuthServiceCase.SESSION_BASED;
     }
 
     /**
