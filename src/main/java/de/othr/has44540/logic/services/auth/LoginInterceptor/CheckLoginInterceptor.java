@@ -2,7 +2,7 @@ package de.othr.has44540.logic.services.auth.LoginInterceptor;
 
 import de.othr.has44540.logic.services.auth.service.factory.AuthServiceCase;
 import de.othr.has44540.logic.services.auth.service.AuthServiceIF;
-import de.othr.has44540.logic.services.auth.NotLoggedInException;
+import de.othr.has44540.logic.services.auth.InvalidLoginException;
 import de.othr.has44540.logic.services.auth.service.factory.AuthServiceQualifierImpl;
 import de.othr.has44540.logic.services.auth.token.AuthToken;
 
@@ -42,7 +42,7 @@ public class CheckLoginInterceptor implements Serializable{
         }
 
         if (authService.getLoggedInUser() == null) {
-            throw new NotLoggedInException();
+            throw new InvalidLoginException();
         }
 
         return context.proceed();
