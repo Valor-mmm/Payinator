@@ -5,6 +5,7 @@ import de.othr.has44540.logic.services.auth.service.AuthServiceIF;
 import de.othr.has44540.logic.services.auth.InvalidLoginException;
 import de.othr.has44540.logic.services.auth.service.factory.AuthServiceQualifierImpl;
 import de.othr.has44540.logic.services.auth.token.AuthToken;
+import org.jetbrains.annotations.Contract;
 
 import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Instance;
@@ -63,6 +64,7 @@ public class CheckLoginInterceptor implements Serializable{
         authService.setAuthToken((AuthToken) parameters[0]);
     }
 
+    @Contract(pure = true)
     private AuthServiceCase determineAuthService(Object[] parameters) {
         if (parameters == null) {
             return AuthServiceCase.SESSION_BASED;
