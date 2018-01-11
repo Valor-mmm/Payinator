@@ -17,6 +17,8 @@ public interface PaymentServiceIF extends Serializable {
                                                                                           AccountException;
 
     Payment makePayment(AuthToken authToken, AbstractAccount fromAccount, AbstractAccount toAccount,
-                        AbstractPaymentMethod paymentMethod, BigDecimal amount) throws AuthException, AccountException;
+                        AbstractPaymentMethod paymentMethod, BigDecimal amount) throws
+                                                                                AuthException,
+                                                                                AccountException;
 
 }

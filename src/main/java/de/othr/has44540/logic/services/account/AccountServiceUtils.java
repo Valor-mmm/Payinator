@@ -1,8 +1,8 @@
 package de.othr.has44540.logic.services.account;
 
-import de.othr.has44540.logic.services.exceptions.account.InvalidAccountException;
 import de.othr.has44540.logic.services.auth.service.AuthServiceIF;
 import de.othr.has44540.logic.services.auth.service.factory.DetectAutomatically;
+import de.othr.has44540.logic.services.exceptions.account.InvalidAccountException;
 import de.othr.has44540.persistance.entities.account.AbstractAccount;
 import de.othr.has44540.persistance.entities.account.impl.SimpleAccount;
 import de.othr.has44540.persistance.entities.user.AbstractUser;
@@ -35,20 +35,20 @@ public class AccountServiceUtils implements Serializable {
         return result != null;
     }
 
-    public void checkAccount(AbstractAccount account) {
+    public void checkAccount(AbstractAccount account) throws InvalidAccountException {
         if (!verifyAccount(account)) {
             throw new InvalidAccountException("An account with the id does not exist.", account);
         }
     }
 
-    public void checkAccountOwner(AbstractAccount account) {
+    public void checkAccountOwner(AbstractAccount account) throws InvalidAccountException {
         AbstractUser user = authService.getExecutiveUser();
         if (!user.containsAccount(account)) {
             throw new InvalidAccountException("The current executive user does not have the account.", account);
         }
     }
 
-    public void checkSimpleAccount(AbstractAccount account) {
+    public void checkSimpleAccount(AbstractAccount account) throws InvalidAccountException {
         checkAccount(account);
         if (!(account instanceof SimpleAccount)) {
             throw new InvalidAccountException("Can not send money to a donation account.", account);

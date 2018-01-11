@@ -50,7 +50,7 @@ public class CheckLoginInterceptor implements Serializable {
         return context.proceed();
     }
 
-    private void submitAuthToken(Object[] parameters) throws InvalidTokenException {
+    private void submitAuthToken(Object[] parameters) throws AuthException {
         if (parameters == null) {
             return;
         }

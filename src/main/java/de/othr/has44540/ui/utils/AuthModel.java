@@ -33,7 +33,7 @@ public class AuthModel implements Serializable {
     private String message;
 
     public String login() {
-        if (email == null || password == null || email.length() < 4 || password.length() < 8) {
+        if (email == null || password == null || email.length() < 3 || password.length() < 3) {
             errorModel.setError("Email or password is empty.",
                                 "The email or password you entered were empty. Please fill in both fields");
             return ErrorModel.pageName;

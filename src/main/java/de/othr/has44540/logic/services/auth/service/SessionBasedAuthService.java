@@ -4,9 +4,9 @@ import de.othr.external.services.oauth.korbinianSchmidt.OAuthConfig;
 import de.othr.external.services.oauth.korbinianSchmidt.session.*;
 import de.othr.has44540.logic.services.auth.UserSession;
 import de.othr.has44540.logic.services.auth.token.AuthToken;
+import de.othr.has44540.logic.services.exceptions.InternalErrorException;
+import de.othr.has44540.logic.services.exceptions.auth.AuthException;
 import de.othr.has44540.logic.services.exceptions.auth.InvalidLoginDataException;
-import de.othr.has44540.logic.services.exceptions.auth.InvalidLinkObjectException;
-import de.othr.has44540.logic.services.exceptions.auth.InvalidTokenException;
 import de.othr.has44540.persistance.entities.user.AbstractUser;
 import de.othr.has44540.persistance.entities.user.personalData.Email;
 import org.jetbrains.annotations.NotNull;
@@ -16,8 +16,6 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import javax.ws.rs.InternalServerErrorException;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -60,7 +58,9 @@ public class SessionBasedAuthService implements AuthServiceIF {
 
     @Override
     @Transactional
-    public AuthToken login(@NotNull String email, @NotNull String password) throws InvalidLoginDataException {
+    public AuthToken login(@NotNull String email, @NotNull String password) throws
+                                                                            AuthException,
+                                                                            InternalErrorException {
         Email foundEmail = AuthServiceCommons.queryEmail(email, em);
 
         AbstractUser user = null;
@@ -79,8 +79,20 @@ public class SessionBasedAuthService implements AuthServiceIF {
             switch (serviceException.getReason()) {
                 case NO_SUCH_SITE:
                     logger.log(Level.SEVERE, "Site token invalid", serviceException);
-                    throw new InternalServerErrorException("Site token is invalid.");
+                    throw new InternalErrorException("An internal error occurred.",
+                                                     "An internal error occurred during communication with oauth service.");
+                case INTERNAL_FAILURE:
+                    logger.log(Level.SEVERE, "OAuth Service responds with internal server error.", serviceException);
+                    throw new InternalErrorException("The Oauth Service is currently not available.",
+                                                     "Because of an error in the OAuthServicePlease try again later.");
+                case INVALID_LOGIN_DATA:
+                    logger.log(Level.SEVERE, "Login data invalid.", serviceException);
+                    throw new InvalidLoginDataException();
+                default:
+                    throwUnknownOauthException(serviceException);
             }
+        } catch (Exception exception) {
+            throwUnknownOauthException(exception);
         }
 
         UserSession newSession = new UserSession(user);
@@ -91,17 +103,22 @@ public class SessionBasedAuthService implements AuthServiceIF {
     }
 
     @Override
-    public AuthToken login() throws InvalidLinkObjectException {
+    public AuthToken login() throws AuthException {
         // TODO: implement method
         return null;
     }
 
     @Override
-    public void setAuthToken(AuthToken token) throws InvalidTokenException {
+    public void setAuthToken(AuthToken token) throws AuthException {
         this.authToken = token;
     }
 
     public void setSession(UserSession session) {
         this.session = session;
+    }
+
+    private void throwUnknownOauthException(Object exception) throws AuthException {
+        logger.log(Level.SEVERE, "Login failed during unexpected oauth exception", exception);
+        throw new AuthException("Unexpected Error.", "Unexpected error during oauth service communication.");
     }
 }

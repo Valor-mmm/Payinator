@@ -5,12 +5,17 @@ import de.othr.has44540.persistance.entities.user.personalData.Email;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class AuthServiceCommons {
 
+    private static final Logger logger = Logger.getLogger(AuthServiceCommons.class.getName());
+
     @NotNull
-    protected static String[] checkEmail(String email) {
+    protected static String[] checkEmail(String email) throws InvalidLoginDataException {
         String localPart = null;
         String domain = null;
         try {
@@ -23,7 +28,7 @@ public class AuthServiceCommons {
         return new String[]{localPart, domain};
     }
 
-    public static Email queryEmail(@NotNull String email, @NotNull EntityManager em) {
+    public static Email queryEmail(@NotNull String email, @NotNull EntityManager em) throws InvalidLoginDataException {
         String[] emailParts = checkEmail(email);
         String localPart = emailParts[0];
         String domain = emailParts[1];
@@ -33,6 +38,12 @@ public class AuthServiceCommons {
                              Email.class);
         emailQuery.setParameter("localPart", localPart);
         emailQuery.setParameter("domain", domain);
-        return emailQuery.getSingleResult();
+        Email result = null;
+        try {
+            result = emailQuery.getSingleResult();
+        } catch (NoResultException ex) {
+            logger.log(Level.INFO, "No email for this criteria found", ex);
+        }
+        return result;
     }
 }
