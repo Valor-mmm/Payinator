@@ -42,7 +42,11 @@ public class AuthModel implements Serializable {
         try {
             authService.login(email, password);
         } catch (InvalidLoginDataException e) {
-            this.message = InvalidLoginDataException.errMessage;
+            if (e.isInvalidEmail() || e.isInvalidPassword()) {
+                this.message = e.getDescription();
+            } else {
+                this.message = InvalidLoginDataException.errMessage;
+            }
             return AuthModel.pageName;
         } catch (Exception e) {
             errorModel.setUnknownError();

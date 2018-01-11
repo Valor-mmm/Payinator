@@ -34,4 +34,20 @@ public class InvalidLoginDataException extends AuthException {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public boolean isInvalidEmail() {
+        return invalidEmail;
+    }
+
+    public void setInvalidEmail(boolean invalidEmail) {
+        this.invalidEmail = invalidEmail;
+    }
+
+    public boolean isInvalidPassword() {
+        return invalidPassword;
+    }
+
+    public void setInvalidPassword(boolean invalidPassword) {
+        this.invalidPassword = invalidPassword;
+    }
 }
