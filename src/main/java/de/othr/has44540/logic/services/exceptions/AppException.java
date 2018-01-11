@@ -3,7 +3,7 @@ package de.othr.has44540.logic.services.exceptions;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class AppException extends RuntimeException implements Serializable {
+public class AppException extends Exception implements Serializable {
 
     private String title;
 
