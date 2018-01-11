@@ -4,10 +4,23 @@ public class InvalidLoginDataException extends AuthException {
 
     private String email;
 
+    private boolean invalidEmail = false;
+    private boolean invalidPassword = false;
+
     public static final String errMessage = "The email and password you entered did not match.";
 
     public InvalidLoginDataException() {
 
+    }
+
+    public InvalidLoginDataException(String title, String message) {
+        super(title, message);
+    }
+
+    public InvalidLoginDataException(String title, String message, boolean invalidEmail, boolean invalidPassword) {
+        this(title, message);
+        this.invalidEmail = invalidEmail;
+        this.invalidPassword = invalidPassword;
     }
 
     public InvalidLoginDataException(String email) {
