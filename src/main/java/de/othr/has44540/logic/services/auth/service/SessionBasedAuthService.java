@@ -45,15 +45,10 @@ public class SessionBasedAuthService implements AuthServiceIF {
     @Transactional
     public AuthToken login(@NotNull String email, @NotNull String password) throws InvalidLoginDataException {
         Email foundEmail = AuthServiceCommons.queryEmail(email, em);
-        if (foundEmail == null) {
-            // TODO: email not found
-        }
 
-        AbstractUser user;
-        user = foundEmail != null ? foundEmail.getUser() : null;
-        if (user == null) {
-            // TODO: better err handling
-            return null;
+        AbstractUser user = null;
+        if (foundEmail != null) {
+            user = foundEmail != null ? foundEmail.getUser() : null;
         }
 
         // TODO: korbis part
