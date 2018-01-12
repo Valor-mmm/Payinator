@@ -83,7 +83,7 @@ public class TokenBasedAuthService extends AbstractAuthService {
         } catch (IllegalTokenChangeException e) {
             logger.log(Level.SEVERE, "Token was illegally changed", e);
         }
-        
+
         if (!validToken) {
             throw new InvalidTokenException(token);
         }
