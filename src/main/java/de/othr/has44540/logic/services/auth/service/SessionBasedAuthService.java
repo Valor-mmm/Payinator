@@ -1,9 +1,14 @@
 package de.othr.has44540.logic.services.auth.service;
 
+import de.othr.external.services.oauth.korbinianSchmidt.session.SessionLinkDTO;
 import de.othr.has44540.logic.services.auth.UserSession;
 import de.othr.has44540.logic.services.auth.token.AuthToken;
+import de.othr.has44540.logic.services.auth.token.IllegalTokenChangeException;
 import de.othr.has44540.logic.services.exceptions.InternalErrorException;
 import de.othr.has44540.logic.services.exceptions.auth.AuthException;
+import de.othr.has44540.logic.services.exceptions.auth.InvalidLinkObjectException;
+import de.othr.has44540.logic.services.exceptions.auth.InvalidLoginDataException;
+import de.othr.has44540.logic.services.exceptions.auth.InvalidTokenException;
 import de.othr.has44540.persistance.entities.user.AbstractUser;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,27 +42,41 @@ public class SessionBasedAuthService extends AbstractAuthService {
     @Override
     @Transactional
     public AuthToken login(@NotNull String email, @NotNull String password) throws
-                                                                            AuthException,
+                                                                            InvalidLoginDataException,
                                                                             InternalErrorException {
+        logger.info("Logging in user with email [" + email + "]");
         UserSession newSession = super.initOAuthSession(email, password);
-        this.session = newSession;
-        AuthToken token = new AuthToken();
-        this.authToken = token;
-        return authToken;
+        logger.info("Login successful for email [" + email + "]");
+        return saveUserSession(newSession);
     }
 
     @Override
-    public AuthToken login() throws AuthException {
-        // TODO: implement method
-        return null;
+    public AuthToken login(SessionLinkDTO sessionLink) throws InvalidLinkObjectException {
+        logger.info("Receiving session link from [" + sessionLink.getFromSiteId() + "]");
+        UserSession newSession = super.initOAuthSession(sessionLink);
+        logger.info("Linked session successfully for site [" + sessionLink.getFromSiteId() + "]");
+        return saveUserSession(newSession);
     }
 
     @Override
-    public void setAuthToken(AuthToken token) throws AuthException {
-        this.authToken = token;
+    public void setAuthToken(AuthToken token) throws InvalidTokenException {
+        try {
+            if (this.authToken.checkToken(token))
+            this.authToken = token;
+        } catch (IllegalTokenChangeException e) {
+            throw new InvalidTokenException(token);
+        }
     }
 
     public void setSession(UserSession session) {
         this.session = session;
     }
+
+    private AuthToken saveUserSession(UserSession newSession) {
+        this.session = newSession;
+        AuthToken token = new AuthToken();
+        this.authToken = token;
+        return authToken;
+    }
 }
+
