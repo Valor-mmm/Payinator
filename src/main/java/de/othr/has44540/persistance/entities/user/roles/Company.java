@@ -21,6 +21,8 @@ public class Company extends AbstractUser {
     @Column(nullable = false)
     private BusinessSector sector;
 
+    @Column(unique = true)
+    private Long externalSiteId;
 
     // References
 
@@ -68,6 +70,13 @@ public class Company extends AbstractUser {
         this.sector = sector;
     }
 
+    public Long getExternalSiteId() {
+        return externalSiteId;
+    }
+
+    public void setExternalSiteId(Long externalSiteId) {
+        this.externalSiteId = externalSiteId;
+    }
 
     // References - getter/setter
 
