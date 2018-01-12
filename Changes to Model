@@ -4,6 +4,7 @@ Changes to Model:
     User:
         Address: number -> streetNumber
         City: now embeddable
+        Abstract user: externalSiteId added
 
 
     BigDouble -> BigDecimal
@@ -20,7 +21,7 @@ Component diagram:
     BigDouble -> BigDecimal
     PaymentInformation -> PaymentMethod
 
-    PaymentServiceIF -> Aufteilen in 2 Methoden
+    everyInterface and exceptions
 
 
     PaymentInformationIF -> PaymentInfoServiceIF
@@ -28,3 +29,7 @@ Component diagram:
     Added AuthenticationService (2 different services)
 
     UnknownAccountException -> InvalidAccountException
+
+
+Use cases:
+    Only SimpleUser can login due to OAuth errors
