@@ -1,5 +1,6 @@
 package de.othr.has44540.logic.services.auth;
 
+import de.othr.external.services.oauth.korbinianSchmidt.session.SessionDTO;
 import de.othr.has44540.persistance.entities.user.AbstractUser;
 
 public class UserSession {
@@ -8,12 +9,15 @@ public class UserSession {
 
     private AbstractUser onBehalfOf;
 
-    public UserSession(AbstractUser user) {
+    private SessionDTO oAuthSession;
+
+    public UserSession(AbstractUser user, SessionDTO oAuthSession) {
         this.user = user;
+        this.oAuthSession = oAuthSession;
     }
 
-    public UserSession(AbstractUser user, AbstractUser onBehalfOf) {
-        this(user);
+    public UserSession(AbstractUser user, AbstractUser onBehalfOf, SessionDTO oAuthSession) {
+        this(user, oAuthSession);
         this.onBehalfOf = onBehalfOf;
     }
 
@@ -34,5 +38,13 @@ public class UserSession {
      */
     public AbstractUser getExecutiveUser() {
         return onBehalfOf != null ? onBehalfOf : user;
+    }
+
+    public SessionDTO getoAuthSession() {
+        return oAuthSession;
+    }
+
+    public void setoAuthSession(SessionDTO oAuthSession) {
+        this.oAuthSession = oAuthSession;
     }
 }

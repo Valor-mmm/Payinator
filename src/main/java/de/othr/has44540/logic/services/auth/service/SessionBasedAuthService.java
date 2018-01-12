@@ -1,16 +1,19 @@
 package de.othr.has44540.logic.services.auth.service;
 
-import de.othr.external.services.oauth.korbinianSchmidt.OAuthConfig;
+import de.othr.external.services.oauth.CustomSessionServiceService;
+import de.othr.external.services.oauth.OAuthConfig;
 import de.othr.external.services.oauth.korbinianSchmidt.session.*;
 import de.othr.has44540.logic.services.auth.UserSession;
 import de.othr.has44540.logic.services.auth.token.AuthToken;
 import de.othr.has44540.logic.services.exceptions.InternalErrorException;
 import de.othr.has44540.logic.services.exceptions.auth.AuthException;
 import de.othr.has44540.logic.services.exceptions.auth.InvalidLoginDataException;
+import de.othr.has44540.logic.services.user.update.UpdateServiceIF;
 import de.othr.has44540.persistance.entities.user.AbstractUser;
 import de.othr.has44540.persistance.entities.user.personalData.Email;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -34,11 +37,16 @@ public class SessionBasedAuthService implements AuthServiceIF {
     @Inject
     private OAuthConfig oauthConfig;
 
+    @Inject
+    private UpdateServiceIF updateService;
+
     @PersistenceContext
     private EntityManager em;
 
-    public SessionBasedAuthService() {
-        sessionService = new SessionServiceService().getSessionServicePort();
+    @PostConstruct
+    @Inject
+    public void initializeSessionService(CustomSessionServiceService sessionServiceService) {
+        sessionService = sessionServiceService.getSessionService();
     }
 
     @Override
@@ -95,7 +103,16 @@ public class SessionBasedAuthService implements AuthServiceIF {
             throwUnknownOauthException(exception);
         }
 
-        UserSession newSession = new UserSession(user);
+        if (oAuthSession == null) {
+            throwUnknownOauthException(new NullPointerException("Returned session is null."));
+        }
+        if (oAuthSession.getSessionToken() == null) {
+            throwUnknownOauthException(new NullPointerException("Returned sessionToken is null."));
+        }
+
+        updateService.updateUser(oAuthSession.getSessionToken(), user);
+
+        UserSession newSession = new UserSession(user, oAuthSession);
         this.session = newSession;
         AuthToken token = new AuthToken();
         this.authToken = token;
@@ -117,8 +134,8 @@ public class SessionBasedAuthService implements AuthServiceIF {
         this.session = session;
     }
 
-    private void throwUnknownOauthException(Object exception) throws AuthException {
+    private void throwUnknownOauthException(Object exception) throws InternalErrorException {
         logger.log(Level.SEVERE, "Login failed during unexpected oauth exception", exception);
-        throw new AuthException("Unexpected Error.", "Unexpected error during oauth service communication.");
+        throw new InternalErrorException("Unexpected Error.", "Unexpected error during oauth service communication.");
     }
 }

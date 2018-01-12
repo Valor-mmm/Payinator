@@ -3,6 +3,7 @@ package de.othr.has44540.ui.utils;
 import de.othr.has44540.logic.services.auth.service.AuthServiceIF;
 import de.othr.has44540.logic.services.auth.service.factory.AuthServiceCase;
 import de.othr.has44540.logic.services.auth.service.factory.AuthServiceQualifier;
+import de.othr.has44540.logic.services.exceptions.InternalErrorException;
 import de.othr.has44540.logic.services.exceptions.auth.InvalidLoginDataException;
 import de.othr.has44540.ui.IndexModel;
 
@@ -10,10 +11,14 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Named
 @SessionScoped
 public class AuthModel implements Serializable {
+
+    private static final Logger logger = Logger.getLogger(AuthModel.class.getName());
 
     public static final String pageName = "login";
 
@@ -34,26 +39,35 @@ public class AuthModel implements Serializable {
 
     public String login() {
         if (email == null || password == null || email.length() < 3 || password.length() < 3) {
-            errorModel.setError("Email or password is empty.",
+            String errTitle = "Email or password is empty.";
+            logger.warning(errTitle);
+            errorModel.setError(errTitle,
                                 "The email or password you entered were empty. Please fill in both fields");
             return ErrorModel.pageName;
         }
 
         try {
             authService.login(email, password);
-        } catch (InvalidLoginDataException e) {
-            if (e.isInvalidEmail() || e.isInvalidPassword()) {
-                this.message = e.getDescription();
+        } catch (InvalidLoginDataException invalidLoginEx) {
+            if (invalidLoginEx.isInvalidEmail() || invalidLoginEx.isInvalidPassword()) {
+                this.message = invalidLoginEx.getDescription();
             } else {
                 this.message = InvalidLoginDataException.errMessage;
             }
+            logger.log(Level.WARNING, this.message, invalidLoginEx);
             return AuthModel.pageName;
-        } catch (Exception e) {
+        } catch (InternalErrorException internalEx) {
+            logger.log(Level.SEVERE, "Internal Error during login.", internalEx);
+            errorModel.setError(internalEx.getTitle(), internalEx.getDescription());
+            return ErrorModel.pageName;
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, "Unexpected exception caught.", ex);
             errorModel.setUnknownError();
             return ErrorModel.pageName;
         }
 
         if (prevPage != null) {
+            logger.info("Return to previous page: [" + prevPage + "]");
             return prevPage;
         }
         return IndexModel.pageName;
