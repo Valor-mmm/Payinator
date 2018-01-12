@@ -9,7 +9,7 @@ public class CharityAccount extends SimpleAccount {
     // Attributes
 
     @Column(nullable = false)
-    private String cause;
+    private String cause = "No Cause";
 
     private String description;
 

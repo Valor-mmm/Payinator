@@ -5,15 +5,15 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class City {
 
-    private String city;
+    private String name;
     private int postalCode;
 
-    public String getCity() {
-        return city;
+    public String getName() {
+        return name;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setName(String city) {
+        this.name = city;
     }
 
     public int getPostalCode() {

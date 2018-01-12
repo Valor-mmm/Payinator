@@ -18,9 +18,9 @@ public class Payment extends GeneratedIDEntity {
     @Column(nullable = false)
     private BigDecimal amount;
 
-    private String cause;
+    private String cause = null;
 
-    private String message;
+    private String message = null;
 
     private LocalDate creationTime;
 
