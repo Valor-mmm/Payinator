@@ -5,6 +5,8 @@ Changes to Model:
         Address: number -> streetNumber
         City: now embeddable
         Abstract user: externalSiteId added
+        PersonalInformation: -> localDate
+        Payment -> added creation time
 
 
     BigDouble -> BigDecimal

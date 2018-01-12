@@ -1,12 +1,10 @@
 package de.othr.has44540.persistance.entities.user.paymentInformation;
 
-import de.othr.has44540.persistance.util.GeneratedIDEntity;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
 @Entity
-public class WireTransfer extends GeneratedIDEntity{
+public class WireTransfer extends AbstractPaymentMethod {
 
     // Attributes
 

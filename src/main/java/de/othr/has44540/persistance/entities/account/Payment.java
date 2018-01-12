@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
 public class Payment extends GeneratedIDEntity {
@@ -20,6 +21,8 @@ public class Payment extends GeneratedIDEntity {
     private String cause;
 
     private String message;
+
+    private LocalDate creationTime;
 
 
     // References
@@ -34,12 +37,13 @@ public class Payment extends GeneratedIDEntity {
     private AbstractPaymentMethod paymentMethod;
 
     public Payment() {
-
+        this.creationTime = LocalDate.now();
     }
 
     public Payment(AbstractAccount fromAccount, AbstractPaymentMethod paymentMethod) {
         this.fromAccount = fromAccount;
         this.paymentMethod = paymentMethod;
+        this.creationTime = LocalDate.now();
     }
 
 
@@ -69,6 +73,13 @@ public class Payment extends GeneratedIDEntity {
         this.message = message;
     }
 
+    public LocalDate getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(LocalDate creationTime) {
+        this.creationTime = creationTime;
+    }
 
     // References - getter/setter
 
