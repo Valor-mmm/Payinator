@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 public interface UpdateServiceIF extends Serializable {
 
-    boolean updateUser(@NotNull String sessionToken, AbstractUser user) throws AuthException;
+    AbstractUser updateUser(@NotNull String sessionToken, AbstractUser user);
 
-    boolean createUser(@NotNull String sessionToken) throws AuthException;
+    AbstractUser createUser(@NotNull String sessionToken);
 }
