@@ -1,6 +1,5 @@
 package de.othr.has44540.logic.services.user.update;
 
-import de.othr.has44540.logic.services.exceptions.auth.AuthException;
 import de.othr.has44540.persistance.entities.user.AbstractUser;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,5 +9,6 @@ public interface UpdateServiceIF extends Serializable {
 
     AbstractUser updateUser(@NotNull String sessionToken, AbstractUser user);
 
-    AbstractUser createUser(@NotNull String sessionToken);
+    AbstractUser updateCompany(@NotNull Long externalSiteId);
+
 }

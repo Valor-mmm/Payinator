@@ -14,7 +14,7 @@ public class UpdateServiceImpl implements UpdateServiceIF {
     }
 
     @Override
-    public AbstractUser createUser(@NotNull String sessionToken) {
+    public AbstractUser updateCompany(@NotNull Long externalSiteId) {
         return null;
     }
 }
