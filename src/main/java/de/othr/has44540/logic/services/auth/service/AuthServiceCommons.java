@@ -1,18 +1,26 @@
 package de.othr.has44540.logic.services.auth.service;
 
 import de.othr.has44540.logic.services.exceptions.auth.InvalidLoginDataException;
+import de.othr.has44540.persistance.entities.user.AbstractUser;
 import de.othr.has44540.persistance.entities.user.personalData.Email;
 import org.jetbrains.annotations.NotNull;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class AuthServiceCommons {
+@ApplicationScoped
+public class AuthServiceCommons implements Serializable {
 
     private static final Logger logger = Logger.getLogger(AuthServiceCommons.class.getName());
+
+    @PersistenceContext
+    private EntityManager em;
 
     @NotNull
     protected static String[] checkEmail(String email) throws InvalidLoginDataException {
@@ -28,7 +36,7 @@ public class AuthServiceCommons {
         return new String[]{localPart, domain};
     }
 
-    public static Email queryEmail(@NotNull String email, @NotNull EntityManager em) throws InvalidLoginDataException {
+    protected Email queryEmail(@NotNull String email) throws InvalidLoginDataException {
         String[] emailParts = checkEmail(email);
         String localPart = emailParts[0];
         String domain = emailParts[1];
@@ -45,5 +53,14 @@ public class AuthServiceCommons {
             logger.log(Level.INFO, "No email for this criteria found", ex);
         }
         return result;
+    }
+
+    protected AbstractUser getUser(@NotNull String email) throws InvalidLoginDataException {
+        Email foundEmail = queryEmail(email);
+
+        if (foundEmail == null) {
+            return null;
+        }
+        return foundEmail.getUser();
     }
 }
