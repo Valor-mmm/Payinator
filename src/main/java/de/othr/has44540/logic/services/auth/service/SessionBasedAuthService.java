@@ -5,6 +5,7 @@ import de.othr.has44540.logic.services.auth.UserSession;
 import de.othr.has44540.logic.services.auth.token.AuthToken;
 import de.othr.has44540.logic.services.auth.token.IllegalTokenChangeException;
 import de.othr.has44540.logic.services.exceptions.InternalErrorException;
+import de.othr.has44540.logic.services.exceptions.OAuthException;
 import de.othr.has44540.logic.services.exceptions.auth.AuthException;
 import de.othr.has44540.logic.services.exceptions.auth.InvalidLinkObjectException;
 import de.othr.has44540.logic.services.exceptions.auth.InvalidLoginDataException;
@@ -43,7 +44,8 @@ public class SessionBasedAuthService extends AbstractAuthService {
     @Transactional
     public AuthToken login(@NotNull String email, @NotNull String password) throws
                                                                             InvalidLoginDataException,
-                                                                            InternalErrorException {
+                                                                            InternalErrorException,
+                                                                            OAuthException {
         logger.info("Logging in user with email [" + email + "]");
         UserSession newSession = super.initOAuthSession(email, password);
         logger.info("Login successful for email [" + email + "]");
@@ -62,7 +64,7 @@ public class SessionBasedAuthService extends AbstractAuthService {
     public void setAuthToken(AuthToken token) throws InvalidTokenException {
         try {
             if (this.authToken.checkToken(token))
-            this.authToken = token;
+                this.authToken = token;
         } catch (IllegalTokenChangeException e) {
             throw new InvalidTokenException(token);
         }

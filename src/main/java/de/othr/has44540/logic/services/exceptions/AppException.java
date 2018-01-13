@@ -14,6 +14,7 @@ public class AppException extends Exception implements Serializable {
     }
 
     public AppException(String title, String description) {
+        super(description);
         this.title = title;
         this.description = description;
     }

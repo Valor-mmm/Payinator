@@ -5,6 +5,8 @@ import de.othr.external.services.oauth.OAuthConfig;
 import de.othr.external.services.oauth.korbinianSchmidt.session.*;
 import de.othr.has44540.logic.services.auth.UserSession;
 import de.othr.has44540.logic.services.exceptions.InternalErrorException;
+import de.othr.has44540.logic.services.exceptions.OAuthCause;
+import de.othr.has44540.logic.services.exceptions.OAuthException;
 import de.othr.has44540.logic.services.exceptions.auth.AuthException;
 import de.othr.has44540.logic.services.exceptions.auth.InvalidLinkObjectException;
 import de.othr.has44540.logic.services.exceptions.auth.InvalidLoginDataException;
@@ -42,8 +44,9 @@ public abstract class AbstractAuthService implements AuthServiceIF {
 
 
     UserSession initOAuthSession(@NotNull String email, @NotNull String password) throws
-                                                                                         InvalidLoginDataException,
-                                                                                         InternalErrorException {
+                                                                                  InvalidLoginDataException,
+                                                                                  InternalErrorException,
+                                                                                  OAuthException {
         AbstractUser foundUser = commons.getUser(email);
 
         LoginDataDTO loginData = new LoginDataDTO();
@@ -61,14 +64,13 @@ public abstract class AbstractAuthService implements AuthServiceIF {
         return new UserSession(updateResult, session);
     }
 
-    UserSession initOAuthSession(@NotNull SessionLinkDTO sessionLink) throws InvalidLinkObjectException,
-                                                                             InternalServerErrorException {
+    UserSession initOAuthSession(@NotNull SessionLinkDTO sessionLink) throws
+                                                                      InvalidLinkObjectException,
+                                                                      InternalServerErrorException {
         return new UserSession(null, null);
     }
 
-    private SessionDTO sendLoginRequest(LoginDataDTO loginData) throws
-                                                                InternalErrorException,
-                                                                InvalidLoginDataException {
+    private SessionDTO sendLoginRequest(LoginDataDTO loginData) throws InvalidLoginDataException, OAuthException {
         SessionDTO oAuthSession = null;
         try {
             oAuthSession = sessionService.create(oAuthConfig.getOauthCustomerToken(), loginData);
@@ -77,12 +79,10 @@ public abstract class AbstractAuthService implements AuthServiceIF {
             switch (serviceException.getReason()) {
                 case NO_SUCH_SITE:
                     logger.log(Level.SEVERE, "Site token invalid", serviceException);
-                    throw new InternalErrorException("An internal error occurred.",
-                                                     "An internal error occurred during communication with oauth service.");
+                    throw new OAuthException(OAuthCause.SITE_TOKEN_INVALID);
                 case INTERNAL_FAILURE:
                     logger.log(Level.SEVERE, "OAuth Service responds with internal server error.", serviceException);
-                    throw new InternalErrorException("The Oauth Service is currently not available.",
-                                                     "Because of an error in the OAuthServicePlease try again later.");
+                    throw new OAuthException(OAuthCause.INTERNAL_ERROR);
                 case INVALID_LOGIN_DATA:
                     logger.log(Level.SEVERE, "Login data invalid.", serviceException);
                     throw new InvalidLoginDataException();
@@ -104,11 +104,8 @@ public abstract class AbstractAuthService implements AuthServiceIF {
     }
 
 
-
-    private void throwUnknownOauthException(Object exception) throws InternalErrorException {
-        logger.log(Level.SEVERE, "Login failed during unexpected oauth exception", exception);
-        throw new InternalErrorException("Unexpected Error.", "Unexpected error during oauth service communication.");
+    private void throwUnknownOauthException(Object exception) throws OAuthException {
+        logger.log(Level.SEVERE, "Login failed during unexpected error with oAuth communication", exception);
+        throw new OAuthException(OAuthCause.UNKNOWN_ERROR);
     }
-
-
 }

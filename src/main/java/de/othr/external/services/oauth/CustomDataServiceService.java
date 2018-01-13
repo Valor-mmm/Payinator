@@ -22,7 +22,7 @@ public class CustomDataServiceService extends DataServiceService implements Seri
         changeServiceHost = new ChangeServiceHost<>();
     }
 
-    public DataService getSessionService() {
+    public DataService getDataService() {
         DataService service = super.getDataServicePort();
         if (oAuthConfig.getOauthHost() == null || service == null) {
             logger.info("No host specified or service is null. Using standard service");

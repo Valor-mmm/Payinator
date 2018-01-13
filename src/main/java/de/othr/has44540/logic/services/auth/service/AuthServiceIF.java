@@ -3,6 +3,7 @@ package de.othr.has44540.logic.services.auth.service;
 import de.othr.external.services.oauth.korbinianSchmidt.session.SessionLinkDTO;
 import de.othr.has44540.logic.services.auth.token.AuthToken;
 import de.othr.has44540.logic.services.exceptions.InternalErrorException;
+import de.othr.has44540.logic.services.exceptions.OAuthException;
 import de.othr.has44540.logic.services.exceptions.auth.AuthException;
 import de.othr.has44540.logic.services.exceptions.auth.InvalidLinkObjectException;
 import de.othr.has44540.logic.services.exceptions.auth.InvalidLoginDataException;
@@ -19,7 +20,10 @@ public interface AuthServiceIF extends Serializable {
 
     AbstractUser getExecutiveUser();
 
-    AuthToken login(String email, String password) throws InvalidLoginDataException, InternalErrorException;
+    AuthToken login(String email, String password) throws
+                                                   InvalidLoginDataException,
+                                                   InternalErrorException,
+                                                   OAuthException;
 
     // TODO korbis link object
     AuthToken login(SessionLinkDTO sessionLink) throws InvalidLinkObjectException, InternalErrorException;
