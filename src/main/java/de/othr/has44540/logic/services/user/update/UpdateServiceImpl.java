@@ -4,9 +4,7 @@ import de.othr.external.services.oauth.CustomDataServiceService;
 import de.othr.external.services.oauth.korbinianSchmidt.data.*;
 import de.othr.has44540.logic.services.exceptions.OAuthCause;
 import de.othr.has44540.logic.services.exceptions.OAuthException;
-import de.othr.has44540.persistance.entities.user.AbstractUser;
-import de.othr.has44540.persistance.entities.user.personalData.Address;
-import de.othr.has44540.persistance.entities.user.personalData.City;
+import de.othr.has44540.logic.services.user.update.updater.PersInfoUpdater;
 import de.othr.has44540.persistance.entities.user.personalData.PersonalInformation;
 import de.othr.has44540.persistance.entities.user.roles.Company;
 import de.othr.has44540.persistance.entities.user.roles.SimpleUser;
@@ -20,7 +18,6 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @ApplicationScoped
@@ -51,7 +48,7 @@ public class UpdateServiceImpl implements UpdateServiceIF {
 
         PersonalInformation oldPersonalInformation = user != null ? user.getPersonalInformation() : null;
         PersonalInformation updatedInformation = persInfoUpdater
-                .updatePersInfo(personalDataDTO, oldPersonalInformation);
+                .update(personalDataDTO, oldPersonalInformation);
 
 
 
