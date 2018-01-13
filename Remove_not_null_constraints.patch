@@ -1,0 +1,247 @@
+Index: src/main/java/de/othr/has44540/persistance/entities/account/impl/CharityAccount.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/de/othr/has44540/persistance/entities/account/impl/CharityAccount.java	(revision 12911ead82dc26972e7a33f80829bde576b74f00)
++++ src/main/java/de/othr/has44540/persistance/entities/account/impl/CharityAccount.java	(date 1515836306000)
+@@ -8,8 +8,7 @@
+ 
+     // Attributes
+ 
+-    @Column(nullable = false)
+-    private String cause = "No Cause";
++    private String cause;
+ 
+     private String description;
+ 
+Index: src/main/java/de/othr/has44540/persistance/entities/account/impl/SimpleAccount.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/de/othr/has44540/persistance/entities/account/impl/SimpleAccount.java	(revision 12911ead82dc26972e7a33f80829bde576b74f00)
++++ src/main/java/de/othr/has44540/persistance/entities/account/impl/SimpleAccount.java	(date 1515836306000)
+@@ -15,7 +15,6 @@
+ 
+     private Boolean isDefault;
+ 
+-    @Column(nullable = false)
+     private BigDecimal balance;
+ 
+ 
+Index: src/main/java/de/othr/has44540/persistance/entities/account/AbstractAccount.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/de/othr/has44540/persistance/entities/account/AbstractAccount.java	(revision 12911ead82dc26972e7a33f80829bde576b74f00)
++++ src/main/java/de/othr/has44540/persistance/entities/account/AbstractAccount.java	(date 1515836306000)
+@@ -13,7 +13,7 @@
+ 
+     // Attributes
+ 
+-    @Column(unique = true, nullable = false)
++    @Column(unique = true)
+     private String alias;
+ 
+ 
+Index: src/main/java/de/othr/has44540/persistance/entities/account/DonationRank.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/de/othr/has44540/persistance/entities/account/DonationRank.java	(revision 12911ead82dc26972e7a33f80829bde576b74f00)
++++ src/main/java/de/othr/has44540/persistance/entities/account/DonationRank.java	(date 1515836306000)
+@@ -14,10 +14,9 @@
+ 
+     // Attributes
+ 
+-    @Column(nullable = false)
+     private String name;
+ 
+-    @Column(nullable = false, unique = true)
++    @Column(unique = true)
+     private Integer rank;
+ 
+ 
+Index: src/main/java/de/othr/has44540/persistance/entities/account/Payment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/de/othr/has44540/persistance/entities/account/Payment.java	(revision 12911ead82dc26972e7a33f80829bde576b74f00)
++++ src/main/java/de/othr/has44540/persistance/entities/account/Payment.java	(date 1515836306000)
+@@ -15,7 +15,6 @@
+ 
+     // Attributes
+ 
+-    @Column(nullable = false)
+     private BigDecimal amount;
+ 
+     private String cause = null;
+Index: src/main/java/de/othr/has44540/persistance/entities/user/paymentInformation/CreditCard.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/de/othr/has44540/persistance/entities/user/paymentInformation/CreditCard.java	(revision 12911ead82dc26972e7a33f80829bde576b74f00)
++++ src/main/java/de/othr/has44540/persistance/entities/user/paymentInformation/CreditCard.java	(date 1515836306000)
+@@ -8,13 +8,10 @@
+ 
+     // Attributes
+ 
+-    @Column(nullable = false)
+     private String cardProvider;
+ 
+-    @Column(nullable = false)
+     private Long securityNumber;
+ 
+-    @Column(nullable = false)
+     private Integer securityCode;
+ 
+ 
+Index: src/main/java/de/othr/has44540/persistance/entities/user/paymentInformation/WireTransfer.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/de/othr/has44540/persistance/entities/user/paymentInformation/WireTransfer.java	(revision 12911ead82dc26972e7a33f80829bde576b74f00)
++++ src/main/java/de/othr/has44540/persistance/entities/user/paymentInformation/WireTransfer.java	(date 1515836306000)
+@@ -8,13 +8,10 @@
+ 
+     // Attributes
+ 
+-    @Column(nullable = false)
+     private String accountName;
+ 
+-    @Column(nullable = false)
+     private String iban;
+ 
+-    @Column(nullable = false)
+     private String bic;
+ 
+ 
+Index: src/main/java/de/othr/has44540/persistance/entities/user/personalData/Address.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/de/othr/has44540/persistance/entities/user/personalData/Address.java	(revision 12911ead82dc26972e7a33f80829bde576b74f00)
++++ src/main/java/de/othr/has44540/persistance/entities/user/personalData/Address.java	(date 1515836306000)
+@@ -10,15 +10,12 @@
+ 
+     // Attributes
+ 
+-    @Column(nullable = false)
+     private String country;
+ 
+     private String region;
+ 
+-    @Column(nullable = false)
+     private String street;
+ 
+-    @Column(nullable = false)
+     private String streetNumber;
+ 
+ 
+Index: src/main/java/de/othr/has44540/persistance/entities/user/personalData/Email.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/de/othr/has44540/persistance/entities/user/personalData/Email.java	(revision 12911ead82dc26972e7a33f80829bde576b74f00)
++++ src/main/java/de/othr/has44540/persistance/entities/user/personalData/Email.java	(date 1515836306000)
+@@ -16,10 +16,8 @@
+ 
+     // Attributes
+ 
+-    @Column(nullable = false)
+     private String domain;
+ 
+-    @Column(nullable = false)
+     private String localPart;
+ 
+ 
+Index: src/main/java/de/othr/has44540/persistance/entities/user/personalData/PersonalInformation.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/de/othr/has44540/persistance/entities/user/personalData/PersonalInformation.java	(revision 12911ead82dc26972e7a33f80829bde576b74f00)
++++ src/main/java/de/othr/has44540/persistance/entities/user/personalData/PersonalInformation.java	(date 1515836306000)
+@@ -13,13 +13,10 @@
+ 
+     // Attributes
+ 
+-    @Column(nullable = false)
+     private String firstName;
+ 
+-    @Column(nullable = false)
+     private String lastName;
+ 
+-    @Column(nullable = false)
+     private LocalDate dateOfBirth;
+ 
+ 
+Index: src/main/java/de/othr/has44540/persistance/entities/user/roles/CharityOrganisation.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/de/othr/has44540/persistance/entities/user/roles/CharityOrganisation.java	(revision 12911ead82dc26972e7a33f80829bde576b74f00)
++++ src/main/java/de/othr/has44540/persistance/entities/user/roles/CharityOrganisation.java	(date 1515836306000)
+@@ -14,7 +14,7 @@
+ 
+     // Attributes
+ 
+-    @Column(unique = true, nullable = false)
++    @Column(unique = true)
+     private String name;
+ 
+     private String nationality;
+Index: src/main/java/de/othr/has44540/persistance/entities/user/roles/Company.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/de/othr/has44540/persistance/entities/user/roles/Company.java	(revision 12911ead82dc26972e7a33f80829bde576b74f00)
++++ src/main/java/de/othr/has44540/persistance/entities/user/roles/Company.java	(date 1515836306000)
+@@ -15,10 +15,9 @@
+ 
+     // Attributes
+ 
+-    @Column(unique = true, nullable = false)
++    @Column(unique = true)
+     private String name;
+ 
+-    @Column(nullable = false)
+     private BusinessSector sector;
+ 
+     @Column(unique = true)
+Index: src/main/java/de/othr/has44540/persistance/entities/user/AbstractUser.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/de/othr/has44540/persistance/entities/user/AbstractUser.java	(revision 12911ead82dc26972e7a33f80829bde576b74f00)
++++ src/main/java/de/othr/has44540/persistance/entities/user/AbstractUser.java	(date 1515836306000)
+@@ -18,16 +18,14 @@
+ 
+     // Attributes
+ 
+-    @Column(nullable = false, unique = true)
++    @Column(unique = true)
+     private String username;
+ 
+-    @Column(nullable = false, unique = true)
++    @Column(unique = true)
+     private Long oauthId;
+ 
+-    @Column(nullable = false)
+     private Long personalDataVersion;
+ 
+-    @Column(nullable = false)
+     private Long paymentDataVersion;
+ 
+ 
