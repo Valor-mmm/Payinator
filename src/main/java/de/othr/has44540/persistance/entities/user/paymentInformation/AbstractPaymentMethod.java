@@ -3,9 +3,12 @@ package de.othr.has44540.persistance.entities.user.paymentInformation;
 import de.othr.has44540.persistance.util.GeneratedIDEntity;
 
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
 @Entity
-public class AbstractPaymentMethod extends GeneratedIDEntity {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class AbstractPaymentMethod extends GeneratedIDEntity {
 
     // Attributes
 

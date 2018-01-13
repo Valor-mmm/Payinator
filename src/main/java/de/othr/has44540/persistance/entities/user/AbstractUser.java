@@ -7,14 +7,12 @@ import de.othr.has44540.persistance.entities.user.personalData.Email;
 import de.othr.has44540.persistance.entities.user.personalData.PersonalInformation;
 import de.othr.has44540.persistance.util.GeneratedIDEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-public abstract class AbstractUser extends GeneratedIDEntity{
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class AbstractUser extends GeneratedIDEntity {
 
     // Attributes
 
@@ -23,13 +21,6 @@ public abstract class AbstractUser extends GeneratedIDEntity{
 
     @Column(nullable = false, unique = true)
     private Long oauthId;
-
-    @Column(nullable = false)
-    private Long personalDataVersion;
-
-    @Column(nullable = false)
-    private Long paymentDataVersion;
-
 
     // References
 
@@ -79,23 +70,6 @@ public abstract class AbstractUser extends GeneratedIDEntity{
     public void setOauthId(Long oauthId) {
         this.oauthId = oauthId;
     }
-
-    public Long getPersonalDataVersion() {
-        return personalDataVersion;
-    }
-
-    public void setPersonalDataVersion(Long personalDataVersion) {
-        this.personalDataVersion = personalDataVersion;
-    }
-
-    public Long getPaymentDataVersion() {
-        return paymentDataVersion;
-    }
-
-    public void setPaymentDataVersion(Long paymentDataVersion) {
-        this.paymentDataVersion = paymentDataVersion;
-    }
-
 
     // References - getter/setter
 

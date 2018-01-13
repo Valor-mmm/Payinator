@@ -2,14 +2,13 @@ package de.othr.has44540.persistance.entities.account;
 
 import de.othr.has44540.persistance.util.GeneratedIDEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.Collections;
 import java.util.Set;
 
 @Entity
-public class AbstractAccount extends GeneratedIDEntity {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class AbstractAccount extends GeneratedIDEntity {
 
     // Attributes
 

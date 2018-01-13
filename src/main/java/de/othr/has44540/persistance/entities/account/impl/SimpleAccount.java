@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.Set;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class SimpleAccount extends AbstractAccount {
 
     // Attributes
