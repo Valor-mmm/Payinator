@@ -1,14 +1,16 @@
 package de.othr.has44540.logic.services.user.update;
 
-import de.othr.has44540.persistance.entities.user.AbstractUser;
+import de.othr.has44540.logic.services.exceptions.OAuthException;
+import de.othr.has44540.persistance.entities.user.roles.Company;
+import de.othr.has44540.persistance.entities.user.roles.SimpleUser;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 
 public interface UpdateServiceIF extends Serializable {
 
-    AbstractUser updateUser(@NotNull String sessionToken, AbstractUser user);
+    SimpleUser updateUser(@NotNull String sessionToken, SimpleUser user) throws OAuthException;
 
-    AbstractUser updateCompany(@NotNull Long externalSiteId);
+    Company updateCompany(@NotNull Long externalSiteId);
 
 }
