@@ -17,13 +17,15 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Stateless
 public class CompanySeeder {
+
+    private static final Logger logger = Logger.getLogger(CompanySeeder.class.getName());
 
     @PersistenceContext
     private EntityManager em;
@@ -48,24 +50,33 @@ public class CompanySeeder {
      * Check every hour if seeding is necessary
      * If it is: seed
      */
-    @Schedule(minute = "*", hour = "*", persistent = false)
+    @Schedule(hour = "*", persistent = false)
     @Transactional
     public void seedCompany() {
-        if (isSeedNecessary()) {
-            doSeeding();
+        try {
+            if (isSeedNecessary()) {
+                logger.info("Seeding company to database.");
+                doSeeding();
+                logger.info("Successfully seeded a company to the database.");
+            }
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error while seeding company to database", e);
         }
     }
 
     private boolean isSeedNecessary() {
+        logger.info("Check if seeding is necessary.");
+        boolean result = false;
         TypedQuery<Company> companyQuery = em
                 .createQuery("SELECT c FROM Company AS c WHERE c.name = :companyName", Company.class);
         companyQuery.setParameter("companyName", companyFactory.getName());
         try {
             companyQuery.getSingleResult();
         } catch (NoResultException e) {
-            return true;
+            result = true;
         }
-        return false;
+        logger.info("Database needs company seeding: " + result);
+        return result;
     }
 
     private void doSeeding() {

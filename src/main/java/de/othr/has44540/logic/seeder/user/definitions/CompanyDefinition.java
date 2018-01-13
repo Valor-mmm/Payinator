@@ -1,6 +1,7 @@
 package de.othr.has44540.logic.seeder.user.definitions;
 
 import de.othr.has44540.logic.seeder.SeedDefinition;
+import de.othr.has44540.persistance.entities.user.roles.BusinessSector;
 import de.othr.has44540.persistance.entities.user.roles.Company;
 
 public class CompanyDefinition implements SeedDefinition<Company> {
@@ -8,11 +9,13 @@ public class CompanyDefinition implements SeedDefinition<Company> {
     private String username;
     private Long oauthID;
     private String name;
+    private BusinessSector sector;
 
     public CompanyDefinition() {
         this.username = "k4hl";
         this.oauthID = (long) 987652345;
         this.name = "Korbi Webshop";
+        this.sector = BusinessSector.SALES;
     }
 
     @Override
@@ -21,6 +24,7 @@ public class CompanyDefinition implements SeedDefinition<Company> {
         company.setUsername(getUsername());
         company.setOauthId(getOauthID());
         company.setName(getName());
+        company.setSector(getSector());
         return company;
     }
 
@@ -46,5 +50,13 @@ public class CompanyDefinition implements SeedDefinition<Company> {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public BusinessSector getSector() {
+        return sector;
+    }
+
+    public void setSector(BusinessSector sector) {
+        this.sector = sector;
     }
 }
