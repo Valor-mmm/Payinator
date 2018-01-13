@@ -76,6 +76,10 @@ public abstract class AbstractAuthService implements AuthServiceIF {
             oAuthSession = sessionService.create(oAuthConfig.getOauthCustomerToken(), loginData);
         } catch (SessionServiceException_Exception e) {
             SessionServiceException serviceException = e.getFaultInfo();
+            if (serviceException == null) {
+                throw new OAuthException("Unknown OAuth Exception", "Fault info of exception was not accessible",
+                                         OAuthCause.UNKNOWN_ERROR);
+            }
             switch (serviceException.getReason()) {
                 case NO_SUCH_SITE:
                     logger.log(Level.SEVERE, "Site token invalid", serviceException);
