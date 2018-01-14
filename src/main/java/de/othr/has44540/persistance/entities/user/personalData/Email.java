@@ -16,6 +16,15 @@ public class Email extends GeneratedIDEntity {
 
     private static transient final String atSymbol = "@";
 
+    public Email() {
+
+    }
+
+    public Email(String localPart, String domain) {
+        this.localPart = localPart;
+        this.domain = domain;
+    }
+
     // Attributes
 
     @Column(nullable = false)
