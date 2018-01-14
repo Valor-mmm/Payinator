@@ -1,6 +1,7 @@
 package de.othr.has44540.logic.services.user.update.updater;
 
 import de.othr.external.services.oauth.korbinianSchmidt.data.PersonalDataDTO;
+import de.othr.has44540.logic.services.exceptions.InternalErrorException;
 import de.othr.has44540.logic.services.user.update.updater.factory.EntityUpdaterCase;
 import de.othr.has44540.logic.services.user.update.updater.factory.EntityUpdaterQalifier;
 import de.othr.has44540.persistance.entities.user.personalData.Address;
@@ -13,6 +14,8 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,7 +33,8 @@ public class PersInfoUpdater implements EntityUpdaterIF<PersonalDataDTO, Persona
     private EntityUpdaterIF<de.othr.external.services.oauth.korbinianSchmidt.data.Address, Address> addressUpdater;
 
 
-    public PersonalInformation update(@NotNull PersonalDataDTO newPersonalData, PersonalInformation persInfo) {
+    public PersonalInformation update(@NotNull PersonalDataDTO newPersonalData, PersonalInformation persInfo) throws
+                                                                                                              InternalErrorException {
         PersonalInformation personalInformation;
         Address oldAddress = persInfo == null ? null : persInfo.getAddress();
         Address address = addressUpdater.update(newPersonalData.getPrimaryAddress(), oldAddress);
@@ -50,14 +54,20 @@ public class PersInfoUpdater implements EntityUpdaterIF<PersonalDataDTO, Persona
      * Does not merge address into personal information
      */
     public PersonalInformation merge(PersonalDataDTO newPersonalData,
-                                                    @NotNull PersonalInformation personalInformation) {
+                                     @NotNull PersonalInformation personalInformation) {
 
         if (newPersonalData == null) {
             return personalInformation;
         }
         personalInformation.setLastName(newPersonalData.getLastName());
         personalInformation.setFirstName(newPersonalData.getFirstName());
-        System.out.println("Day of birth: [" + newPersonalData.getDayOfBirth() + "]");
+        LocalDate dateOfBirth = LocalDate.now();
+        try {
+            dateOfBirth = LocalDate.parse(newPersonalData.getDayOfBirth());
+        } catch (DateTimeParseException ex) {
+            logger.log(Level.WARNING, "Can not parse [" + newPersonalData.getDayOfBirth() + "] to local date.", ex);
+        }
+        personalInformation.setDateOfBirth(dateOfBirth);
 
         return personalInformation;
     }
