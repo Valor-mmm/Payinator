@@ -23,12 +23,15 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @ApplicationScoped
@@ -79,13 +82,16 @@ public class UpdateServiceImpl implements UpdateServiceIF {
             user = simpleUserSupplier.get();
             user.setPersonalInformation(updatedInformation);
             user.setPaymentMethods(updatedPaymentMethods);
+            user.setUsername(updatedInformation.getFirstName());
         } else {
             user.setPersonalInformation(updatedInformation);
             user.setPaymentMethods(updatedPaymentMethods);
             user = em.merge(user);
         }
         em.persist(user);
-
+        Email foundEmail = findEmail(email.getLocalPart(), email.getDomain());
+        foundEmail.setUser(user);
+        em.persist(foundEmail);
         return user;
     }
 
@@ -142,5 +148,17 @@ public class UpdateServiceImpl implements UpdateServiceIF {
     @Override
     public Company updateCompany(@NotNull Long externalSiteId) {
         return null;
+    }
+
+    private Email findEmail(String localPart, String domain) throws InternalErrorException {
+        TypedQuery<Email> emailQ = em.createNamedQuery("emailByLocalPartAndDomain", Email.class);
+        emailQ.setParameter("localPart", localPart);
+        emailQ.setParameter("domain", domain);
+        try {
+            return emailQ.getSingleResult();
+        } catch (NoResultException ex) {
+            logger.log(Level.SEVERE, "Could not find email of already persisted user.", ex);
+            throw new InternalErrorException();
+        }
     }
 }

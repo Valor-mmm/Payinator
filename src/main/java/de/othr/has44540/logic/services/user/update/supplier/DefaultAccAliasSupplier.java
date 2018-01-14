@@ -33,14 +33,11 @@ public class DefaultAccAliasSupplier implements Supplier<String>, Serializable {
         if (em != null) {
             emExists = true;
         }
-        logger.log(Level.INFO, "Enitity manager: " + emExists);
         TypedQuery<String> allDefaultAccounts = em.createQuery(
                 "SELECT aa.alias FROM AbstractAccount AS aa WHERE aa.alias LIKE CONCAT(:defaultName, '%') ORDER BY aa.alias DESC",
                 String.class);
         allDefaultAccounts.setParameter("defaultName", name);
-        logger.info("before Q execution");
         List<String> defaultNames = allDefaultAccounts.getResultList();
-        logger.info("after q execution");
         for (String alias : defaultNames) {
             logger.info(alias);
             try {

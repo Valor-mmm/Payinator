@@ -65,16 +65,17 @@ public class SimpleUserSupplier implements Supplier<SimpleUser>, Serializable {
         TypedQuery<Email> emailQ = em.createNamedQuery("emailByLocalPartAndDomain", Email.class);
         emailQ.setParameter("localPart", email.getLocalPart());
         emailQ.setParameter("domain", email.getDomain());
-        Email result;
+        Email result = null;
         try {
             result = emailQ.getSingleResult();
             return result;
         } catch (NoResultException ex) {
             logger.log(Level.CONFIG, "No email with this local part and domain exists yet.", ex);
         }
-
-        em.persist(email);
-        result = email;
+        if (result == null) {
+            em.persist(email);
+            result = email;
+        }
         return result;
     }
 

@@ -5,6 +5,8 @@ import de.othr.has44540.persistance.entities.account.impl.SimpleAccount;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.TreeSet;
@@ -13,6 +15,9 @@ import java.util.function.Supplier;
 @RequestScoped
 @EntitySupplierQualifier(EntitySupplierCase.SIMPLE_ACCOUNT)
 public class SimpleAccountSupplier implements Supplier<SimpleAccount>, Serializable {
+
+    @PersistenceContext
+    private EntityManager em;
 
     @Inject
     @EntitySupplierQualifier(EntitySupplierCase.DEFAULT_ACC_ALIAS)
@@ -33,6 +38,8 @@ public class SimpleAccountSupplier implements Supplier<SimpleAccount>, Serializa
         simpleAccount.setAlias(defaultAccAliasSupplier.get());
         simpleAccount.setPaymentsIn(new TreeSet<>());
         simpleAccount.setPaymentsOut(new TreeSet<>());
+
+        em.persist(simpleAccount);
         return simpleAccount;
     }
 
