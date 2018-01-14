@@ -2,15 +2,19 @@ package de.othr.has44540.logic.services.user.update;
 
 import de.othr.external.services.oauth.CustomDataServiceService;
 import de.othr.external.services.oauth.korbinianSchmidt.data.*;
+import de.othr.external.services.oauth.korbinianSchmidt.session.SessionDTO;
 import de.othr.has44540.logic.services.exceptions.InternalErrorException;
 import de.othr.has44540.logic.services.exceptions.OAuthCause;
 import de.othr.has44540.logic.services.exceptions.OAuthException;
+import de.othr.has44540.logic.services.user.update.supplier.SimpleUserSupplier;
 import de.othr.has44540.logic.services.user.update.updater.EntityUpdaterIF;
 import de.othr.has44540.logic.services.user.update.updater.PersInfoUpdater;
 import de.othr.has44540.logic.services.user.update.updater.factory.EntityUpdaterCase;
 import de.othr.has44540.logic.services.user.update.updater.factory.EntityUpdaterQalifier;
 import de.othr.has44540.persistance.entities.account.Payment;
+import de.othr.has44540.persistance.entities.account.impl.SimpleAccount;
 import de.othr.has44540.persistance.entities.user.paymentInformation.AbstractPaymentMethod;
+import de.othr.has44540.persistance.entities.user.personalData.Email;
 import de.othr.has44540.persistance.entities.user.personalData.PersonalInformation;
 import de.othr.has44540.persistance.entities.user.roles.Company;
 import de.othr.has44540.persistance.entities.user.roles.SimpleUser;
@@ -25,6 +29,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 @ApplicationScoped
@@ -33,14 +38,17 @@ public class UpdateServiceImpl implements UpdateServiceIF {
     private static final Logger logger = Logger.getLogger(UpdateServiceImpl.class.getName());
 
     private DataService dataService;
+    private Supplier<SimpleUser> simpleUserSupplier;
 
     @PersistenceContext
     private EntityManager em;
 
-    @Inject @EntityUpdaterQalifier(EntityUpdaterCase.PERSONAL_INFO)
+    @Inject
+    @EntityUpdaterQalifier(EntityUpdaterCase.PERSONAL_INFO)
     private EntityUpdaterIF<PersonalDataDTO, PersonalInformation> persInfoUpdater;
 
-    @Inject @EntityUpdaterQalifier(EntityUpdaterCase.PAYMENT_INFORMATION)
+    @Inject
+    @EntityUpdaterQalifier(EntityUpdaterCase.PAYMENT_INFORMATION)
     private EntityUpdaterIF<List<PaymentMethod>, Set<AbstractPaymentMethod>> paymentMethodUpdater;
 
     @PostConstruct
@@ -51,21 +59,27 @@ public class UpdateServiceImpl implements UpdateServiceIF {
 
     @Override
     @Transactional
-    public SimpleUser updateUser(@NotNull String sessionToken, SimpleUser user) throws
-                                                                                OAuthException,
-                                                                                InternalErrorException {
+    public SimpleUser updateUser(@NotNull SessionDTO oAuthSession, SimpleUser user, Email email) throws
+                                                                                                 OAuthException,
+                                                                                                 InternalErrorException {
 
-        PersonalDataDTO personalDataDTO = getPersonalData(sessionToken);
-        List<PaymentMethod> paymentMethods = getPaymentMethods(sessionToken);
+        PersonalDataDTO personalDataDTO = getPersonalData(oAuthSession.getSessionToken());
+        List<PaymentMethod> paymentMethods = getPaymentMethods(oAuthSession.getSessionToken());
 
         PersonalInformation oldPersonalInformation = user != null ? user.getPersonalInformation() : null;
-        PersonalInformation updatedInformation = persInfoUpdater
-                .update(personalDataDTO, oldPersonalInformation);
+        PersonalInformation updatedInformation = persInfoUpdater.update(personalDataDTO, oldPersonalInformation);
 
         Set<AbstractPaymentMethod> currentSet = user != null ? user.getPaymentMethods() : null;
         Set<AbstractPaymentMethod> updatedPaymentMethods = paymentMethodUpdater.update(paymentMethods, currentSet);
 
+        if (user == null) {
+            simpleUserSupplier = new SimpleUserSupplier(oAuthSession.getUserId(), email);
+            user = simpleUserSupplier.get();
+        }
 
+        user.setPersonalInformation(updatedInformation);
+        user.setPaymentMethods(updatedPaymentMethods);
+        
         return null;
     }
 

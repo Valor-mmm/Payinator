@@ -41,9 +41,7 @@ public class AuthServiceCommons implements Serializable {
         String localPart = emailParts[0];
         String domain = emailParts[1];
 
-        TypedQuery<Email> emailQuery = em
-                .createQuery("SELECT e FROM Email AS e WHERE e.localPart = :localPart AND e.domain = :domain",
-                             Email.class);
+        TypedQuery<Email> emailQuery = em.createNamedQuery("emailByLocalPartAndDomain", Email.class);
         emailQuery.setParameter("localPart", localPart);
         emailQuery.setParameter("domain", domain);
         Email result = null;
