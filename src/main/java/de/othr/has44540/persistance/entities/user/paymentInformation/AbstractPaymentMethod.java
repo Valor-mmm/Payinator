@@ -12,6 +12,8 @@ public abstract class AbstractPaymentMethod extends GeneratedIDEntity {
 
     // Attributes
 
+    private Long oauthID;
+
     private Boolean isDefault;
 
     private String name;
@@ -33,5 +35,13 @@ public abstract class AbstractPaymentMethod extends GeneratedIDEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Long getOauthID() {
+        return oauthID;
+    }
+
+    public void setOauthID(Long oauthID) {
+        this.oauthID = oauthID;
     }
 }

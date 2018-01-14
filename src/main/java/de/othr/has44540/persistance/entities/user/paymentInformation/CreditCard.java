@@ -15,7 +15,7 @@ public class CreditCard extends AbstractPaymentMethod{
     private Long securityNumber;
 
     @Column(nullable = false)
-    private Integer securityCode;
+    private String securityCode;
 
 
     // Attributes -getter/setter
@@ -36,11 +36,11 @@ public class CreditCard extends AbstractPaymentMethod{
         this.securityNumber = securityNumber;
     }
 
-    public Integer getSecurityCode() {
+    public String getSecurityCode() {
         return securityCode;
     }
 
-    public void setSecurityCode(Integer securityCode) {
+    public void setSecurityCode(String securityCode) {
         this.securityCode = securityCode;
     }
 }
