@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import java.util.Collections;
 import java.util.Set;
+import java.util.TreeSet;
 
 @Entity
 public class DonationRank extends GeneratedIDEntity{
@@ -26,6 +27,14 @@ public class DonationRank extends GeneratedIDEntity{
     @ManyToMany(mappedBy = "donationRanks")
     private Set<DonorAccount> donorAccounts;
 
+    // Methods
+
+    public void addDonorAccount(DonorAccount account) {
+        if (this.donorAccounts == null) {
+            this.donorAccounts = new TreeSet<>();
+        }
+        this.donorAccounts.add(account);
+    }
 
     // Attributes -getter/setter
 

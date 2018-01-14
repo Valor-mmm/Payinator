@@ -7,9 +7,11 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 
 @Entity
+@NamedQuery(name = "emailByLocalPartAndDomain", query = "SELECT e FROM Email AS e WHERE e.localPart = :localPart AND e.domain = :domain")
 public class Email extends GeneratedIDEntity {
 
     private static transient final String atSymbol = "@";

@@ -6,6 +6,7 @@ import de.othr.has44540.persistance.entities.account.DonationRank;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import java.util.Collection;
+import java.util.Set;
 
 @Entity
 public class DonorAccount extends AbstractAccount{
@@ -13,7 +14,7 @@ public class DonorAccount extends AbstractAccount{
     // References
 
     @ManyToMany
-    private Collection<DonationRank> donationRanks;
+    private Set<DonationRank> donationRanks;
 
 
     // References - getter/setter
@@ -22,7 +23,7 @@ public class DonorAccount extends AbstractAccount{
         return donationRanks;
     }
 
-    public void setDonationRanks(Collection<DonationRank> donationRanks) {
+    public void setDonationRanks(Set<DonationRank> donationRanks) {
         this.donationRanks = donationRanks;
     }
 }
