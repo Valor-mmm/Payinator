@@ -12,6 +12,7 @@ import de.othr.has44540.logic.services.exceptions.auth.InvalidLinkObjectExceptio
 import de.othr.has44540.logic.services.exceptions.auth.InvalidLoginDataException;
 import de.othr.has44540.logic.services.user.update.UpdateServiceIF;
 import de.othr.has44540.persistance.entities.user.AbstractUser;
+import de.othr.has44540.persistance.entities.user.roles.SimpleUser;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.PostConstruct;
@@ -46,7 +47,8 @@ public abstract class AbstractAuthService implements AuthServiceIF {
     UserSession initOAuthSession(@NotNull String email, @NotNull String password) throws
                                                                                   InvalidLoginDataException,
                                                                                   InternalErrorException,
-                                                                                  OAuthException {
+                                                                                  OAuthException,
+                                                                                  AuthException {
         AbstractUser foundUser = commons.getUser(email);
 
         LoginDataDTO loginData = new LoginDataDTO();
@@ -54,8 +56,8 @@ public abstract class AbstractAuthService implements AuthServiceIF {
         loginData.setPassword(password);
 
         SessionDTO session = sendLoginRequest(loginData);
-
-        AbstractUser updateResult = updateService.updateUser(session.getSessionToken(), foundUser);
+        checkForSimpleUser(foundUser);
+        AbstractUser updateResult = updateService.updateUser(session.getSessionToken(), (SimpleUser) foundUser);
         if (updateResult == null) {
             throw new InternalErrorException("Could not update user.",
                                              "The user could neither be updated nor be created");
@@ -111,5 +113,16 @@ public abstract class AbstractAuthService implements AuthServiceIF {
     private void throwUnknownOauthException(Object exception) throws OAuthException {
         logger.log(Level.SEVERE, "Login failed during unexpected error with oAuth communication", exception);
         throw new OAuthException(OAuthCause.UNKNOWN_ERROR);
+    }
+
+    private static boolean checkForSimpleUser(AbstractUser user) throws AuthException {
+        if (user == null) {
+            return true;
+        }
+        if (user instanceof SimpleUser) {
+            return true;
+        }
+        throw new AuthException("User can not be logged in.",
+                                "Currently only Simple Users can log in. You tried to log in with a charity " + "Organisation or a Company account.");
     }
 }

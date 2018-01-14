@@ -23,7 +23,7 @@ public interface AuthServiceIF extends Serializable {
     AuthToken login(String email, String password) throws
                                                    InvalidLoginDataException,
                                                    InternalErrorException,
-                                                   OAuthException;
+                                                   OAuthException, AuthException;
 
     // TODO korbis link object
     AuthToken login(SessionLinkDTO sessionLink) throws InvalidLinkObjectException, InternalErrorException;

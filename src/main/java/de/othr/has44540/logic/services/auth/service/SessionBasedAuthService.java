@@ -45,7 +45,8 @@ public class SessionBasedAuthService extends AbstractAuthService {
     public AuthToken login(@NotNull String email, @NotNull String password) throws
                                                                             InvalidLoginDataException,
                                                                             InternalErrorException,
-                                                                            OAuthException {
+                                                                            OAuthException,
+                                                                            AuthException {
         logger.info("Logging in user with email [" + email + "]");
         UserSession newSession = super.initOAuthSession(email, password);
         logger.info("Login successful for email [" + email + "]");

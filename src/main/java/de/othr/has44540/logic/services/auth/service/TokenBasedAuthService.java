@@ -7,6 +7,7 @@ import de.othr.has44540.logic.services.auth.token.AuthTokenManager;
 import de.othr.has44540.logic.services.auth.token.IllegalTokenChangeException;
 import de.othr.has44540.logic.services.exceptions.InternalErrorException;
 import de.othr.has44540.logic.services.exceptions.OAuthException;
+import de.othr.has44540.logic.services.exceptions.auth.AuthException;
 import de.othr.has44540.logic.services.exceptions.auth.InvalidLinkObjectException;
 import de.othr.has44540.logic.services.exceptions.auth.InvalidLoginDataException;
 import de.othr.has44540.logic.services.exceptions.auth.InvalidTokenException;
@@ -60,7 +61,8 @@ public class TokenBasedAuthService extends AbstractAuthService {
     public AuthToken login(@NotNull String email, @NotNull String password) throws
                                                                             InvalidLoginDataException,
                                                                             InternalErrorException,
-                                                                            OAuthException {
+                                                                            OAuthException,
+                                                                            AuthException {
         UserSession session = super.initOAuthSession(email, password);
         AuthToken token = new AuthToken();
         tokenManager.addToken(token, session);
