@@ -3,25 +3,25 @@ package de.othr.has44540.logic.services.user.update.supplier;
 import de.othr.has44540.persistance.entities.account.impl.DonorAccount;
 import de.othr.has44540.persistance.entities.account.impl.SimpleAccount;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.TreeSet;
 import java.util.function.Supplier;
 
-public class SimpleAccountSupplier implements Supplier<SimpleAccount> {
+@RequestScoped
+@EntitySupplierQualifier(EntitySupplierCase.SIMPLE_ACCOUNT)
+public class SimpleAccountSupplier implements Supplier<SimpleAccount>, Serializable {
 
     @Inject
-    @DefaultAccAliasQualifier
+    @EntitySupplierQualifier(EntitySupplierCase.DEFAULT_ACC_ALIAS)
     private Supplier<String> defaultAccAliasSupplier;
 
-    private DonorAccount donorAccount = null;
+    private DonorAccount donorAccount;
 
     public SimpleAccountSupplier() {
-
-    }
-
-    public SimpleAccountSupplier(DonorAccount donorAccount) {
-        this.donorAccount = donorAccount;
+        donorAccount = null;
     }
 
     @Override
@@ -34,5 +34,13 @@ public class SimpleAccountSupplier implements Supplier<SimpleAccount> {
         simpleAccount.setPaymentsIn(new TreeSet<>());
         simpleAccount.setPaymentsOut(new TreeSet<>());
         return simpleAccount;
+    }
+
+    public void setDonorAccount(DonorAccount donorAccount) {
+        this.donorAccount = donorAccount;
+    }
+
+    public DonorAccount getDonorAccount() {
+        return donorAccount;
     }
 }

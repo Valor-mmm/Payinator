@@ -8,6 +8,7 @@ import java.lang.annotation.Target;
 
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.FIELD})
-public @interface DefaultAccAliasQualifier {
+@Target({ElementType.TYPE, ElementType.FIELD, ElementType.PARAMETER})
+public @interface EntitySupplierQualifier {
+    EntitySupplierCase value();
 }

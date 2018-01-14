@@ -9,13 +9,15 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
+import java.io.Serializable;
 import java.util.TreeSet;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @ApplicationScoped
-public class DonationRankSupplier implements Supplier<DonationRank> {
+@EntitySupplierQualifier(EntitySupplierCase.DONATION_RANK)
+public class DonationRankSupplier implements Supplier<DonationRank> , Serializable{
 
     private static final Logger logger = Logger.getLogger(DonationRankSupplier.class.getName());
 
@@ -27,6 +29,7 @@ public class DonationRankSupplier implements Supplier<DonationRank> {
     @PostConstruct
     @Transactional
     private void initDonationRankSupplier() {
+        logger.info("Starting Donation Rank supplier.");
         TypedQuery<DonationRank> initialDonationRank = em
                 .createQuery("SELECT dr FROM DonationRank AS dr WHERE dr.rank = 0", DonationRank.class);
         try {
@@ -34,6 +37,7 @@ public class DonationRankSupplier implements Supplier<DonationRank> {
         } catch (NoResultException ex) {
             logger.log(Level.CONFIG, "No initial donation rank found.", ex);
         }
+        logger.info("Finished initializing donation rank supplier.");
     }
 
     @Override

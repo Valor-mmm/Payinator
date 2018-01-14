@@ -12,6 +12,7 @@ import de.othr.has44540.logic.services.exceptions.auth.InvalidLinkObjectExceptio
 import de.othr.has44540.logic.services.exceptions.auth.InvalidLoginDataException;
 import de.othr.has44540.logic.services.user.update.UpdateServiceIF;
 import de.othr.has44540.persistance.entities.user.AbstractUser;
+import de.othr.has44540.persistance.entities.user.personalData.Email;
 import de.othr.has44540.persistance.entities.user.roles.SimpleUser;
 import org.jetbrains.annotations.NotNull;
 
@@ -49,7 +50,9 @@ public abstract class AbstractAuthService implements AuthServiceIF {
                                                                                   InternalErrorException,
                                                                                   OAuthException,
                                                                                   AuthException {
+        String[] emailParts = AuthServiceCommons.checkEmail(email);
         AbstractUser foundUser = commons.getUser(email);
+        Email emailEntity = new Email(emailParts[0], emailParts[1]);
 
         LoginDataDTO loginData = new LoginDataDTO();
         loginData.setEmail(email);
@@ -57,7 +60,7 @@ public abstract class AbstractAuthService implements AuthServiceIF {
 
         SessionDTO session = sendLoginRequest(loginData);
         checkForSimpleUser(foundUser);
-        AbstractUser updateResult = updateService.updateUser(session.getSessionToken(), (SimpleUser) foundUser);
+        AbstractUser updateResult = updateService.updateUser(session, (SimpleUser) foundUser, emailEntity);
         if (updateResult == null) {
             throw new InternalErrorException("Could not update user.",
                                              "The user could neither be updated nor be created");

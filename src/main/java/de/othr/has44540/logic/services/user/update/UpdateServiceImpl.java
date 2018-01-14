@@ -6,13 +6,12 @@ import de.othr.external.services.oauth.korbinianSchmidt.session.SessionDTO;
 import de.othr.has44540.logic.services.exceptions.InternalErrorException;
 import de.othr.has44540.logic.services.exceptions.OAuthCause;
 import de.othr.has44540.logic.services.exceptions.OAuthException;
+import de.othr.has44540.logic.services.user.update.supplier.EntitySupplierCase;
+import de.othr.has44540.logic.services.user.update.supplier.EntitySupplierQualifier;
 import de.othr.has44540.logic.services.user.update.supplier.SimpleUserSupplier;
 import de.othr.has44540.logic.services.user.update.updater.EntityUpdaterIF;
-import de.othr.has44540.logic.services.user.update.updater.PersInfoUpdater;
 import de.othr.has44540.logic.services.user.update.updater.factory.EntityUpdaterCase;
 import de.othr.has44540.logic.services.user.update.updater.factory.EntityUpdaterQalifier;
-import de.othr.has44540.persistance.entities.account.Payment;
-import de.othr.has44540.persistance.entities.account.impl.SimpleAccount;
 import de.othr.has44540.persistance.entities.user.paymentInformation.AbstractPaymentMethod;
 import de.othr.has44540.persistance.entities.user.personalData.Email;
 import de.othr.has44540.persistance.entities.user.personalData.PersonalInformation;
@@ -38,6 +37,9 @@ public class UpdateServiceImpl implements UpdateServiceIF {
     private static final Logger logger = Logger.getLogger(UpdateServiceImpl.class.getName());
 
     private DataService dataService;
+
+    @Inject
+    @EntitySupplierQualifier(EntitySupplierCase.SIMPLE_USER)
     private Supplier<SimpleUser> simpleUserSupplier;
 
     @PersistenceContext
@@ -73,14 +75,18 @@ public class UpdateServiceImpl implements UpdateServiceIF {
         Set<AbstractPaymentMethod> updatedPaymentMethods = paymentMethodUpdater.update(paymentMethods, currentSet);
 
         if (user == null) {
-            simpleUserSupplier = new SimpleUserSupplier(oAuthSession.getUserId(), email);
+            initSimpleUserSupplier(oAuthSession.getUserId(), email);
             user = simpleUserSupplier.get();
+            user.setPersonalInformation(updatedInformation);
+            user.setPaymentMethods(updatedPaymentMethods);
+        } else {
+            user.setPersonalInformation(updatedInformation);
+            user.setPaymentMethods(updatedPaymentMethods);
+            user = em.merge(user);
         }
+        em.persist(user);
 
-        user.setPersonalInformation(updatedInformation);
-        user.setPaymentMethods(updatedPaymentMethods);
-        
-        return null;
+        return user;
     }
 
     private @NotNull PersonalDataDTO getPersonalData(String sessionToken) throws OAuthException {
@@ -122,6 +128,15 @@ public class UpdateServiceImpl implements UpdateServiceIF {
         }
 
         return paymentMethods;
+    }
+
+    private void initSimpleUserSupplier(Long oAuthID, Email email) {
+        if (simpleUserSupplier instanceof SimpleUserSupplier) {
+            SimpleUserSupplier implementation = (SimpleUserSupplier) simpleUserSupplier;
+            implementation.setoAuthId(oAuthID);
+            implementation.setEmail(email);
+            simpleUserSupplier = implementation;
+        }
     }
 
     @Override
