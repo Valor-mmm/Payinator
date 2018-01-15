@@ -6,6 +6,8 @@ import de.othr.has44540.logic.services.exceptions.auth.AuthException;
 import de.othr.has44540.persistance.entities.account.AbstractAccount;
 
 import javax.enterprise.context.SessionScoped;
+import javax.jws.WebMethod;
+import javax.jws.WebService;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -13,6 +15,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @SessionScoped
+@WebService
 public class AccountServiceImpl implements AccountServiceIF {
 
     @PersistenceContext
@@ -25,6 +28,7 @@ public class AccountServiceImpl implements AccountServiceIF {
     @Override
     @CheckLogin
     @Transactional
+    @WebMethod
     public List<AbstractAccount> getAccounts(AuthToken authToken) throws AuthException {
         TypedQuery<AbstractAccount> findAllQ = em
                 .createQuery("SELECT a FROM AbstractAccount AS a", AbstractAccount.class);
@@ -34,6 +38,7 @@ public class AccountServiceImpl implements AccountServiceIF {
     @Override
     @CheckLogin
     @Transactional
+    @WebMethod
     public AbstractAccount searchAccount(AuthToken authToken, String alias) throws AuthException {
         TypedQuery<AbstractAccount> searchQ = em
                 .createQuery("SELECT a FROM AbstractAccount AS a WHERE a.alias = :alias", AbstractAccount.class);
