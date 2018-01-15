@@ -25,8 +25,9 @@ public interface AuthServiceIF extends Serializable {
                                                    InternalErrorException,
                                                    OAuthException, AuthException;
 
-    // TODO korbis link object
-    AuthToken login(SessionLinkDTO sessionLink) throws InvalidLinkObjectException, InternalErrorException;
+    AuthToken link(SessionLinkDTO sessionLink) throws InvalidLinkObjectException, InternalErrorException;
+
+    AuthToken logout(AuthToken authToken) throws InvalidTokenException;
 
     void setAuthToken(AuthToken token) throws InvalidTokenException;
 

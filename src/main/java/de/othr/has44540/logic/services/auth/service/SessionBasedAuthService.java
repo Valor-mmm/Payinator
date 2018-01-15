@@ -54,11 +54,26 @@ public class SessionBasedAuthService extends AbstractAuthService {
     }
 
     @Override
-    public AuthToken login(SessionLinkDTO sessionLink) throws InvalidLinkObjectException {
+    public AuthToken link(SessionLinkDTO sessionLink) throws InvalidLinkObjectException {
         logger.info("Receiving session link from [" + sessionLink.getFromSiteId() + "]");
         UserSession newSession = super.initOAuthSession(sessionLink);
         logger.info("Linked session successfully for site [" + sessionLink.getFromSiteId() + "]");
         return saveUserSession(newSession);
+    }
+
+    @Override
+    public AuthToken logout(AuthToken authToken) throws InvalidTokenException {
+        if (! this.authToken.equals(authToken)) {
+            throw new InvalidTokenException(authToken);
+        }
+        try {
+            this.authToken.checkToken(authToken);
+        } catch (IllegalTokenChangeException e) {
+            throw new InvalidTokenException(authToken);
+        }
+        this.session = null;
+        this.authToken = null;
+        return authToken;
     }
 
     @Override

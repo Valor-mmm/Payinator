@@ -7,6 +7,7 @@ import javax.ejb.Stateless;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -20,7 +21,7 @@ public class AuthTokenManager implements Serializable {
     private Map<AuthToken, UserSession> tokenUserMap;
 
     public AuthTokenManager() {
-        tokenUserMap = new TreeMap<>();
+        tokenUserMap = new HashMap<>();
     }
 
     public boolean checkToken(AuthToken token) throws IllegalTokenChangeException {
@@ -63,10 +64,8 @@ public class AuthTokenManager implements Serializable {
         logger.info("Finished removing expired tokens.");
     }
 
-    protected UserSession getUserForToken(AuthToken token) throws IllegalTokenChangeException {
-        if (!checkToken(token)) {
-            return null;
-        }
-        return tokenUserMap.get(token);
+    public void removeToken(AuthToken token) throws IllegalTokenChangeException {
+        this.checkToken(token);
+        this.tokenUserMap.remove(token);
     }
 }

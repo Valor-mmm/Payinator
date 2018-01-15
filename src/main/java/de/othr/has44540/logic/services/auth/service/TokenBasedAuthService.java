@@ -17,9 +17,12 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.jws.WebMethod;
+import javax.jws.WebService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@WebService
 @SessionScoped
 public class TokenBasedAuthService extends AbstractAuthService {
 
@@ -31,6 +34,7 @@ public class TokenBasedAuthService extends AbstractAuthService {
     private AuthToken authToken;
 
     @Override
+    @WebMethod(exclude = true)
     public AbstractUser getLoggedInUser() {
         UserSession session = getSession();
         if (session == null) {
@@ -40,6 +44,7 @@ public class TokenBasedAuthService extends AbstractAuthService {
     }
 
     @Override
+    @WebMethod(exclude = true)
     public AbstractUser getOnBehalfOf() {
         UserSession session = getSession();
         if (session == null) {
@@ -49,6 +54,7 @@ public class TokenBasedAuthService extends AbstractAuthService {
     }
 
     @Override
+    @WebMethod(exclude = true)
     public AbstractUser getExecutiveUser() {
         UserSession session = getSession();
         if (session == null) {
@@ -63,14 +69,16 @@ public class TokenBasedAuthService extends AbstractAuthService {
                                                                             InternalErrorException,
                                                                             OAuthException,
                                                                             AuthException {
+        logger.info("Logging in: [" + email + "]");
         UserSession session = super.initOAuthSession(email, password);
         AuthToken token = new AuthToken();
         tokenManager.addToken(token, session);
+        logger.info("Successfully logged in: [" + email + "] with token id: [" + token.getId() + "]");
         return token;
     }
 
     @Override
-    public AuthToken login(SessionLinkDTO sessionLink) throws InvalidLinkObjectException {
+    public AuthToken link(SessionLinkDTO sessionLink) throws InvalidLinkObjectException {
         logger.info("Receiving session link from [" + sessionLink.getFromSiteId() + "]");
         UserSession newSession = super.initOAuthSession(sessionLink);
         AuthToken token = new AuthToken();
@@ -80,6 +88,21 @@ public class TokenBasedAuthService extends AbstractAuthService {
     }
 
     @Override
+    public AuthToken logout(AuthToken authToken) throws InvalidTokenException {
+        if (!this.authToken.equals(authToken)) {
+            throw new InvalidTokenException(authToken);
+        }
+        try {
+            this.tokenManager.removeToken(authToken);
+        } catch (IllegalTokenChangeException e) {
+            throw new InvalidTokenException(authToken);
+        }
+        this.authToken = null;
+        return authToken;
+    }
+
+    @Override
+    @WebMethod(exclude = true)
     public void setAuthToken(AuthToken token) throws InvalidTokenException {
         boolean validToken = false;
         try {
@@ -94,15 +117,18 @@ public class TokenBasedAuthService extends AbstractAuthService {
         this.authToken = token;
     }
 
+    @WebMethod(exclude = true)
     public AuthTokenManager getTokenManager() {
         return tokenManager;
     }
 
+    @WebMethod(exclude = true)
     public void setTokenManager(AuthTokenManager tokenManager) {
         this.tokenManager = tokenManager;
     }
 
     @Nullable
+    @WebMethod(exclude = true)
     private UserSession getSession() {
         try {
             return tokenManager.getSessionForToken(authToken);

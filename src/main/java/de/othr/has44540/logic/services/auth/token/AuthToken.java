@@ -2,13 +2,21 @@ package de.othr.has44540.logic.services.auth.token;
 
 import de.othr.has44540.logic.services.auth.utils.PasswordGenerator;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlSchemaType;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class AuthToken implements Serializable{
+@XmlAccessorType(XmlAccessType.FIELD)
+public class AuthToken implements Serializable {
 
     private static final Logger logger = Logger.getLogger(AuthToken.class.getName());
     private static final PasswordGenerator pwGenerator = new PasswordGenerator(30);
@@ -16,20 +24,14 @@ public class AuthToken implements Serializable{
 
     private UUID id;
     private String key;
+
+    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
     private LocalDateTime creationTime;
 
     public AuthToken() {
         id = UUID.randomUUID();
         creationTime = LocalDateTime.now();
         key = pwGenerator.nextPassword();
-    }
-
-    public LocalDateTime getCreationTime() {
-        return creationTime;
-    }
-
-    public UUID getId() {
-        return id;
     }
 
     @Override
@@ -67,5 +69,13 @@ public class AuthToken implements Serializable{
             throw new IllegalTokenChangeException(token.getId(), "key");
         }
         return true;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public LocalDateTime getCreationTime() {
+        return creationTime;
     }
 }
