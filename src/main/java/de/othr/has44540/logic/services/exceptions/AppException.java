@@ -35,6 +35,11 @@ public class AppException extends Exception implements Serializable {
         return Objects.hash(title, description);
     }
 
+    @Override
+    public String toString() {
+        return "AppException{" + "title='" + title + '\'' + ", description='" + description + '\'' + '}';
+    }
+
     public String getTitle() {
         return title;
     }
