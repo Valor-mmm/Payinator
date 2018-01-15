@@ -4,15 +4,11 @@ import de.othr.has44540.logic.services.auth.utils.PasswordGenerator;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlSchemaType;
-import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @XmlAccessorType(XmlAccessType.FIELD)
