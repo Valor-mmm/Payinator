@@ -7,10 +7,12 @@ public class InvalidTokenException extends AuthException {
     private AuthToken authToken;
 
     public InvalidTokenException() {
-
+        super("The given token is not valid.", "The given token could be expired and removed, illegally changed or " +
+                "never been valid.");
     }
 
     public InvalidTokenException(AuthToken token) {
+        this();
         authToken = token;
     }
 
