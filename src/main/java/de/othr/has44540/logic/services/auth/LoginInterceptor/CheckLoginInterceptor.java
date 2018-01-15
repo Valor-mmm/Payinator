@@ -44,7 +44,7 @@ public class CheckLoginInterceptor implements Serializable {
         }
 
         if (authService.getLoggedInUser() == null) {
-            throw new AuthException();
+            throw new AuthException("Method requires login.", "No login context was provided, but is necessary.");
         }
 
         return context.proceed();
