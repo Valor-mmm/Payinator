@@ -4,6 +4,7 @@ import de.othr.has44540.logic.services.auth.service.AuthServiceIF;
 import de.othr.has44540.logic.services.auth.service.factory.AuthServiceCase;
 import de.othr.has44540.logic.services.auth.service.factory.AuthServiceQualifier;
 import de.othr.has44540.logic.services.exceptions.InternalErrorException;
+import de.othr.has44540.logic.services.exceptions.auth.AuthException;
 import de.othr.has44540.logic.services.exceptions.auth.InvalidLoginDataException;
 import de.othr.has44540.ui.IndexModel;
 
@@ -21,6 +22,8 @@ public class AuthModel implements Serializable {
     private static final Logger logger = Logger.getLogger(AuthModel.class.getName());
 
     public static final String pageName = "login";
+
+    private boolean loggedIn = false;
 
     @Inject
     @AuthServiceQualifier(AuthServiceCase.SESSION_BASED)
@@ -47,6 +50,7 @@ public class AuthModel implements Serializable {
         }
 
         try {
+            loggedIn = false;
             authService.login(email, password);
         } catch (InvalidLoginDataException invalidLoginEx) {
             if (invalidLoginEx.isInvalidEmail() || invalidLoginEx.isInvalidPassword()) {
@@ -60,17 +64,27 @@ public class AuthModel implements Serializable {
             logger.log(Level.SEVERE, "Internal Error during login.", internalEx);
             errorModel.setError(internalEx.getTitle(), internalEx.getDescription());
             return ErrorModel.pageName;
+
+        } catch (AuthException authEx) {
+            logger.log(Level.SEVERE, "Auth Error occured.", authEx);
+            errorModel.setError(authEx.getTitle(), authEx.getDescription());
         } catch (Exception ex) {
             logger.log(Level.SEVERE, "Unexpected exception caught.", ex);
             errorModel.setUnknownError();
             return ErrorModel.pageName;
         }
 
+        loggedIn = true;
+
         if (prevPage != null) {
             logger.info("Return to previous page: [" + prevPage + "]");
             return prevPage;
         }
         return IndexModel.pageName;
+    }
+
+    public String logout() {
+        return "accounts";
     }
 
     public String getEmail() {
@@ -103,5 +117,9 @@ public class AuthModel implements Serializable {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public boolean isLoggedIn() {
+        return loggedIn;
     }
 }

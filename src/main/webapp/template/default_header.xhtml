@@ -16,7 +16,8 @@
             <h:link styleClass="btn btn-primary" outcome="donate.xhtml">Donate</h:link>
         </div>
         <div class="navbar-section float-right">
-            <h:link styleClass="btn btn-primary" outcome="login.xhtml">Login</h:link>
+            <h:link rendered="#{!authModel.loggedIn}" styleClass="btn btn-primary" outcome="login.xhtml">Login</h:link>
+            <h:link rendered="#{authModel.loggedIn}" styleClass="btn btn-primary" outcome="#{authModel.logout()}">Logout</h:link>
         </div>
     </div>
 </ui:composition>
