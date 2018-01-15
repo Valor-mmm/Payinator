@@ -89,9 +89,6 @@ public class TokenBasedAuthService extends AbstractAuthService {
 
     @Override
     public AuthToken logout(AuthToken authToken) throws InvalidTokenException {
-        if (!this.authToken.equals(authToken)) {
-            throw new InvalidTokenException(authToken);
-        }
         try {
             this.tokenManager.removeToken(authToken);
         } catch (IllegalTokenChangeException e) {
