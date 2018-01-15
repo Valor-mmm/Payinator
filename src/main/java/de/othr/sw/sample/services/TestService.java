@@ -32,8 +32,6 @@ public class TestService implements Serializable {
     @Resource
     private WebServiceContext context;
 
-    @Inject
-    private AuthTestService authTestService;
 
     @WebMethod
     @Transactional
@@ -61,10 +59,5 @@ public class TestService implements Serializable {
     @WebMethod
     public int getSessionCounter() {
         return sessionCounter;
-    }
-
-    @WebMethod
-    public String getAuthString() {
-        return authTestService.getAuth();
     }
 }
