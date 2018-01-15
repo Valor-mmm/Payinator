@@ -14,12 +14,15 @@ import de.othr.has44540.persistance.entities.user.paymentInformation.AbstractPay
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
+import javax.jws.WebMethod;
+import javax.jws.WebService;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 
 @SessionScoped
+@WebService
 public class PaymentServiceImpl implements PaymentServiceIF {
 
 
@@ -35,6 +38,9 @@ public class PaymentServiceImpl implements PaymentServiceIF {
     public Payment payDefault(AuthToken authToken, AbstractAccount toAccount, BigDecimal amount) throws
                                                                                                  AuthException,
                                                                                                  AccountException {
+        if (toAccount == null) {
+            toAccount = accountUtils.getDefaultAccount();
+        }
         accountUtils.checkSimpleAccount(toAccount);
         AbstractAccount fromAccount = accountUtils.getDefaultAccount();
         if (fromAccount == null) {
@@ -57,6 +63,10 @@ public class PaymentServiceImpl implements PaymentServiceIF {
                                                                                        AccountException {
         accountUtils.checkAccount(fromAccount);
         accountUtils.checkAccountOwner(fromAccount);
+        if (fromAccount.getAlias().equals(toAccount.getAlias())) {
+            throw new AccountException("From and to Account are equal.",
+                                       "The from and to account for this payment are equal");
+        }
         if (!accountUtils.verifyPaymentMethodOfUser(paymentMethod)) {
             throw new UnknownPaymentMethodException("No paymentMethod for user with id found.", paymentMethod);
         }
@@ -65,6 +75,7 @@ public class PaymentServiceImpl implements PaymentServiceIF {
         return initiatePayment(payment, toAccount, amount);
     }
 
+    @WebMethod(exclude = true)
     private Payment initiatePayment(Payment payment, AbstractAccount toAccount, BigDecimal amount) throws
                                                                                                    AccountException,
                                                                                                    AuthException {
@@ -82,6 +93,7 @@ public class PaymentServiceImpl implements PaymentServiceIF {
         return payment;
     }
 
+    @WebMethod(exclude = true)
     private void bookTransaction(BigDecimal amount) {
         /* TODO: book transaction to company account
             Maybe donate a fractural amount

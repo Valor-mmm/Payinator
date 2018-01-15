@@ -94,7 +94,7 @@ public interface SessionService {
     /**
      * 
      * @param linkObject
-     * @param sessionToken
+     * @param siteToken
      * @return
      *     returns de.othr.external.services.oauth.korbinianSchmidt.session.SessionDTO
      * @throws SessionServiceException_Exception
@@ -104,8 +104,8 @@ public interface SessionService {
     @RequestWrapper(localName = "link", targetNamespace = "http://impl.service.sw.kschmidt.de/", className = "de.othr.external.services.oauth.korbinianSchmidt.session.Link")
     @ResponseWrapper(localName = "linkResponse", targetNamespace = "http://impl.service.sw.kschmidt.de/", className = "de.othr.external.services.oauth.korbinianSchmidt.session.LinkResponse")
     public SessionDTO link(
-        @WebParam(name = "sessionToken", targetNamespace = "")
-        String sessionToken,
+        @WebParam(name = "siteToken", targetNamespace = "")
+        String siteToken,
         @WebParam(name = "linkObject", targetNamespace = "")
         SessionLinkDTO linkObject)
         throws SessionServiceException_Exception

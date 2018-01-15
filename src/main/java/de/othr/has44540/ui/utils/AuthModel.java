@@ -4,6 +4,7 @@ import de.othr.has44540.logic.services.auth.service.AuthServiceIF;
 import de.othr.has44540.logic.services.auth.service.factory.AuthServiceCase;
 import de.othr.has44540.logic.services.auth.service.factory.AuthServiceQualifier;
 import de.othr.has44540.logic.services.exceptions.InternalErrorException;
+import de.othr.has44540.logic.services.exceptions.OAuthException;
 import de.othr.has44540.logic.services.exceptions.auth.AuthException;
 import de.othr.has44540.logic.services.exceptions.auth.InvalidLoginDataException;
 import de.othr.has44540.logic.services.exceptions.auth.InvalidTokenException;
@@ -68,6 +69,11 @@ public class AuthModel implements Serializable {
         } catch (AuthException authEx) {
             logger.log(Level.SEVERE, "Auth Error occured.", authEx);
             errorModel.setError(authEx.getTitle(), authEx.getDescription());
+            return ErrorModel.pageName;
+        } catch (OAuthException oAuthEx) {
+            logger.log(Level.SEVERE, "Error during oAuth Communication", oAuthEx);
+            errorModel.setError("Error during OAuth communication.", "Please try again later. Cause: " + oAuthEx.getErrorReason());
+            return ErrorModel.pageName;
         } catch (Exception ex) {
             logger.log(Level.SEVERE, "Unexpected exception caught.", ex);
             errorModel.setUnknownError();

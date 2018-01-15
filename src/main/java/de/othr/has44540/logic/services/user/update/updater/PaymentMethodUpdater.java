@@ -34,8 +34,7 @@ public class PaymentMethodUpdater implements EntityUpdaterIF<List<PaymentMethod>
                                                                                            InternalErrorException {
         Set<AbstractPaymentMethod> result = new TreeSet<>();
         for (PaymentMethod newPm : newPaymentMethods) {
-            // TODO: change to real getID method
-            AbstractPaymentMethod matchingPm = null; // findByOauthId(newPm.getID, oldPaymentMethods);
+            AbstractPaymentMethod matchingPm = findByOauthId(newPm.getMethodId(), oldPaymentMethods);
             AbstractPaymentMethod mergedPm = null;
             if (matchingPm == null) {
                 mergedPm = mergeOne(newPm, createNewPm(newPm));
@@ -57,8 +56,7 @@ public class PaymentMethodUpdater implements EntityUpdaterIF<List<PaymentMethod>
         }
         Set<AbstractPaymentMethod> result = new TreeSet<>();
         for (PaymentMethod newPm : newPaymentMethods) {
-            // TODO: change to real getID method
-            AbstractPaymentMethod matchingPm = null; //findByOauthId(newPm.getID, oldPaymentMethods);
+            AbstractPaymentMethod matchingPm = findByOauthId(newPm.getMethodId(), oldPaymentMethods);
             AbstractPaymentMethod mergedPM = mergeOne(newPm, matchingPm == null ? createNewPm(newPm) : matchingPm);
             result.add(mergedPM);
         }
@@ -80,7 +78,7 @@ public class PaymentMethodUpdater implements EntityUpdaterIF<List<PaymentMethod>
     private AbstractPaymentMethod mergeOne(@NotNull PaymentMethod newPaymentMethod,
                                            @NotNull AbstractPaymentMethod oldPaymentMethod) throws
                                                                                             InternalErrorException {
-        oldPaymentMethod.setDefault(newPaymentMethod.isIsPrimary());
+        oldPaymentMethod.setDefault(newPaymentMethod.isPrimary());
         oldPaymentMethod.setName(newPaymentMethod.getName());
 
         if (newPaymentMethod instanceof WireTransferPaymentMethod) {

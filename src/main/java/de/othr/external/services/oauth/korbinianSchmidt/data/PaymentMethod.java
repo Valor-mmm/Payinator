@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="isPrimary" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
+ *         &lt;element name="methodId" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
  *         &lt;element name="name" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="paymentAddress" type="{http://impl.service.sw.kschmidt.de/}address" minOccurs="0"/>
  *         &lt;element name="primary" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "paymentMethod", propOrder = {
-    "isPrimary",
+    "methodId",
     "name",
     "paymentAddress",
     "primary"
@@ -40,27 +40,35 @@ import javax.xml.bind.annotation.XmlType;
     CreditCardPaymentMethod.class,
     WireTransferPaymentMethod.class
 })
-public abstract class PaymentMethod {
+public class PaymentMethod {
 
-    protected boolean isPrimary;
+    protected Long methodId;
     protected String name;
     protected Address paymentAddress;
     protected boolean primary;
 
     /**
-     * Gets the value of the isPrimary property.
+     * Gets the value of the methodId property.
      * 
+     * @return
+     *     possible object is
+     *     {@link Long }
+     *     
      */
-    public boolean isIsPrimary() {
-        return isPrimary;
+    public Long getMethodId() {
+        return methodId;
     }
 
     /**
-     * Sets the value of the isPrimary property.
+     * Sets the value of the methodId property.
      * 
+     * @param value
+     *     allowed object is
+     *     {@link Long }
+     *     
      */
-    public void setIsPrimary(boolean value) {
-        this.isPrimary = value;
+    public void setMethodId(Long value) {
+        this.methodId = value;
     }
 
     /**

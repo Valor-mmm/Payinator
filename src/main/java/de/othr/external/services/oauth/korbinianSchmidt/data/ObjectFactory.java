@@ -135,6 +135,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link PaymentMethod }
+     * 
+     */
+    public PaymentMethod createPaymentMethod() {
+        return new PaymentMethod();
+    }
+
+    /**
      * Create an instance of {@link GetPrimaryShippingDataResponse }
      * 
      */

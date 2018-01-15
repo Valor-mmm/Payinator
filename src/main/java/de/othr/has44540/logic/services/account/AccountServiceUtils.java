@@ -2,6 +2,7 @@ package de.othr.has44540.logic.services.account;
 
 import de.othr.has44540.logic.services.auth.service.AuthServiceIF;
 import de.othr.has44540.logic.services.auth.service.factory.DetectAutomatically;
+import de.othr.has44540.logic.services.exceptions.account.AccountException;
 import de.othr.has44540.logic.services.exceptions.account.InvalidAccountException;
 import de.othr.has44540.persistance.entities.account.AbstractAccount;
 import de.othr.has44540.persistance.entities.account.impl.SimpleAccount;
@@ -78,5 +79,15 @@ public class AccountServiceUtils implements Serializable {
     public AbstractPaymentMethod getDefaultPaymentMethod() {
         AbstractUser user = authService.getExecutiveUser();
         return user.getDefaultPaymentMethod();
+    }
+
+    public AbstractAccount determinDefaultAccount() throws AccountException {
+        AbstractUser user = authService.getLoggedInUser();
+        AbstractAccount account = user.getDefaultAccount();
+        if (account == null) {
+            throw new AccountException("No default account found.",
+                                       "The logged in user does not have an default account");
+        }
+        return account;
     }
 }

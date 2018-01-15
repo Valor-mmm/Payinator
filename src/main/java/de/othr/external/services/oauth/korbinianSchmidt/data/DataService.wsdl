@@ -81,9 +81,9 @@
       <xs:element minOccurs="0" name="return" type="tns:paymentMethod"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType abstract="true" name="paymentMethod">
+  <xs:complexType name="paymentMethod">
     <xs:sequence>
-      <xs:element name="isPrimary" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="methodId" type="xs:long"/>
       <xs:element minOccurs="0" name="name" type="xs:string"/>
       <xs:element minOccurs="0" name="paymentAddress" type="tns:address"/>
       <xs:element name="primary" type="xs:boolean"/>

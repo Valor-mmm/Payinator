@@ -79,7 +79,7 @@
   </xs:complexType>
   <xs:complexType name="link">
     <xs:sequence>
-      <xs:element minOccurs="0" name="sessionToken" type="xs:string"/>
+      <xs:element minOccurs="0" name="siteToken" type="xs:string"/>
       <xs:element minOccurs="0" name="linkObject" type="tns:sessionLinkDTO"/>
     </xs:sequence>
   </xs:complexType>
