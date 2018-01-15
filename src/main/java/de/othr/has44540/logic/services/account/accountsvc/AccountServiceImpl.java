@@ -32,7 +32,8 @@ public class AccountServiceImpl implements AccountServiceIF {
     public List<AbstractAccount> getAccounts(AuthToken authToken) throws AuthException {
         TypedQuery<AbstractAccount> findAllQ = em
                 .createQuery("SELECT a FROM AbstractAccount AS a", AbstractAccount.class);
-        return findAllQ.getResultList();
+        List<AbstractAccount> result = findAllQ.getResultList();
+        return result;
     }
 
     @Override

@@ -25,7 +25,7 @@ public class SimpleAccount extends AbstractAccount {
     @ManyToOne
     private DonorAccount donorAccount;
 
-    @OneToMany(mappedBy = "toAccount")
+    @OneToMany(mappedBy = "toAccount", fetch = FetchType.EAGER)
     private Set<Payment> paymentsIn;
 
 

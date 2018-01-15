@@ -18,7 +18,7 @@ public abstract class AbstractAccount extends GeneratedIDEntity {
 
     // References - getter/setter
 
-    @OneToMany(mappedBy = "fromAccount")
+    @OneToMany(mappedBy = "fromAccount", fetch = FetchType.EAGER)
     private Set<Payment> paymentsOut;
 
 
