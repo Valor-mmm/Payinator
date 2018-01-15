@@ -62,15 +62,7 @@ public class SessionBasedAuthService extends AbstractAuthService {
     }
 
     @Override
-    public AuthToken logout(AuthToken authToken) throws InvalidTokenException {
-        if (! this.authToken.equals(authToken)) {
-            throw new InvalidTokenException(authToken);
-        }
-        try {
-            this.authToken.checkToken(authToken);
-        } catch (IllegalTokenChangeException e) {
-            throw new InvalidTokenException(authToken);
-        }
+    public AuthToken logout(AuthToken authToken) {
         this.session = null;
         this.authToken = null;
         return authToken;

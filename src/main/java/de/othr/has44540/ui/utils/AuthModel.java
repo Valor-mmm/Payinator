@@ -6,6 +6,7 @@ import de.othr.has44540.logic.services.auth.service.factory.AuthServiceQualifier
 import de.othr.has44540.logic.services.exceptions.InternalErrorException;
 import de.othr.has44540.logic.services.exceptions.auth.AuthException;
 import de.othr.has44540.logic.services.exceptions.auth.InvalidLoginDataException;
+import de.othr.has44540.logic.services.exceptions.auth.InvalidTokenException;
 import de.othr.has44540.ui.IndexModel;
 
 import javax.enterprise.context.SessionScoped;
@@ -44,8 +45,7 @@ public class AuthModel implements Serializable {
         if (email == null || password == null || email.length() < 3 || password.length() < 3) {
             String errTitle = "Email or password is empty.";
             logger.warning(errTitle);
-            errorModel.setError(errTitle,
-                                "The email or password you entered were empty. Please fill in both fields");
+            errorModel.setError(errTitle, "The email or password you entered were empty. Please fill in both fields");
             return ErrorModel.pageName;
         }
 
@@ -84,7 +84,15 @@ public class AuthModel implements Serializable {
     }
 
     public String logout() {
-        return "accounts";
+        try {
+            authService.logout(null);
+            loggedIn = false;
+        } catch (InvalidTokenException e) {
+            logger.log(Level.WARNING, "Could not logout.", e);
+            errorModel.setError(e.getTitle(), e.getDescription());
+            return "views/" + ErrorModel.pageName;
+        }
+        return "views/" + IndexModel.pageName;
     }
 
     public String getEmail() {
