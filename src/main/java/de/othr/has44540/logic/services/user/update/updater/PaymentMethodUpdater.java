@@ -80,6 +80,7 @@ public class PaymentMethodUpdater implements EntityUpdaterIF<List<PaymentMethod>
                                                                                             InternalErrorException {
         oldPaymentMethod.setDefault(newPaymentMethod.isPrimary());
         oldPaymentMethod.setName(newPaymentMethod.getName());
+        oldPaymentMethod.setOauthID(newPaymentMethod.getMethodId());
 
         if (newPaymentMethod instanceof WireTransferPaymentMethod) {
             if (!(oldPaymentMethod instanceof WireTransfer)) {
@@ -126,7 +127,7 @@ public class PaymentMethodUpdater implements EntityUpdaterIF<List<PaymentMethod>
             return null;
         }
         for (AbstractPaymentMethod pm : pmSet) {
-            if (pm.getOauthID().equals(id)) {
+            if (id.equals(pm.getOauthID())) {
                 return pm;
             }
         }

@@ -13,6 +13,7 @@ import de.othr.has44540.persistance.entities.user.roles.Company;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.io.Serializable;
@@ -58,12 +59,17 @@ public class AccountServiceUtils implements Serializable {
 
     public boolean verifyPaymentMethodOfUser(AbstractPaymentMethod paymentMethod) {
         AbstractUser user = authService.getExecutiveUser();
-        TypedQuery<AbstractPaymentMethod> methodOfUserQ = em.createQuery(
+        TypedQuery<AbstractUser> methodOfUserQ = em.createQuery(
                 "SELECT u FROM AbstractUser u JOIN u.paymentMethods p WHERE u.id = :userId AND p.id = :pmId",
-                AbstractPaymentMethod.class);
+                AbstractUser.class);
         methodOfUserQ.setParameter("userId", user.getId());
         methodOfUserQ.setParameter("pmId", paymentMethod.getId());
-        return methodOfUserQ.getSingleResult() != null;
+        try {
+            methodOfUserQ.getSingleResult();
+            return true;
+        } catch (NoResultException ex) {
+            return false;
+        }
     }
 
     public boolean isCompanyTransaction() {

@@ -11,6 +11,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -60,5 +61,17 @@ public class AuthServiceCommons implements Serializable {
             return null;
         }
         return foundEmail.getUser();
+    }
+
+    protected AbstractUser findUser(Long oauthId) {
+        TypedQuery<AbstractUser> userQ = em
+                .createQuery("SELECT u FROM AbstractUser AS u WHERE u.oauthId = :oauthId", AbstractUser.class);
+        userQ.setParameter("oauthId", oauthId);
+        try {
+            return userQ.getSingleResult();
+        } catch (NoResultException noFound) {
+            logger.log(Level.CONFIG, "No user with oaut id [" + oauthId + "] found.", noFound);
+        }
+        return null;
     }
 }

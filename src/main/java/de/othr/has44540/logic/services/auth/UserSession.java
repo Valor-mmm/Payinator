@@ -47,4 +47,12 @@ public class UserSession {
     public void setoAuthSession(SessionDTO oAuthSession) {
         this.oAuthSession = oAuthSession;
     }
+
+    public void setUser(AbstractUser user) {
+        this.user = user;
+    }
+
+    public void setOnBehalfOf(AbstractUser onBehalfOf) {
+        this.onBehalfOf = onBehalfOf;
+    }
 }

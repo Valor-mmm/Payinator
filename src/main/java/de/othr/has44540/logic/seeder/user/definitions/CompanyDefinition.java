@@ -10,12 +10,14 @@ public class CompanyDefinition implements SeedDefinition<Company> {
     private Long oauthID;
     private String name;
     private BusinessSector sector;
+    private Long externalSiteId;
 
     public CompanyDefinition() {
         this.username = "k4hl";
         this.oauthID = (long) 987652345;
         this.name = "Korbi Webshop";
         this.sector = BusinessSector.SALES;
+        this.externalSiteId = new Long(3);
     }
 
     @Override
@@ -25,6 +27,7 @@ public class CompanyDefinition implements SeedDefinition<Company> {
         company.setOauthId(getOauthID());
         company.setName(getName());
         company.setSector(getSector());
+        company.setExternalSiteId(getExternalSiteId());
         return company;
     }
 
@@ -58,5 +61,13 @@ public class CompanyDefinition implements SeedDefinition<Company> {
 
     public void setSector(BusinessSector sector) {
         this.sector = sector;
+    }
+
+    public Long getExternalSiteId() {
+        return externalSiteId;
+    }
+
+    public void setExternalSiteId(Long externalSiteId) {
+        this.externalSiteId = externalSiteId;
     }
 }

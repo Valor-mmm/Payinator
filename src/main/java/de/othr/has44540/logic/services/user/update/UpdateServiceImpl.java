@@ -3,6 +3,7 @@ package de.othr.has44540.logic.services.user.update;
 import de.othr.external.services.oauth.CustomDataServiceService;
 import de.othr.external.services.oauth.korbinianSchmidt.data.*;
 import de.othr.external.services.oauth.korbinianSchmidt.session.SessionDTO;
+import de.othr.has44540.logic.seeder.user.CompanySeeder;
 import de.othr.has44540.logic.services.exceptions.InternalErrorException;
 import de.othr.has44540.logic.services.exceptions.OAuthCause;
 import de.othr.has44540.logic.services.exceptions.OAuthException;
@@ -20,6 +21,7 @@ import de.othr.has44540.persistance.entities.user.roles.SimpleUser;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -56,6 +58,9 @@ public class UpdateServiceImpl implements UpdateServiceIF {
     @EntityUpdaterQalifier(EntityUpdaterCase.PAYMENT_INFORMATION)
     private EntityUpdaterIF<List<PaymentMethod>, Set<AbstractPaymentMethod>> paymentMethodUpdater;
 
+    @EJB
+    private CompanySeeder companySeeder;
+
     @PostConstruct
     @Inject
     public void initUpdateService(CustomDataServiceService dataServiceService) {
@@ -89,9 +94,11 @@ public class UpdateServiceImpl implements UpdateServiceIF {
             user = em.merge(user);
         }
         em.persist(user);
-        Email foundEmail = findEmail(email.getLocalPart(), email.getDomain());
-        foundEmail.setUser(user);
-        em.persist(foundEmail);
+        if (email != null) {
+            Email foundEmail = findEmail(email.getLocalPart(), email.getDomain());
+            foundEmail.setUser(user);
+            em.persist(foundEmail);
+        }
         return user;
     }
 
@@ -147,6 +154,16 @@ public class UpdateServiceImpl implements UpdateServiceIF {
 
     @Override
     public Company updateCompany(@NotNull Long externalSiteId) {
+        companySeeder.seedCompany();
+
+        TypedQuery<Company> companyQuery = em
+                .createQuery("SELECT c FROM Company AS c WHERE c.externalSiteId = :siteId", Company.class);
+        companyQuery.setParameter("siteId", externalSiteId);
+        try {
+            return companyQuery.getSingleResult();
+        } catch (NoResultException ex) {
+            logger.log(Level.SEVERE, "No company found. Seeding Error is possible.", ex);
+        }
         return null;
     }
 

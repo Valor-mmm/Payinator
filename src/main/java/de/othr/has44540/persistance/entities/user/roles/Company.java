@@ -6,6 +6,7 @@ import de.othr.has44540.persistance.entities.user.AbstractUser;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import java.util.Collections;
 import java.util.Set;
@@ -26,7 +27,7 @@ public class Company extends AbstractUser {
 
     // References
 
-    @OneToMany(mappedBy = "company")
+    @OneToMany(mappedBy = "company", fetch = FetchType.EAGER)
     private Set<CompanyAccount> companyAccounts;
 
     // Methods

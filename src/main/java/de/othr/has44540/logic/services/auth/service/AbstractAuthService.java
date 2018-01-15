@@ -11,8 +11,10 @@ import de.othr.has44540.logic.services.exceptions.auth.AuthException;
 import de.othr.has44540.logic.services.exceptions.auth.InvalidLinkObjectException;
 import de.othr.has44540.logic.services.exceptions.auth.InvalidLoginDataException;
 import de.othr.has44540.logic.services.user.update.UpdateServiceIF;
+import de.othr.has44540.persistance.entities.account.AbstractAccount;
 import de.othr.has44540.persistance.entities.user.AbstractUser;
 import de.othr.has44540.persistance.entities.user.personalData.Email;
+import de.othr.has44540.persistance.entities.user.roles.Company;
 import de.othr.has44540.persistance.entities.user.roles.SimpleUser;
 import org.jetbrains.annotations.NotNull;
 
@@ -59,20 +61,22 @@ public abstract class AbstractAuthService implements AuthServiceIF {
         loginData.setPassword(password);
 
         SessionDTO session = sendLoginRequest(loginData);
-        checkForSimpleUser(foundUser);
-        AbstractUser updateResult = updateService.updateUser(session, (SimpleUser) foundUser, emailEntity);
-        if (updateResult == null) {
-            throw new InternalErrorException("Could not update user.",
-                                             "The user could neither be updated nor be created");
-        }
+        return initiateUser(session, foundUser, emailEntity);
 
-        return new UserSession(updateResult, session);
     }
 
     UserSession initOAuthSession(@NotNull SessionLinkDTO sessionLink) throws
-                                                                      InvalidLinkObjectException,
-                                                                      InternalServerErrorException {
-        return new UserSession(null, null);
+                                                                      AuthException,
+                                                                      InternalServerErrorException,
+                                                                      OAuthException,
+                                                                      InternalErrorException {
+        SessionDTO sessionDTO = sendLinkRequest(sessionLink);
+        AbstractUser foundUser = commons.findUser(sessionDTO.getUserId());
+        Company company = updateService.updateCompany(sessionLink.getFromSiteId());
+        UserSession userSession = initiateUser(sessionDTO, foundUser, foundUser != null ? foundUser.getEmail() : null);
+        userSession.setOnBehalfOf(userSession.getUser());
+        userSession.setUser(company);
+        return userSession;
     }
 
     private SessionDTO sendLoginRequest(LoginDataDTO loginData) throws InvalidLoginDataException, OAuthException {
@@ -113,6 +117,43 @@ public abstract class AbstractAuthService implements AuthServiceIF {
     }
 
 
+    private SessionDTO sendLinkRequest(SessionLinkDTO sessionLink) throws OAuthException, InvalidLinkObjectException {
+        SessionDTO result = null;
+        try {
+            result = sessionService.link(oAuthConfig.getOauthCustomerToken(), sessionLink);
+        } catch (SessionServiceException_Exception e) {
+            SessionServiceException serviceException = e.getFaultInfo();
+            if (serviceException == null) {
+                throwUnknownOauthException(e);
+            }
+
+            switch (serviceException.getReason()) {
+                case INVALID_SESSION_LINK:
+                    logger.severe("Invalid session link from site: [" + sessionLink.getFromSiteId() + "]");
+                    throw new InvalidLinkObjectException("Invalid Link Object", serviceException.getMessage(),
+                                                         sessionLink);
+                case INTERNAL_FAILURE:
+                    logger.log(Level.SEVERE, "OAuth Service responds with internal server error.", serviceException);
+                    throw new OAuthException(OAuthCause.INTERNAL_ERROR);
+                default:
+                    logger.log(Level.SEVERE, "Error during OAuth communication.", serviceException);
+                    throwUnknownOauthException(serviceException.getReason());
+            }
+        } catch (Exception e) {
+            throwUnknownOauthException(e);
+        }
+
+        if (result == null) {
+            throwUnknownOauthException(new NullPointerException("Returned session is null."));
+        }
+        if (result.getSessionToken() == null) {
+            throwUnknownOauthException(new NullPointerException("Returned sessionToken is null."));
+        }
+
+        return result;
+    }
+
+
     private void throwUnknownOauthException(Object exception) throws OAuthException {
         logger.log(Level.SEVERE, "Login failed during unexpected error with oAuth communication", exception);
         throw new OAuthException(OAuthCause.UNKNOWN_ERROR);
@@ -127,5 +168,19 @@ public abstract class AbstractAuthService implements AuthServiceIF {
         }
         throw new AuthException("User can not be logged in.",
                                 "Currently only Simple Users can log in. You tried to log in with a charity " + "Organisation or a Company account.");
+    }
+
+    private UserSession initiateUser(SessionDTO session, AbstractUser user, Email email) throws
+                                                                                         AuthException,
+                                                                                         OAuthException,
+                                                                                         InternalErrorException {
+        checkForSimpleUser(user);
+        AbstractUser updateResult = updateService.updateUser(session, (SimpleUser) user, email);
+        if (updateResult == null) {
+            throw new InternalErrorException("Could not update user.",
+                                             "The user could neither be updated nor be created");
+        }
+
+        return new UserSession(updateResult, session);
     }
 }

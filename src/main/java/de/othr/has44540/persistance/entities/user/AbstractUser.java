@@ -27,7 +27,7 @@ public abstract class AbstractUser extends GeneratedIDEntity {
     @OneToOne
     private Email email;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @Column(nullable = false)
     private Set<AbstractPaymentMethod> paymentMethods;
 

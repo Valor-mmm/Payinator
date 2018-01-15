@@ -25,7 +25,7 @@ public interface AuthServiceIF extends Serializable {
                                                    InternalErrorException,
                                                    OAuthException, AuthException;
 
-    AuthToken linkCompany(SessionLinkDTO sessionLink) throws InvalidLinkObjectException, InternalErrorException;
+    AuthToken linkCompany(SessionLinkDTO sessionLink) throws AuthException, InternalErrorException, OAuthException;
 
     AuthToken logout(AuthToken authToken) throws InvalidTokenException;
 

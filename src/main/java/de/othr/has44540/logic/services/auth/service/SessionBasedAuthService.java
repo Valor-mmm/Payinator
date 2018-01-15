@@ -54,7 +54,10 @@ public class SessionBasedAuthService extends AbstractAuthService {
     }
 
     @Override
-    public AuthToken linkCompany(SessionLinkDTO sessionLink) throws InvalidLinkObjectException {
+    public AuthToken linkCompany(SessionLinkDTO sessionLink) throws
+                                                             AuthException,
+                                                             OAuthException,
+                                                             InternalErrorException {
         logger.info("Receiving session link from [" + sessionLink.getFromSiteId() + "]");
         UserSession newSession = super.initOAuthSession(sessionLink);
         logger.info("Linked session successfully for site [" + sessionLink.getFromSiteId() + "]");

@@ -53,8 +53,10 @@ public class SimpleUserSupplier implements Supplier<SimpleUser>, Serializable {
 
         simpleUser.setDonorAccount(donorAccount);
 
-        email = handleEmail(email);
-        simpleUser.setEmail(email);
+        if (email != null) {
+            email = handleEmail(email);
+            simpleUser.setEmail(email);
+        }
 
         simpleUser.setOauthId(oAuthId);
         return simpleUser;

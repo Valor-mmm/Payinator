@@ -39,7 +39,7 @@ public class PaymentServiceImpl implements PaymentServiceIF {
                                                                                                  AuthException,
                                                                                                  AccountException {
         if (toAccount == null) {
-            toAccount = accountUtils.getDefaultAccount();
+            toAccount = accountUtils.determinDefaultAccount();
         }
         accountUtils.checkSimpleAccount(toAccount);
         AbstractAccount fromAccount = accountUtils.getDefaultAccount();
