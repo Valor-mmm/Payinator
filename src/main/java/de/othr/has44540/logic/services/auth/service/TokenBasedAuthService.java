@@ -64,7 +64,7 @@ public class TokenBasedAuthService extends AbstractAuthService {
     }
 
     @Override
-    public AuthToken login(@NotNull String email, @NotNull String password) throws
+    public AuthToken loginSimpleUser(@NotNull String email, @NotNull String password) throws
                                                                             InvalidLoginDataException,
                                                                             InternalErrorException,
                                                                             OAuthException,
@@ -78,7 +78,7 @@ public class TokenBasedAuthService extends AbstractAuthService {
     }
 
     @Override
-    public AuthToken link(SessionLinkDTO sessionLink) throws InvalidLinkObjectException {
+    public AuthToken linkCompany(SessionLinkDTO sessionLink) throws InvalidLinkObjectException {
         logger.info("Receiving session link from [" + sessionLink.getFromSiteId() + "]");
         UserSession newSession = super.initOAuthSession(sessionLink);
         AuthToken token = new AuthToken();

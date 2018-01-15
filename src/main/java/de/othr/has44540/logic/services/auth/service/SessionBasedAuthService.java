@@ -42,7 +42,7 @@ public class SessionBasedAuthService extends AbstractAuthService {
 
     @Override
     @Transactional
-    public AuthToken login(@NotNull String email, @NotNull String password) throws
+    public AuthToken loginSimpleUser(@NotNull String email, @NotNull String password) throws
                                                                             InvalidLoginDataException,
                                                                             InternalErrorException,
                                                                             OAuthException,
@@ -54,7 +54,7 @@ public class SessionBasedAuthService extends AbstractAuthService {
     }
 
     @Override
-    public AuthToken link(SessionLinkDTO sessionLink) throws InvalidLinkObjectException {
+    public AuthToken linkCompany(SessionLinkDTO sessionLink) throws InvalidLinkObjectException {
         logger.info("Receiving session link from [" + sessionLink.getFromSiteId() + "]");
         UserSession newSession = super.initOAuthSession(sessionLink);
         logger.info("Linked session successfully for site [" + sessionLink.getFromSiteId() + "]");

@@ -51,7 +51,7 @@ public class AuthModel implements Serializable {
 
         try {
             loggedIn = false;
-            authService.login(email, password);
+            authService.loginSimpleUser(email, password);
         } catch (InvalidLoginDataException invalidLoginEx) {
             if (invalidLoginEx.isInvalidEmail() || invalidLoginEx.isInvalidPassword()) {
                 this.message = invalidLoginEx.getDescription();

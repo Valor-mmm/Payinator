@@ -20,12 +20,12 @@ public interface AuthServiceIF extends Serializable {
 
     AbstractUser getExecutiveUser();
 
-    AuthToken login(String email, String password) throws
+    AuthToken loginSimpleUser(String email, String password) throws
                                                    InvalidLoginDataException,
                                                    InternalErrorException,
                                                    OAuthException, AuthException;
 
-    AuthToken link(SessionLinkDTO sessionLink) throws InvalidLinkObjectException, InternalErrorException;
+    AuthToken linkCompany(SessionLinkDTO sessionLink) throws InvalidLinkObjectException, InternalErrorException;
 
     AuthToken logout(AuthToken authToken) throws InvalidTokenException;
 
