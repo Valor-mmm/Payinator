@@ -12,13 +12,11 @@ import java.math.BigDecimal;
 
 public interface PaymentServiceIF extends Serializable {
 
-    Payment payDefault(AuthToken authToken, AbstractAccount toAccount, BigDecimal amount, String cause) throws
-                                                                                          AuthException,
-                                                                                          AccountException;
+    // AbstractAccount toAccount, BigDecimal amount, String cause
+    Payment payDefault(AuthToken authToken, Payment payment) throws AuthException, AccountException;
 
-    Payment makePayment(AuthToken authToken, AbstractAccount fromAccount, AbstractAccount toAccount,
-                        AbstractPaymentMethod paymentMethod, BigDecimal amount, String cause) throws
-                                                                                AuthException,
-                                                                                AccountException;
+    // AbstractAccount fromAccount, AbstractAccount toAccount, AbstractPaymentMethod paymentMethod, BigDecimal
+    // amount, String cause
+    Payment makePayment(AuthToken authToken, Payment payment) throws AuthException, AccountException;
 
 }

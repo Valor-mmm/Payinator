@@ -21,11 +21,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.util.logging.Logger;
 
 @SessionScoped
 @WebService
 public class PaymentService implements PaymentServiceIF {
 
+    public static final Logger logger = Logger.getLogger(PaymentService.class.getName());
 
     @PersistenceContext
     private EntityManager em;
@@ -36,64 +38,67 @@ public class PaymentService implements PaymentServiceIF {
     @Override
     @CheckLogin
     @Transactional
-    public Payment payDefault(AuthToken authToken, AbstractAccount toAccount, BigDecimal amount, String cause) throws
-                                                                                                               AuthException,
-                                                                                                               AccountException {
-        if (toAccount == null) {
-            toAccount = accountUtils.determinDefaultAccount();
+    public Payment payDefault(AuthToken authToken, Payment payment) throws AuthException, AccountException {
+        if (payment == null) {
+            throw new AccountException("The payment is null.", "The payment for default payment is null");
         }
-        accountUtils.checkSimpleAccount(toAccount);
-        AbstractAccount fromAccount = accountUtils.getDefaultAccount();
-        if (fromAccount == null) {
+        if (payment.getToAccount() == null) {
+            AbstractAccount defaultAccount = accountUtils.determinDefaultAccount();
+            accountUtils.checkSimpleAccount(defaultAccount);
+            payment.setToAccount((SimpleAccount) defaultAccount);
+        }
+        payment.setFromAccount(accountUtils.getDefaultAccount());
+        if (payment.getFromAccount() == null) {
             throw new InvalidAccountException("User does not have a default account.");
         }
-        AbstractPaymentMethod paymentMethod = accountUtils.getDefaultPaymentMethod();
-        if (paymentMethod == null) {
+        payment.setPaymentMethod(accountUtils.getDefaultPaymentMethod());
+        if (payment.getPaymentMethod() == null) {
             throw new UnknownPaymentMethodException("User does not have a default payment method.");
         }
 
-        return makePayment(authToken, fromAccount, toAccount, paymentMethod, amount, cause);
+        return makePayment(authToken, payment);
     }
 
     @Override
     @CheckLogin
     @Transactional
-    public Payment makePayment(AuthToken authToken, AbstractAccount fromAccount, AbstractAccount toAccount,
-                               AbstractPaymentMethod paymentMethod, BigDecimal amount, String cause) throws
-                                                                                                     AuthException,
-                                                                                                     AccountException {
-        accountUtils.checkAccount(fromAccount);
-        accountUtils.checkAccountOwner(fromAccount);
-        if (fromAccount.getAlias().equals(toAccount.getAlias())) {
+    public Payment makePayment(AuthToken authToken, Payment payment) throws AuthException, AccountException {
+        accountUtils.checkAccount(payment.getFromAccount());
+        accountUtils.verifyAccount(payment.getToAccount());
+        accountUtils.checkAccountOwner(payment.getFromAccount());
+        if (payment.getFromAccount().getAlias().equals(payment.getToAccount().getAlias())) {
             throw new AccountException("From and to Account are equal.",
                                        "The from and to account for this payment are equal");
         }
-        if (!accountUtils.verifyPaymentMethodOfUser(paymentMethod)) {
-            throw new UnknownPaymentMethodException("No paymentMethod for user with id found.", paymentMethod);
+        if (!accountUtils.verifyPaymentMethodOfUser(payment.getPaymentMethod())) {
+            throw new UnknownPaymentMethodException("No paymentMethod for user with id found.",
+                                                    payment.getPaymentMethod());
         }
 
-        Payment payment = new Payment(fromAccount, paymentMethod);
-        payment.setCause(cause);
-        return initiatePayment(payment, toAccount, amount);
+        return initiatePayment(payment);
     }
 
     @WebMethod(exclude = true)
-    private Payment initiatePayment(Payment payment, AbstractAccount toAccount, BigDecimal amount) throws
-                                                                                                   AccountException,
-                                                                                                   AuthException {
-        accountUtils.checkSimpleAccount(toAccount);
+    private Payment initiatePayment(Payment payment) throws AccountException, AuthException {
+        accountUtils.checkSimpleAccount(payment.getToAccount());
 
-        SimpleAccount simpleAccount = (SimpleAccount) toAccount;
-        payment.setToAccount(simpleAccount);
-        payment.setAmount(amount);
-
-        if (accountUtils.isCompanyTransaction()) {
-            bookTransaction(amount);
+        if (payment.getAmount() == null) {
+            throw new AccountException("The payment amount was null", "The amount of the given payment is null.");
         }
 
+        if (payment.getId() != null) {
+            throw new AccountException("The payment has an ID",
+                                       "The id sould be system given and null at creation time.");
+        }
+
+        if (accountUtils.isCompanyTransaction()) {
+            bookTransaction(payment.getAmount());
+        }
+
+        payment = em.merge(payment);
         em.persist(payment);
 
-        SimpleAccount mergedToAcc = em.merge((SimpleAccount) toAccount);
+        SimpleAccount mergedToAcc = em.merge(payment.getToAccount());
         AbstractAccount mergedFromAcc = em.merge(payment.getFromAccount());
         mergedToAcc.addPaymentIn(payment);
         mergedFromAcc.addPaymentOut(payment);
