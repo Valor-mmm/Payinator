@@ -4,6 +4,7 @@ import de.othr.has44540.persistance.entities.account.AbstractAccount;
 import de.othr.has44540.persistance.entities.account.DonationRank;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import java.util.Collection;
 import java.util.Set;
@@ -13,7 +14,7 @@ public class DonorAccount extends AbstractAccount{
 
     // References
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<DonationRank> donationRanks;
 
 

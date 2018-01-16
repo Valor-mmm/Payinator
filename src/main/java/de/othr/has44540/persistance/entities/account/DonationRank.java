@@ -5,12 +5,17 @@ import de.othr.has44540.persistance.util.GeneratedIDEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
 
 @Entity
+@XmlAccessorType(XmlAccessType.FIELD)
 public class DonationRank extends GeneratedIDEntity{
 
     // Attributes
@@ -24,7 +29,8 @@ public class DonationRank extends GeneratedIDEntity{
 
     // References
 
-    @ManyToMany(mappedBy = "donationRanks")
+    @XmlTransient
+    @ManyToMany(mappedBy = "donationRanks", fetch = FetchType.EAGER)
     private Set<DonorAccount> donorAccounts;
 
     // Methods
