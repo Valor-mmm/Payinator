@@ -5,6 +5,7 @@ import de.othr.has44540.logic.services.account.accountsvc.InternalAccountSvcIF;
 import de.othr.has44540.logic.services.auth.service.AuthServiceIF;
 import de.othr.has44540.logic.services.auth.service.factory.AuthServiceCase;
 import de.othr.has44540.logic.services.auth.service.factory.AuthServiceQualifier;
+import de.othr.has44540.logic.services.exceptions.InternalErrorException;
 import de.othr.has44540.logic.services.exceptions.auth.AuthException;
 import de.othr.has44540.persistance.entities.account.AbstractAccount;
 import de.othr.has44540.persistance.entities.account.impl.SimpleAccount;
@@ -52,12 +53,17 @@ public class AccountsModel implements Serializable {
 
     public void retrieveAccounts() {
         try {
-            logger.info("Retrieving accounts.");
-            accounts = accountService.getAccounts(null);
+            logger.info("Retrieving accounts for [" + accountCase + "]");
+            accounts = accountService.getAccountsByCase(accountCase);
             return;
         } catch (AuthException e) {
             handleAuthError(e);
-        } catch (Exception e) {
+        }  catch (InternalErrorException intEx) {
+            logger.log(Level.SEVERE, "An internal error occurred.", intEx);
+            errorModel.setError(intEx.getTitle(), intEx.getDescription());
+            IndexModel.redirectToPage(ErrorModel.pageName);
+        }
+        catch (Exception e) {
             handleUnknownError(e);
         }
     }
@@ -119,9 +125,10 @@ public class AccountsModel implements Serializable {
         return Arrays.asList(AccountCase.values());
     }
 
-    public void selectionChanged(AjaxBehaviorEvent event) {
+    public String selectionChanged() {
       logger.info("Selection changed. To [" + this.accountCase + "]");
       retrieveAccounts();
+      return null;
     }
 
     private void handleAuthError(AuthException e) {
@@ -134,5 +141,9 @@ public class AccountsModel implements Serializable {
         logger.log(Level.SEVERE, "Unexpected error during accountService communication.", e);
         errorModel.setUnknownError();
         ErrorModel.redirectToErrorPage();
+    }
+
+    public void setAccountCase(AccountCase accountCase) {
+        this.accountCase = accountCase;
     }
 }
