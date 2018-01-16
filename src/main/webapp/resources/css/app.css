@@ -5,6 +5,10 @@ html, body {
 .footer {
     position: fixed;
     bottom: 0;
-    width: 60%;
-    margin-left: 20%;
+    width: 70%;
+}
+
+.template-page {
+    margin-left: 15%;
+    margin-right: 15%;
 }

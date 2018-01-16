@@ -27,6 +27,9 @@ public class SessionBasedAuthService extends AbstractAuthService {
 
     @Override
     public AbstractUser getLoggedInUser() {
+        if (session == null) {
+            return null;
+        }
         return session.getUser();
     }
 

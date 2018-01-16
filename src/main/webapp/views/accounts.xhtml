@@ -9,6 +9,33 @@
     <ui:composition template="../template/template.xhtml">
         <ui:define name="content_component">
             <h1>Accounts</h1>
+
+            <h:form>
+                <h:selectOneMenu value="#{accountsModel.accountCase}">
+                    <f:converter converterId="de.othr.has44540.ui.accounts.AccountCaseConverter"/>
+                    <f:selectItems value="#{accountsModel.accountCaseList}"/>
+                    <f:ajax listener="#{accountsModel.selectionChanged}" render="account-list"/>
+                </h:selectOneMenu>
+            </h:form>
+
+            <div id="account-list">
+                <ui:repeat value="#{accountsModel.accounts}" var="account">
+                    <div class="card centered"
+                         style="background-color: #{accountsModel.getColorForAccount(account)}; margin-bottom: 5px;">
+                        <div class="card-header">
+                            <div class="card-title">#{account.alias}</div>
+                            <div class="card-subtitle text-gray">#{accountsModel.getCaseNameForAccount(account)}</div>
+                        </div>
+                        <div class="card-body">
+                            Balance: #{accountsModel.getBalance(account)}
+                        </div>
+                        <div class="card-footer">
+                            <h:commandButton styleClass="btn btn-clear"
+                                             action="#{accountsModel.delete(account)}">Delete</h:commandButton>
+                        </div>
+                    </div>
+                </ui:repeat>
+            </div>
         </ui:define>
     </ui:composition>
 </h:body>

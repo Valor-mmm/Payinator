@@ -42,6 +42,11 @@ public class AuthModel implements Serializable {
 
     private String message;
 
+    public void requireLogin(String prevPage) {
+        this.prevPage = prevPage;
+        this.message = "The current site requires a login. Please log in to access the site.";
+    }
+
     public String login() {
         if (email == null || password == null || email.length() < 3 || password.length() < 3) {
             String errTitle = "Email or password is empty.";

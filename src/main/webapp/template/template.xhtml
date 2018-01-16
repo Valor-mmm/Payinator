@@ -12,17 +12,17 @@
     <h:outputStylesheet library="css" name="spectre-icons.min.css"/>
 </h:head>
 <h:body>
-    <div id="site-header">
+    <div id="site-header" class="template-page">
         <ui:insert name="header_component">
             <ui:include src="default_header.xhtml"/>
         </ui:insert>
     </div>
-    <div id="site-content">
+    <div id="site-content" class="template-page">
         <ui:insert name="content_component">
             <ui:include src="default_content.xhtml"/>
         </ui:insert>
     </div>
-    <div id="site-footer">
+    <div id="site-footer" class="template-page">
         <ui:insert name="footer_component">
             <ui:include src="default_footer.xhtml"/>
         </ui:insert>
