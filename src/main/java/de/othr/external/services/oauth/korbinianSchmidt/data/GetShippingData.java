@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="sessionToken" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="sessionToken" type="{http://impl.service.sw.kschmidt.de/}sessionDTO" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -31,17 +31,17 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class GetShippingData {
 
-    protected String sessionToken;
+    protected SessionDTO sessionToken;
 
     /**
      * Gets the value of the sessionToken property.
      * 
      * @return
      *     possible object is
-     *     {@link String }
+     *     {@link SessionDTO }
      *     
      */
-    public String getSessionToken() {
+    public SessionDTO getSessionToken() {
         return sessionToken;
     }
 
@@ -50,10 +50,10 @@ public class GetShippingData {
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link SessionDTO }
      *     
      */
-    public void setSessionToken(String value) {
+    public void setSessionToken(SessionDTO value) {
         this.sessionToken = value;
     }
 

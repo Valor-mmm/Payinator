@@ -37,7 +37,7 @@ public interface DataService {
     @ResponseWrapper(localName = "getPersonalDataResponse", targetNamespace = "http://impl.service.sw.kschmidt.de/", className = "de.othr.external.services.oauth.korbinianSchmidt.data.GetPersonalDataResponse")
     public PersonalDataDTO getPersonalData(
         @WebParam(name = "sessionToken", targetNamespace = "")
-        String sessionToken)
+        SessionDTO sessionToken)
         throws DataServiceException_Exception
     ;
 
@@ -54,7 +54,7 @@ public interface DataService {
     @ResponseWrapper(localName = "getPrimaryShippingDataResponse", targetNamespace = "http://impl.service.sw.kschmidt.de/", className = "de.othr.external.services.oauth.korbinianSchmidt.data.GetPrimaryShippingDataResponse")
     public ShippingData getPrimaryShippingData(
         @WebParam(name = "sessionToken", targetNamespace = "")
-        String sessionToken)
+        SessionDTO sessionToken)
         throws DataServiceException_Exception
     ;
 
@@ -71,7 +71,7 @@ public interface DataService {
     @ResponseWrapper(localName = "getShippingDataResponse", targetNamespace = "http://impl.service.sw.kschmidt.de/", className = "de.othr.external.services.oauth.korbinianSchmidt.data.GetShippingDataResponse")
     public List<ShippingData> getShippingData(
         @WebParam(name = "sessionToken", targetNamespace = "")
-        String sessionToken)
+        SessionDTO sessionToken)
         throws DataServiceException_Exception
     ;
 
@@ -88,7 +88,7 @@ public interface DataService {
     @ResponseWrapper(localName = "getPrimaryPaymentMethodResponse", targetNamespace = "http://impl.service.sw.kschmidt.de/", className = "de.othr.external.services.oauth.korbinianSchmidt.data.GetPrimaryPaymentMethodResponse")
     public PaymentMethod getPrimaryPaymentMethod(
         @WebParam(name = "sessionToken", targetNamespace = "")
-        String sessionToken)
+        SessionDTO sessionToken)
         throws DataServiceException_Exception
     ;
 
@@ -105,7 +105,7 @@ public interface DataService {
     @ResponseWrapper(localName = "getPaymentMethodsResponse", targetNamespace = "http://impl.service.sw.kschmidt.de/", className = "de.othr.external.services.oauth.korbinianSchmidt.data.GetPaymentMethodsResponse")
     public List<PaymentMethod> getPaymentMethods(
         @WebParam(name = "sessionToken", targetNamespace = "")
-        String sessionToken)
+        SessionDTO sessionToken)
         throws DataServiceException_Exception
     ;
 

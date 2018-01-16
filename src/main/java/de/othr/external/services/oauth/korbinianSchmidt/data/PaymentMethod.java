@@ -17,6 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
+ *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
  *         &lt;element name="methodId" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
  *         &lt;element name="name" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="paymentAddress" type="{http://impl.service.sw.kschmidt.de/}address" minOccurs="0"/>
@@ -31,6 +32,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "paymentMethod", propOrder = {
+    "id",
     "methodId",
     "name",
     "paymentAddress",
@@ -40,12 +42,37 @@ import javax.xml.bind.annotation.XmlType;
     CreditCardPaymentMethod.class,
     WireTransferPaymentMethod.class
 })
-public class PaymentMethod {
+public abstract class PaymentMethod {
 
+    protected Long id;
     protected Long methodId;
     protected String name;
     protected Address paymentAddress;
     protected boolean primary;
+
+    /**
+     * Gets the value of the id property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Long }
+     *     
+     */
+    public Long getId() {
+        return id;
+    }
+
+    /**
+     * Sets the value of the id property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Long }
+     *     
+     */
+    public void setId(Long value) {
+        this.id = value;
+    }
 
     /**
      * Gets the value of the methodId property.

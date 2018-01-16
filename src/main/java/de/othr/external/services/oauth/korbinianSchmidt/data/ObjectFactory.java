@@ -135,14 +135,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link PaymentMethod }
-     * 
-     */
-    public PaymentMethod createPaymentMethod() {
-        return new PaymentMethod();
-    }
-
-    /**
      * Create an instance of {@link GetPrimaryShippingDataResponse }
      * 
      */
@@ -172,6 +164,14 @@ public class ObjectFactory {
      */
     public Address createAddress() {
         return new Address();
+    }
+
+    /**
+     * Create an instance of {@link SessionDTO }
+     * 
+     */
+    public SessionDTO createSessionDTO() {
+        return new SessionDTO();
     }
 
     /**

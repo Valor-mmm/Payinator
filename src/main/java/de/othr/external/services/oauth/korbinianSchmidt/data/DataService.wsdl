@@ -16,7 +16,17 @@
   <xs:element name="wireTransferPaymentMethod" type="tns:wireTransferPaymentMethod"/>
   <xs:complexType name="getPersonalData">
     <xs:sequence>
+      <xs:element minOccurs="0" name="sessionToken" type="tns:sessionDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="sessionDTO">
+    <xs:sequence>
       <xs:element minOccurs="0" name="sessionToken" type="xs:string"/>
+      <xs:element name="userId" type="xs:long"/>
+      <xs:element minOccurs="0" name="username" type="xs:string"/>
+      <xs:element minOccurs="0" name="creationDate" type="xs:string"/>
+      <xs:element minOccurs="0" name="expirationDate" type="xs:string"/>
+      <xs:element name="siteId" type="xs:long"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="getPersonalDataResponse">
@@ -36,6 +46,7 @@
   <xs:complexType name="address">
     <xs:sequence>
       <xs:element minOccurs="0" name="country" type="xs:string"/>
+      <xs:element minOccurs="0" name="id" type="xs:long"/>
       <xs:element minOccurs="0" name="name" type="xs:string"/>
       <xs:element minOccurs="0" name="place" type="xs:string"/>
       <xs:element minOccurs="0" name="street" type="xs:string"/>
@@ -45,7 +56,7 @@
   </xs:complexType>
   <xs:complexType name="getPrimaryShippingData">
     <xs:sequence>
-      <xs:element minOccurs="0" name="sessionToken" type="xs:string"/>
+      <xs:element minOccurs="0" name="sessionToken" type="tns:sessionDTO"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="getPrimaryShippingDataResponse">
@@ -56,6 +67,7 @@
   <xs:complexType name="shippingData">
     <xs:sequence>
       <xs:element name="isPrimary" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="id" type="xs:long"/>
       <xs:element minOccurs="0" name="name" type="xs:string"/>
       <xs:element name="primary" type="xs:boolean"/>
       <xs:element minOccurs="0" name="shippingAddress" type="tns:address"/>
@@ -63,7 +75,7 @@
   </xs:complexType>
   <xs:complexType name="getShippingData">
     <xs:sequence>
-      <xs:element minOccurs="0" name="sessionToken" type="xs:string"/>
+      <xs:element minOccurs="0" name="sessionToken" type="tns:sessionDTO"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="getShippingDataResponse">
@@ -73,7 +85,7 @@
   </xs:complexType>
   <xs:complexType name="getPrimaryPaymentMethod">
     <xs:sequence>
-      <xs:element minOccurs="0" name="sessionToken" type="xs:string"/>
+      <xs:element minOccurs="0" name="sessionToken" type="tns:sessionDTO"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="getPrimaryPaymentMethodResponse">
@@ -81,8 +93,9 @@
       <xs:element minOccurs="0" name="return" type="tns:paymentMethod"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="paymentMethod">
+  <xs:complexType abstract="true" name="paymentMethod">
     <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:long"/>
       <xs:element minOccurs="0" name="methodId" type="xs:long"/>
       <xs:element minOccurs="0" name="name" type="xs:string"/>
       <xs:element minOccurs="0" name="paymentAddress" type="tns:address"/>
@@ -113,7 +126,7 @@
   </xs:complexType>
   <xs:complexType name="getPaymentMethods">
     <xs:sequence>
-      <xs:element minOccurs="0" name="sessionToken" type="xs:string"/>
+      <xs:element minOccurs="0" name="sessionToken" type="tns:sessionDTO"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="getPaymentMethodsResponse">

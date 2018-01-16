@@ -73,8 +73,9 @@ public class UpdateServiceImpl implements UpdateServiceIF {
                                                                                                  OAuthException,
                                                                                                  InternalErrorException {
 
-        PersonalDataDTO personalDataDTO = getPersonalData(oAuthSession.getSessionToken());
-        List<PaymentMethod> paymentMethods = getPaymentMethods(oAuthSession.getSessionToken());
+        de.othr.external.services.oauth.korbinianSchmidt.data.SessionDTO dataSession = convertSession(oAuthSession);
+        PersonalDataDTO personalDataDTO = getPersonalData(dataSession);
+        List<PaymentMethod> paymentMethods = getPaymentMethods(dataSession);
 
         PersonalInformation oldPersonalInformation = user != null ? user.getPersonalInformation() : null;
         PersonalInformation updatedInformation = persInfoUpdater.update(personalDataDTO, oldPersonalInformation);
@@ -102,10 +103,11 @@ public class UpdateServiceImpl implements UpdateServiceIF {
         return user;
     }
 
-    private @NotNull PersonalDataDTO getPersonalData(String sessionToken) throws OAuthException {
+    private @NotNull PersonalDataDTO getPersonalData(
+            de.othr.external.services.oauth.korbinianSchmidt.data.SessionDTO session) throws OAuthException {
         PersonalDataDTO personalDataDTO;
         try {
-            personalDataDTO = dataService.getPersonalData(sessionToken);
+            personalDataDTO = dataService.getPersonalData(session);
         } catch (DataServiceException_Exception e) {
             DataServiceException exception = e.getFaultInfo();
             if (exception == null) {
@@ -122,10 +124,11 @@ public class UpdateServiceImpl implements UpdateServiceIF {
         return personalDataDTO;
     }
 
-    private List<PaymentMethod> getPaymentMethods(String sessionToken) throws OAuthException {
+    private List<PaymentMethod> getPaymentMethods(
+            de.othr.external.services.oauth.korbinianSchmidt.data.SessionDTO session) throws OAuthException {
         List<PaymentMethod> paymentMethods;
         try {
-            paymentMethods = dataService.getPaymentMethods(sessionToken);
+            paymentMethods = dataService.getPaymentMethods(session);
         } catch (DataServiceException_Exception e) {
             DataServiceException exception = e.getFaultInfo();
             if (exception == null) {
@@ -177,5 +180,17 @@ public class UpdateServiceImpl implements UpdateServiceIF {
             logger.log(Level.SEVERE, "Could not find email of already persisted user.", ex);
             throw new InternalErrorException();
         }
+    }
+
+    private de.othr.external.services.oauth.korbinianSchmidt.data.SessionDTO convertSession(@NotNull SessionDTO session) {
+        de.othr.external.services.oauth.korbinianSchmidt.data.SessionDTO dataSession = new de.othr.external.services
+                .oauth.korbinianSchmidt.data.SessionDTO();
+        dataSession.setCreationDate(session.getCreationDate());
+        dataSession.setExpirationDate(session.getExpirationDate());
+        dataSession.setSessionToken(session.getSessionToken());
+        dataSession.setSiteId(session.getSiteId());
+        dataSession.setUserId(session.getUserId());
+        dataSession.setUsername(session.getUsername());
+        return dataSession;
     }
 }
