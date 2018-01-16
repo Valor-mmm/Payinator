@@ -11,6 +11,7 @@ import de.othr.has44540.persistance.entities.account.AbstractAccount;
 import de.othr.has44540.persistance.entities.account.Payment;
 import de.othr.has44540.persistance.entities.account.impl.SimpleAccount;
 import de.othr.has44540.persistance.entities.user.paymentInformation.AbstractPaymentMethod;
+import de.othr.has44540.persistance.entities.user.roles.SimpleUser;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
@@ -23,7 +24,7 @@ import java.math.BigDecimal;
 
 @SessionScoped
 @WebService
-public class PaymentServiceImpl implements PaymentServiceIF {
+public class PaymentService implements PaymentServiceIF {
 
 
     @PersistenceContext
@@ -35,9 +36,9 @@ public class PaymentServiceImpl implements PaymentServiceIF {
     @Override
     @CheckLogin
     @Transactional
-    public Payment payDefault(AuthToken authToken, AbstractAccount toAccount, BigDecimal amount) throws
-                                                                                                 AuthException,
-                                                                                                 AccountException {
+    public Payment payDefault(AuthToken authToken, AbstractAccount toAccount, BigDecimal amount, String cause) throws
+                                                                                                               AuthException,
+                                                                                                               AccountException {
         if (toAccount == null) {
             toAccount = accountUtils.determinDefaultAccount();
         }
@@ -51,16 +52,16 @@ public class PaymentServiceImpl implements PaymentServiceIF {
             throw new UnknownPaymentMethodException("User does not have a default payment method.");
         }
 
-        return makePayment(authToken, fromAccount, toAccount, paymentMethod, amount);
+        return makePayment(authToken, fromAccount, toAccount, paymentMethod, amount, cause);
     }
 
     @Override
     @CheckLogin
     @Transactional
     public Payment makePayment(AuthToken authToken, AbstractAccount fromAccount, AbstractAccount toAccount,
-                               AbstractPaymentMethod paymentMethod, BigDecimal amount) throws
-                                                                                       AuthException,
-                                                                                       AccountException {
+                               AbstractPaymentMethod paymentMethod, BigDecimal amount, String cause) throws
+                                                                                                     AuthException,
+                                                                                                     AccountException {
         accountUtils.checkAccount(fromAccount);
         accountUtils.checkAccountOwner(fromAccount);
         if (fromAccount.getAlias().equals(toAccount.getAlias())) {
@@ -72,6 +73,7 @@ public class PaymentServiceImpl implements PaymentServiceIF {
         }
 
         Payment payment = new Payment(fromAccount, paymentMethod);
+        payment.setCause(cause);
         return initiatePayment(payment, toAccount, amount);
     }
 
@@ -90,6 +92,14 @@ public class PaymentServiceImpl implements PaymentServiceIF {
         }
 
         em.persist(payment);
+
+        SimpleAccount mergedToAcc = em.merge((SimpleAccount) toAccount);
+        AbstractAccount mergedFromAcc = em.merge(payment.getFromAccount());
+        mergedToAcc.addPaymentIn(payment);
+        mergedFromAcc.addPaymentOut(payment);
+        em.persist(mergedToAcc);
+        em.persist(mergedFromAcc);
+
         return payment;
     }
 

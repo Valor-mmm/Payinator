@@ -8,10 +8,14 @@ import de.othr.has44540.persistance.entities.user.personalData.PersonalInformati
 import de.othr.has44540.persistance.util.GeneratedIDEntity;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.Set;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@XmlAccessorType(XmlAccessType.FIELD)
 public abstract class AbstractUser extends GeneratedIDEntity {
 
     // Attributes
@@ -24,6 +28,7 @@ public abstract class AbstractUser extends GeneratedIDEntity {
 
     // References
 
+    @XmlTransient
     @OneToOne
     private Email email;
 
@@ -34,6 +39,7 @@ public abstract class AbstractUser extends GeneratedIDEntity {
     @OneToOne
     private PersonalInformation personalInformation;
 
+    @XmlTransient
     @OneToOne
     private DonorAccount donorAccount;
 

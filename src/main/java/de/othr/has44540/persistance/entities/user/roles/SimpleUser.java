@@ -5,6 +5,7 @@ import de.othr.has44540.persistance.entities.account.impl.SimpleAccount;
 import de.othr.has44540.persistance.entities.user.AbstractUser;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import java.util.Set;
 
@@ -13,7 +14,7 @@ public class SimpleUser extends AbstractUser {
 
     // Relations
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private Set<SimpleAccount> simpleAccounts;
 
     // Methods

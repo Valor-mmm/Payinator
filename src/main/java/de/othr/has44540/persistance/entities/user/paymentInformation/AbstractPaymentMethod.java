@@ -5,9 +5,11 @@ import de.othr.has44540.persistance.util.GeneratedIDEntity;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.xml.bind.annotation.XmlSeeAlso;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@XmlSeeAlso({WireTransfer.class, CreditCard.class})
 public abstract class AbstractPaymentMethod extends GeneratedIDEntity {
 
     // Attributes

@@ -1,5 +1,6 @@
 package de.othr.has44540.persistance.entities.account;
 
+import de.othr.has44540.logic.services.auth.token.LocalDateTimeAdapter;
 import de.othr.has44540.persistance.entities.account.impl.SimpleAccount;
 import de.othr.has44540.persistance.entities.user.paymentInformation.AbstractPaymentMethod;
 import de.othr.has44540.persistance.util.GeneratedIDEntity;
@@ -7,10 +8,15 @@ import de.othr.has44540.persistance.util.GeneratedIDEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Payment extends GeneratedIDEntity {
 
     // Attributes
@@ -22,7 +28,8 @@ public class Payment extends GeneratedIDEntity {
 
     private String message = null;
 
-    private LocalDate creationTime;
+    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
+    private LocalDateTime creationTime;
 
 
     // References
@@ -37,13 +44,13 @@ public class Payment extends GeneratedIDEntity {
     private AbstractPaymentMethod paymentMethod;
 
     public Payment() {
-        this.creationTime = LocalDate.now();
+        this.creationTime = LocalDateTime.now();
     }
 
     public Payment(AbstractAccount fromAccount, AbstractPaymentMethod paymentMethod) {
+        this();
         this.fromAccount = fromAccount;
         this.paymentMethod = paymentMethod;
-        this.creationTime = LocalDate.now();
     }
 
 
@@ -73,11 +80,11 @@ public class Payment extends GeneratedIDEntity {
         this.message = message;
     }
 
-    public LocalDate getCreationTime() {
+    public LocalDateTime getCreationTime() {
         return creationTime;
     }
 
-    public void setCreationTime(LocalDate creationTime) {
+    public void setCreationTime(LocalDateTime creationTime) {
         this.creationTime = creationTime;
     }
 
