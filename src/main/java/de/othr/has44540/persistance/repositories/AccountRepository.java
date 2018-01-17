@@ -1,6 +1,8 @@
 package de.othr.has44540.persistance.repositories;
 
 import de.othr.has44540.logic.services.account.accountsvc.AccountCase;
+import de.othr.has44540.logic.services.auth.LoginInterceptor.CheckLogin;
+import de.othr.has44540.logic.services.exceptions.auth.AuthException;
 import de.othr.has44540.persistance.entities.account.AbstractAccount;
 import de.othr.has44540.persistance.util.SingleIdEntityRepository;
 
@@ -14,7 +16,8 @@ import java.util.stream.Collectors;
 @Transactional
 public class AccountRepository extends SingleIdEntityRepository<Long, AbstractAccount> implements Serializable {
 
-    public List<AbstractAccount> getAccountsForCase(AccountCase accountCase) {
+    @CheckLogin
+    public List<AbstractAccount> getAccountsForCase(AccountCase accountCase) throws AuthException {
         return findAll()
                 .stream()
                 .filter(accountCase::fitsAccout)

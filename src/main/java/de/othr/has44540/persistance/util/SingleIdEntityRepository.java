@@ -10,7 +10,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class SingleIdEntityRepository<IdType, Entity extends SingleIdEntity<IdType>> {
+public abstract class SingleIdEntityRepository<IdType, Entity extends SingleIdEntity<IdType>> {
 
     public static final String PERSISTANCE_UNIT_NAME = "swPU";
 
