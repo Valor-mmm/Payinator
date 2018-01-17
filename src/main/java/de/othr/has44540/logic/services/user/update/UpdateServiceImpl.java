@@ -94,12 +94,12 @@ public class UpdateServiceImpl implements UpdateServiceIF {
             user.setPaymentMethods(updatedPaymentMethods);
             user = em.merge(user);
         }
-        em.persist(user);
         if (email != null) {
             Email foundEmail = findEmail(email.getLocalPart(), email.getDomain());
             foundEmail.setUser(user);
-            em.persist(foundEmail);
+            // dont need to persist. will be persisted with user; (Cascade)
         }
+        em.persist(user);
         return user;
     }
 

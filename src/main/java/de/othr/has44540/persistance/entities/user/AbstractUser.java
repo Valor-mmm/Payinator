@@ -29,7 +29,7 @@ public abstract class AbstractUser extends GeneratedIDEntity {
     // References
 
     @XmlTransient
-    @OneToOne
+    @OneToOne(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     private Email email;
 
     @OneToMany(fetch = FetchType.EAGER)
