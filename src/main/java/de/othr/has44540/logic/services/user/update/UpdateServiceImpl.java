@@ -1,4 +1,4 @@
-package de.othr.has44540.logic.unnecessaryr.update;
+package de.othr.has44540.logic.services.user.update;
 
 import de.othr.external.services.oauth.CustomDataServiceService;
 import de.othr.external.services.oauth.korbinianSchmidt.data.*;
