@@ -9,6 +9,7 @@ import de.othr.has44540.logic.services.exceptions.InternalErrorException;
 import de.othr.has44540.logic.services.exceptions.auth.AuthException;
 import de.othr.has44540.persistance.entities.account.AbstractAccount;
 import de.othr.has44540.persistance.entities.account.impl.SimpleAccount;
+import de.othr.has44540.persistance.repositories.AccountRepository;
 import de.othr.has44540.ui.IndexModel;
 import de.othr.has44540.ui.utils.AuthModel;
 import de.othr.has44540.ui.utils.ErrorModel;
@@ -35,7 +36,7 @@ public class AccountsModel implements Serializable {
     public static final String pageName = "accounts";
 
     @Inject
-    private InternalAccountSvcIF accountService;
+    private AccountRepository accountRepository;
 
     @Inject
     @AuthServiceQualifier(AuthServiceCase.SESSION_BASED)
@@ -54,16 +55,11 @@ public class AccountsModel implements Serializable {
     public void retrieveAccounts() {
         try {
             logger.info("Retrieving accounts for [" + accountCase + "]");
-            accounts = accountService.getAccountsByCase(accountCase);
+            accounts = accountRepository.getAccountsForCase(accountCase);
             return;
         } catch (AuthException e) {
             handleAuthError(e);
-        }  catch (InternalErrorException intEx) {
-            logger.log(Level.SEVERE, "An internal error occurred.", intEx);
-            errorModel.setError(intEx.getTitle(), intEx.getDescription());
-            IndexModel.redirectToPage(ErrorModel.pageName);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             handleUnknownError(e);
         }
     }
@@ -78,7 +74,7 @@ public class AccountsModel implements Serializable {
     }
 
     public String getColorForAccount(AbstractAccount account) {
-        AccountCase accountCase = getAccountCaseForAccount(account);
+        AccountCase accountCase = determineAccountCase(account);
         if (accountCase == null) {
             logger.warning("Account case was null.");
             return "";
@@ -87,24 +83,12 @@ public class AccountsModel implements Serializable {
     }
 
     public String getCaseNameForAccount(AbstractAccount account) {
-        AccountCase accountCase = getAccountCaseForAccount(account);
+        AccountCase accountCase = determineAccountCase(account);
         if (accountCase == null) {
             logger.warning("Account case was null.");
             return "";
         }
         return accountCase.getName();
-    }
-
-    private AccountCase getAccountCaseForAccount(AbstractAccount account) {
-        try {
-            return accountService.determineAccountCase(account);
-        } catch (AuthException e) {
-            handleAuthError(e);
-        } catch (Exception e) {
-            handleUnknownError(e);
-        }
-        logger.severe("Account case is null.");
-        return null;
     }
 
     public String delete(AbstractAccount account) {
@@ -113,7 +97,7 @@ public class AccountsModel implements Serializable {
 
     public String getBalance(AbstractAccount account) {
         if (account instanceof SimpleAccount) {
-            BigDecimal balance =((SimpleAccount) account).getBalance();
+            BigDecimal balance = ((SimpleAccount) account).getBalance();
             if (balance != null) {
                 return balance.toString() + "€";
             }
@@ -126,9 +110,9 @@ public class AccountsModel implements Serializable {
     }
 
     public String selectionChanged() {
-      logger.info("Selection changed. To [" + this.accountCase + "]");
-      retrieveAccounts();
-      return null;
+        logger.info("Selection changed. To [" + this.accountCase + "]");
+        retrieveAccounts();
+        return null;
     }
 
     private void handleAuthError(AuthException e) {
@@ -141,6 +125,18 @@ public class AccountsModel implements Serializable {
         logger.log(Level.SEVERE, "Unexpected error during accountService communication.", e);
         errorModel.setUnknownError();
         ErrorModel.redirectToErrorPage();
+    }
+
+    public AccountCase determineAccountCase(AbstractAccount account) {
+        for (AccountCase accountCase : AccountCase.values()) {
+            if (accountCase.fitsAccout(account)) {
+                if (accountCase.equals(AccountCase.ALL)) {
+                    continue;
+                }
+                return accountCase;
+            }
+        }
+        return null;
     }
 
     public void setAccountCase(AccountCase accountCase) {

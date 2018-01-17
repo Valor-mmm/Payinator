@@ -14,7 +14,6 @@
                 <h:selectOneMenu value="#{accountsModel.accountCase}">
                     <f:converter converterId="de.othr.has44540.ui.accounts.AccountCaseConverter"/>
                     <f:selectItems value="#{accountsModel.accountCaseList}"/>
-                    <f:ajax execute="@form" listener="#{accountsModel.selectionChanged}" render="account-list"/>
                 </h:selectOneMenu>
                 <div>
                     <h:commandButton action="#{accountsModel.selectionChanged}" value="Submit"/>
