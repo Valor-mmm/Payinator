@@ -29,7 +29,6 @@ public class SimpleUserSupplier implements Supplier<SimpleUser>, Serializable {
     private EntityManager em;
 
     private Long oAuthId;
-    private Email email;
 
     @Inject
     @EntitySupplierQualifier(EntitySupplierCase.SIMPLE_ACCOUNT)
@@ -53,32 +52,8 @@ public class SimpleUserSupplier implements Supplier<SimpleUser>, Serializable {
 
         simpleUser.setDonorAccount(donorAccount);
 
-        if (email != null) {
-            email = handleEmail(email);
-            simpleUser.setEmail(email);
-        }
-
         simpleUser.setOauthId(oAuthId);
         return simpleUser;
-    }
-
-    @Transactional
-    private Email handleEmail(Email email) {
-        TypedQuery<Email> emailQ = em.createNamedQuery("emailByLocalPartAndDomain", Email.class);
-        emailQ.setParameter("localPart", email.getLocalPart());
-        emailQ.setParameter("domain", email.getDomain());
-        Email result = null;
-        try {
-            result = emailQ.getSingleResult();
-            return result;
-        } catch (NoResultException ex) {
-            logger.log(Level.CONFIG, "No email with this local part and domain exists yet.", ex);
-        }
-        if (result == null) {
-            em.persist(email);
-            result = email;
-        }
-        return result;
     }
 
     private void initSimpleAccountSupplier(DonorAccount donorAccount) {
@@ -93,13 +68,5 @@ public class SimpleUserSupplier implements Supplier<SimpleUser>, Serializable {
 
     public void setoAuthId(Long oAuthId) {
         this.oAuthId = oAuthId;
-    }
-
-    public Email getEmail() {
-        return email;
-    }
-
-    public void setEmail(Email email) {
-        this.email = email;
     }
 }

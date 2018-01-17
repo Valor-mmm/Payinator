@@ -1,4 +1,4 @@
-package de.othr.has44540.logic.services.user.update;
+package de.othr.has44540.logic.unnecessaryr.update;
 
 import de.othr.external.services.oauth.CustomDataServiceService;
 import de.othr.external.services.oauth.korbinianSchmidt.data.*;
@@ -84,21 +84,22 @@ public class UpdateServiceImpl implements UpdateServiceIF {
         Set<AbstractPaymentMethod> updatedPaymentMethods = paymentMethodUpdater.update(paymentMethods, currentSet);
 
         if (user == null) {
-            initSimpleUserSupplier(oAuthSession.getUserId(), email);
+            initSimpleUserSupplier(oAuthSession.getUserId());
             user = simpleUserSupplier.get();
             user.setPersonalInformation(updatedInformation);
             user.setPaymentMethods(updatedPaymentMethods);
-            user.setUsername(updatedInformation.getFirstName());
+            user.setUsername(oAuthSession.getUsername());
         } else {
             user.setPersonalInformation(updatedInformation);
             user.setPaymentMethods(updatedPaymentMethods);
             user = em.merge(user);
         }
         if (email != null) {
-            Email foundEmail = findEmail(email.getLocalPart(), email.getDomain());
-            foundEmail.setUser(user);
+            email = findEmail(email);
+            email.setUser(user);
             // dont need to persist. will be persisted with user; (Cascade)
         }
+        user.setEmail(email);
         em.persist(user);
         return user;
     }
@@ -146,11 +147,10 @@ public class UpdateServiceImpl implements UpdateServiceIF {
         return paymentMethods;
     }
 
-    private void initSimpleUserSupplier(Long oAuthID, Email email) {
+    private void initSimpleUserSupplier(Long oAuthID) {
         if (simpleUserSupplier instanceof SimpleUserSupplier) {
             SimpleUserSupplier implementation = (SimpleUserSupplier) simpleUserSupplier;
             implementation.setoAuthId(oAuthID);
-            implementation.setEmail(email);
             simpleUserSupplier = implementation;
         }
     }
@@ -170,15 +170,15 @@ public class UpdateServiceImpl implements UpdateServiceIF {
         return null;
     }
 
-    private Email findEmail(String localPart, String domain) throws InternalErrorException {
+    private Email findEmail(@NotNull Email email) throws InternalErrorException {
         TypedQuery<Email> emailQ = em.createNamedQuery("emailByLocalPartAndDomain", Email.class);
-        emailQ.setParameter("localPart", localPart);
-        emailQ.setParameter("domain", domain);
+        emailQ.setParameter("localPart", email.getLocalPart());
+        emailQ.setParameter("domain", email.getDomain());
         try {
             return emailQ.getSingleResult();
         } catch (NoResultException ex) {
-            logger.log(Level.SEVERE, "Could not find email of already persisted user.", ex);
-            throw new InternalErrorException();
+            logger.log(Level.INFO, "Could not find email of already persisted user.", ex);
+            return email;
         }
     }
 
