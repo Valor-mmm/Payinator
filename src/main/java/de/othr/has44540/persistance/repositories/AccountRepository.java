@@ -16,6 +16,10 @@ import java.util.stream.Collectors;
 @Transactional
 public class AccountRepository extends SingleIdEntityRepository<Long, AbstractAccount> implements Serializable {
 
+    public AccountRepository() {
+        super(AbstractAccount.class);
+    }
+
     @CheckLogin
     public List<AbstractAccount> getAccountsForCase(AccountCase accountCase) throws AuthException {
         return findAll()

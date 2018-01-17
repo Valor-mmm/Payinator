@@ -10,7 +10,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.logging.Logger;
 
-public abstract class SingleIdEntityRepository<IdType, Entity extends SingleIdEntity<IdType>> {
+public class SingleIdEntityRepository<IdType, Entity extends SingleIdEntity<IdType>> {
 
     public static final String PERSISTANCE_UNIT_NAME = "swPU";
 
@@ -20,6 +20,10 @@ public abstract class SingleIdEntityRepository<IdType, Entity extends SingleIdEn
 
     @PersistenceContext(unitName = SingleIdEntityRepository.PERSISTANCE_UNIT_NAME)
     private EntityManager em;
+
+    public SingleIdEntityRepository(Class<Entity> entityClass) {
+        this.entityClass = entityClass;
+    }
 
     @SuppressWarnings("unchecked")
     public SingleIdEntityRepository() {
