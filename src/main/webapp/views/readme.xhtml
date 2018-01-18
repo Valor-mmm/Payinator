@@ -10,9 +10,31 @@
     <ui:composition template="../template/template.xhtml">
         <ui:define name="content_component">
             <h1>Readme</h1>
-        </ui:define>
-        <ui:define name="footer_component">
-            <p>Thanks for using Payinator</p>
+
+            <p>Mein Projekt Payinator etwas ähnliches wie PayPal abbilden.<br/>
+                Allerdings soll bei meinem Projekt eine "Aufrunden bitte" Funktionalität wie aus Supermärkten geboten werden<br/>
+                Leider konnte ich alle Funktionen in diesem Zusammenhang aus Zeitgründen nicht fertig stellen.</p>
+
+            <p>Für das Css Layout ist zu großen Teilen
+                <a href="https://picturepan2.github.io/spectre/index.html">Spectre Css</a> verantwortlich.</p>
+
+            <h6>Funktionen des Payinators jetzt:</h6>
+            <ul>
+                <li>Accounts eines Nutzers anzeigen und filtern.</li>
+                <li>Payments eines Nutzers anzeigen (ein/ausgehend)</li>
+                <li>Ein neues Payment erstellen.
+                    <div class="text-gray">Genutzt in Partnerprojekt</div>
+                </li>
+            </ul>
+            <h6>Funktionen im Hintergrund</h6>
+            <ul>
+                <li>User mit OAuth System einloggen
+                    <div class="text-gray">Genutztes Partnerprojekt</div>
+                </li>
+                <li>Datenupdate des Users beim Login</li>
+                <li>Link der User session mit anderem Projekt</li>
+                <li>Automatischer wechsel zwischen Session/Token basierender Authentifizierung</li>
+            </ul>
         </ui:define>
     </ui:composition>
 </h:body>

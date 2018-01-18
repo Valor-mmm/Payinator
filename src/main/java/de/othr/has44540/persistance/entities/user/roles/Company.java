@@ -47,6 +47,9 @@ public class Company extends AbstractUser {
 
     @Override
     public boolean containsAccount(AbstractAccount account) {
+        if (getDonorAccount() != null && getDonorAccount().equals(account)) {
+            return true;
+        }
         if (companyAccounts == null) {
             return false;
         }

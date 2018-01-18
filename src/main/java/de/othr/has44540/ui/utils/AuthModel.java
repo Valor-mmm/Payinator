@@ -11,6 +11,7 @@ import de.othr.has44540.logic.services.exceptions.auth.InvalidTokenException;
 import de.othr.has44540.ui.IndexModel;
 
 import javax.enterprise.context.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
@@ -98,11 +99,16 @@ public class AuthModel implements Serializable {
     public String logout() {
         try {
             authService.logout(null);
+            FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
             loggedIn = false;
             return AuthModel.pageName;
         } catch (InvalidTokenException e) {
             logger.log(Level.WARNING, "Could not logout.", e);
             errorModel.setError(e.getTitle(), e.getDescription());
+            return ErrorModel.pageName;
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Unexpected error during Logout.", e);
+            errorModel.setUnknownError();
             return ErrorModel.pageName;
         }
     }

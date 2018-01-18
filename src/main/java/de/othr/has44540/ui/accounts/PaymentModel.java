@@ -42,7 +42,8 @@ public class PaymentModel implements Serializable {
     @Inject
     private InternalPaymentSvcIF paymentService;
 
-    @Inject @AuthServiceQualifier(AuthServiceCase.SESSION_BASED)
+    @Inject
+    @AuthServiceQualifier(AuthServiceCase.SESSION_BASED)
     private AuthServiceIF authService;
 
     @Inject
@@ -50,6 +51,12 @@ public class PaymentModel implements Serializable {
 
     @Inject
     private AuthModel authModel;
+
+    @Inject
+    private AccountConverter accountConverter;
+
+    @Inject
+    private PaymentMethodConverter paymentMethodConverter;
 
     /*
         Block used for creation of new payment
@@ -87,8 +94,9 @@ public class PaymentModel implements Serializable {
         if (user == null) {
             allPaymentMethods = new HashSet<>();
         }
+
         allPaymentMethods = authService.getLoggedInUser().getPaymentMethods();
-        if (allPaymentMethods != null && !allPaymentMethods.isEmpty()){
+        if (allPaymentMethods != null && !allPaymentMethods.isEmpty()) {
             paymentMethod = allPaymentMethods.iterator().next();
         }
     }
@@ -121,8 +129,26 @@ public class PaymentModel implements Serializable {
         return paymentsOut;
     }
 
+    private void checkPayment() {
+        String errTitle = "Wrong or missing inputs.";
+        if (amount == null) {
+            errorModel.setError(errTitle, "Please enter a decimal number for the Amount field. Example: \"40.6\"");
+            IndexModel.redirectToPage(ErrorModel.pageName);
+        }
+        if (toAccount == null) {
+            errorModel.setError(errTitle,
+                                "The account you entered was not valid. Please enter a valid account alias.");
+            IndexModel.redirectToPage(ErrorModel.pageName);
+        }
+        if (fromAccount == null || paymentMethod == null) {
+            errorModel.setUnknownError();
+            IndexModel.redirectToPage(ErrorModel.pageName);
+        }
+    }
+
     // To create a new payment
     public String create() {
+        checkPayment();
         Payment payment = new Payment();
         payment.setAmount(new BigDecimal(amount));
         payment.setToAccount(toAccount);
@@ -228,5 +254,13 @@ public class PaymentModel implements Serializable {
 
     public void setPaymentsOut(List<Payment> paymentsOut) {
         this.paymentsOut = paymentsOut;
+    }
+
+    public AccountConverter getAccountConverter() {
+        return accountConverter;
+    }
+
+    public PaymentMethodConverter getPaymentMethodConverter() {
+        return paymentMethodConverter;
     }
 }

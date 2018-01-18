@@ -45,16 +45,18 @@
                             <label for="amountInput" class="form-label">Amount</label>
                             <h:inputText id="amountInput" converterId="javax.faces.Double" styleClass="form-input" value="#{paymentModel.amount}"/>
                             <label for="toAccountInput" class="form-label">To Account</label>
-                            <h:inputText id="toAccountInput" styleClass="form-input" value="#{paymentModel.toAccount}"/>
-                            <label for="fromAccountInput" class="form-label">To Account</label>
+                            <h:inputText id="toAccountInput" styleClass="form-input" value="#{paymentModel.toAccount}">
+                                <f:converter binding="#{paymentModel.accountConverter}"/>
+                            </h:inputText>
+                            <label for="fromAccountInput" class="form-label">From Account</label>
                             <h:selectOneMenu id="fromAccountInput" value="#{paymentModel.fromAccount}">
                                 <f:selectItems value="#{paymentModel.allFromAccounts}"/>
-                                <f:converter converterId="de.othr.has44540.ui.accounts.AccountConverter"/>
+                                <f:converter binding="#{paymentModel.accountConverter}"/>
                             </h:selectOneMenu>
                             <label for="paymentMethodInput" class="form-label">Payment Method</label>
                             <h:selectOneMenu id="paymentMethodInput" value="#{paymentModel.paymentMethod}">
                                 <f:selectItems value="#{paymentModel.allPaymentMethods}"/>
-                                <f:converter converterId="de.othr.has44540.ui.accounts.AccountConverter"/>
+                                <f:converter binding="#{paymentModel.paymentMethodConverter}"/>
                             </h:selectOneMenu>
                             <label for="causeInput" class="form-label">Cause</label>
                             <h:inputText id="causeInput" styleClass="form-input" value="#{paymentModel.cause}"/>

@@ -1,7 +1,7 @@
 package de.othr.has44540.ui.accounts;
 
-import de.othr.has44540.persistance.entities.account.AbstractAccount;
-import de.othr.has44540.persistance.repositories.AccountRepository;
+import de.othr.has44540.persistance.entities.user.paymentInformation.AbstractPaymentMethod;
+import de.othr.has44540.persistance.repositories.PaymentMethodRepository;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.component.UIComponent;
@@ -9,25 +9,19 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.inject.Inject;
 import java.io.Serializable;
-import java.util.logging.Logger;
 
 @SessionScoped
-public class AccountConverter implements Converter, Serializable {
+public class PaymentMethodConverter implements Converter, Serializable {
 
     @Inject
-    private AccountRepository accountRepository;
-
-    private static final Logger logger = Logger.getLogger(AccountConverter.class.getName());
+    private PaymentMethodRepository pmRepository;
 
     @Override
     public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String s) {
         if (s == null) {
             return null;
         }
-
-        Object account = accountRepository.findByAlias(s);
-        logger.info("Converting: [" + s + "] to object. Found: " + (account != null));
-        return account;
+        return pmRepository.findByName(s);
     }
 
     @Override
@@ -36,10 +30,10 @@ public class AccountConverter implements Converter, Serializable {
             return null;
         }
 
-        if (!(o instanceof AbstractAccount)) {
+        if (!(o instanceof AbstractPaymentMethod)) {
             return null;
         }
 
-        return ((AbstractAccount) (AbstractAccount) o).getAlias();
+        return ((AbstractPaymentMethod) o).getName();
     }
 }

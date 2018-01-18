@@ -8,6 +8,22 @@
     <ui:composition template="../template/template.xhtml">
         <ui:define name="content_component">
             <h1>Index</h1>
+
+            <div style="visibility: #{indexModel.showUsername()}">
+                <h4>Welcome #{indexModel.username}</h4>
+            </div>
+            <div style="visibility: #{indexModel.showNotLoggedIn()}">
+                <div class="empty">
+                    <p class="empty-title h5">You are currently not logged in. </p>
+                    <p class="empty-subtitle">Please Log in with your OAuth credentials to use Payinator</p>
+                    <div class="empty-action">
+                        <h:form>
+                            <h:commandButton action="login" value="Login"/>
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+
         </ui:define>
     </ui:composition>
 </h:body>

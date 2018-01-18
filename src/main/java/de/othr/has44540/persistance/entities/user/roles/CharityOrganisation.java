@@ -42,6 +42,10 @@ public class CharityOrganisation extends AbstractUser {
 
     @Override
     public boolean containsAccount(AbstractAccount account) {
+        if (getDonorAccount() != null && getDonorAccount().equals(account)) {
+            return true;
+        }
+
         if (charityAccounts == null) {
             return false;
         }

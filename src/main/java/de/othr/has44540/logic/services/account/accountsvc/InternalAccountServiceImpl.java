@@ -33,8 +33,9 @@ public class InternalAccountServiceImpl extends AccountServiceImpl implements In
     @WebMethod(exclude = true)
     @Transactional
     public List<AbstractAccount> getAccountsByUserAndCase(AccountCase accountCase) throws
-                                                                                                        AuthException {
-        return getAllUserAccounts()
+                                                                                   AuthException {
+        List<AbstractAccount> userAccounts = getAllUserAccounts();
+        return userAccounts
                 .stream()
                 .filter(accountCase::fitsAccount)
                 .collect(Collectors.toList());

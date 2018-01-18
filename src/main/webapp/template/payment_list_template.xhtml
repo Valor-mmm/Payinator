@@ -17,12 +17,14 @@
                 <div class="card-body">
                     <h:outputText value="Amount: #{payment.amount}"/>
                     <br/>
-                    From Account: <h:outputText value="#{payment.fromAccount}">
-                        <f:converter converterId="de.othr.has44540.ui.accounts.AccountConverter"/>
+                    From Account:
+                    <h:outputText value="#{payment.fromAccount}">
+                        <f:converter binding="#{paymentModel.accountConverter}"/>
                     </h:outputText>
                     <br/>
-                    To Account: <h:outputText value="#{payment.toAccount}">
-                        <f:converter converterId="de.othr.has44540.ui.accounts.AccountConverter"/>
+                    To Account:
+                    <h:outputText value="#{payment.toAccount}">
+                        <f:converter binding="#{paymentModel.accountConverter}"/>
                     </h:outputText>
                 </div>
             </div>

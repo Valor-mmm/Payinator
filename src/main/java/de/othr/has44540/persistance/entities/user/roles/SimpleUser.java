@@ -34,6 +34,10 @@ public class SimpleUser extends AbstractUser {
 
     @Override
     public boolean containsAccount(AbstractAccount account) {
+        if (getDonorAccount()!= null && getDonorAccount().equals(account)) {
+            return true;
+        }
+
         if (simpleAccounts == null) {
             return false;
         }
