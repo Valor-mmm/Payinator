@@ -13,6 +13,7 @@ import de.othr.has44540.logic.services.user.update.supplier.SimpleUserSupplier;
 import de.othr.has44540.logic.services.user.update.updater.EntityUpdaterIF;
 import de.othr.has44540.logic.services.user.update.updater.factory.EntityUpdaterCase;
 import de.othr.has44540.logic.services.user.update.updater.factory.EntityUpdaterQalifier;
+import de.othr.has44540.persistance.entities.user.AbstractUser;
 import de.othr.has44540.persistance.entities.user.paymentInformation.AbstractPaymentMethod;
 import de.othr.has44540.persistance.entities.user.personalData.Email;
 import de.othr.has44540.persistance.entities.user.personalData.PersonalInformation;
@@ -83,6 +84,12 @@ public class UpdateServiceImpl implements UpdateServiceIF {
         Set<AbstractPaymentMethod> currentSet = user != null ? user.getPaymentMethods() : null;
         Set<AbstractPaymentMethod> updatedPaymentMethods = paymentMethodUpdater.update(paymentMethods, currentSet);
 
+
+        if (user == null) {
+            logger.info("User was null. Trying to get user with same oauth ID");
+            user = getUserByOauthId(oAuthSession.getUserId());
+            logger.info("User found: " + (user != null));
+        }
         if (user == null) {
             initSimpleUserSupplier(oAuthSession.getUserId());
             user = simpleUserSupplier.get();
@@ -182,9 +189,9 @@ public class UpdateServiceImpl implements UpdateServiceIF {
         }
     }
 
-    private de.othr.external.services.oauth.korbinianSchmidt.data.SessionDTO convertSession(@NotNull SessionDTO session) {
-        de.othr.external.services.oauth.korbinianSchmidt.data.SessionDTO dataSession = new de.othr.external.services
-                .oauth.korbinianSchmidt.data.SessionDTO();
+    private de.othr.external.services.oauth.korbinianSchmidt.data.SessionDTO convertSession(
+            @NotNull SessionDTO session) {
+        de.othr.external.services.oauth.korbinianSchmidt.data.SessionDTO dataSession = new de.othr.external.services.oauth.korbinianSchmidt.data.SessionDTO();
         dataSession.setCreationDate(session.getCreationDate());
         dataSession.setExpirationDate(session.getExpirationDate());
         dataSession.setSessionToken(session.getSessionToken());
@@ -192,5 +199,16 @@ public class UpdateServiceImpl implements UpdateServiceIF {
         dataSession.setUserId(session.getUserId());
         dataSession.setUsername(session.getUsername());
         return dataSession;
+    }
+
+    private SimpleUser getUserByOauthId(Long id) {
+        TypedQuery<SimpleUser> userByOAuthIdQuery = em
+                .createQuery("SELECT u FROM SimpleUser AS u WHERE u.oauthId = :oAuthID", SimpleUser.class)
+                .setParameter("oAuthID", id);
+        try {
+            return userByOAuthIdQuery.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 }

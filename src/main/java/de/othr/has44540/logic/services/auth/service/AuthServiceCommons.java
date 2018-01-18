@@ -49,7 +49,7 @@ public class AuthServiceCommons implements Serializable {
         try {
             result = emailQuery.getSingleResult();
         } catch (NoResultException ex) {
-            logger.log(Level.INFO, "No email for this criteria found", ex);
+            logger.log(Level.CONFIG, "No email for this criteria found", ex);
         }
         return result;
     }
