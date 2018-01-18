@@ -39,14 +39,16 @@ public class AuthServiceFactory implements Serializable {
     public AuthServiceIF getServiceAutomatically(SessionBasedAuthService sessionBasedAuthService,
                                                  TokenBasedAuthService tokenBasedAuthService) {
         if (serviceMemory.getServiceCase() == null) {
-            logger.config("Assuming session management is not available, creating token based service.");
+            logger.info("Assuming session management is not available, creating token based service.");
             return getTokenBasedService(tokenBasedAuthService);
         }
 
         switch (serviceMemory.getServiceCase()) {
             case SESSION_BASED:
+                logger.info("Created Session_Based Auth Service from Memory");
                 return getSessionBasedService(sessionBasedAuthService);
             case TOKEN_BASED:
+                logger.info("Created Token_Based Auth Service from Memory");
                 return getTokenBasedService(tokenBasedAuthService);
             default:
                 String errMessage = "No case for AuthServiceCase " + serviceMemory.getServiceCase();

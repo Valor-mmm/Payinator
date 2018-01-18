@@ -36,6 +36,10 @@ public abstract class AbstractAccount extends GeneratedIDEntity {
         return paymentsOut.add(payment);
     }
 
+    @Override
+    public String toString() {
+        return alias;
+    }
 
     // Attributes - getter/setter
 

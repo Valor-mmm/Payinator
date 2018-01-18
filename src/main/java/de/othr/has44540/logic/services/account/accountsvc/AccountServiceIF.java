@@ -3,6 +3,7 @@ package de.othr.has44540.logic.services.account.accountsvc;
 import de.othr.has44540.logic.services.auth.token.AuthToken;
 import de.othr.has44540.logic.services.exceptions.auth.AuthException;
 import de.othr.has44540.persistance.entities.account.AbstractAccount;
+import de.othr.has44540.persistance.entities.account.impl.SimpleAccount;
 
 import java.io.Serializable;
 import java.util.List;

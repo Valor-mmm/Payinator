@@ -2,6 +2,8 @@ package de.othr.has44540.logic.services.account;
 
 import de.othr.has44540.logic.services.auth.service.AuthServiceIF;
 import de.othr.has44540.logic.services.auth.service.factory.DetectAutomatically;
+import de.othr.has44540.logic.services.auth.updateService.ServiceUpdate;
+import de.othr.has44540.logic.services.auth.updateService.UpdatableAuthService;
 import de.othr.has44540.logic.services.exceptions.account.AccountException;
 import de.othr.has44540.logic.services.exceptions.account.InvalidAccountException;
 import de.othr.has44540.persistance.entities.account.AbstractAccount;
@@ -11,6 +13,7 @@ import de.othr.has44540.persistance.entities.user.paymentInformation.AbstractPay
 import de.othr.has44540.persistance.entities.user.roles.Company;
 
 import javax.enterprise.context.SessionScoped;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -19,7 +22,7 @@ import javax.persistence.TypedQuery;
 import java.io.Serializable;
 
 @SessionScoped
-public class AccountServiceUtils implements Serializable {
+public class AccountServiceUtils implements Serializable, UpdatableAuthService {
 
     @PersistenceContext
     private EntityManager em;
@@ -95,5 +98,15 @@ public class AccountServiceUtils implements Serializable {
                                        "The logged in user does not have an default account");
         }
         return account;
+    }
+
+    @Override
+    public void updateAuthService(AuthServiceIF newAuthService) {
+        this.authService = newAuthService;
+    }
+
+    @Override
+    public void listenOnUpdateEvent(@Observes ServiceUpdate serviceUpdate) {
+        this.updateAuthService(serviceUpdate.getNewService());
     }
 }

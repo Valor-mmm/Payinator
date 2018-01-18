@@ -13,11 +13,21 @@
             <div class="container">
                 <div class="columns">
                     <div class="column">
-                        <h3>Outgoing</h3>Incoming
+                        <h3>Outgoing</h3>
+                        <ui:insert>
+                            <ui:include src="../template/payment_list_template.xhtml">
+                                <ui:param name="paymentList" value="#{paymentModel.retrievePaymentsOut()}"/>
+                            </ui:include>
+                        </ui:insert>
                     </div>
                     <div class="divider-vert"/>
                     <div class="column">
                         <h3>Incoming</h3>
+                        <ui:insert>
+                            <ui:include src="../template/payment_list_template.xhtml">
+                                <ui:param name="paymentList" value="#{paymentModel.paymentsIn}"/>
+                            </ui:include>
+                        </ui:insert>
                     </div>
                 </div>
             </div>
@@ -33,12 +43,18 @@
                     <h:form styleClass="create-payment-form">
                         <div class="form-group">
                             <label for="amountInput" class="form-label">Amount</label>
-                            <h:inputText id="amountInput" styleClass="form-input" value="#{paymentModel.amount}"/>
+                            <h:inputText id="amountInput" converterId="javax.faces.Double" styleClass="form-input" value="#{paymentModel.amount}"/>
                             <label for="toAccountInput" class="form-label">To Account</label>
                             <h:inputText id="toAccountInput" styleClass="form-input" value="#{paymentModel.toAccount}"/>
                             <label for="fromAccountInput" class="form-label">To Account</label>
-                            <h:selectOneMenu id="fromAccountInput" value="#{paymentModel.defaultAccount}">
+                            <h:selectOneMenu id="fromAccountInput" value="#{paymentModel.fromAccount}">
                                 <f:selectItems value="#{paymentModel.allFromAccounts}"/>
+                                <f:converter converterId="de.othr.has44540.ui.accounts.AccountConverter"/>
+                            </h:selectOneMenu>
+                            <label for="paymentMethodInput" class="form-label">Payment Method</label>
+                            <h:selectOneMenu id="paymentMethodInput" value="#{paymentModel.paymentMethod}">
+                                <f:selectItems value="#{paymentModel.allPaymentMethods}"/>
+                                <f:converter converterId="de.othr.has44540.ui.accounts.AccountConverter"/>
                             </h:selectOneMenu>
                             <label for="causeInput" class="form-label">Cause</label>
                             <h:inputText id="causeInput" styleClass="form-input" value="#{paymentModel.cause}"/>
@@ -49,7 +65,7 @@
                     </h:form>
                 </div>
 
-                <a class="off-canvas-overlay" href="#close"></a>
+                <a class="off-canvas-overlay" href="#close"/>
 
                 <div class="off-canvas-content">
                     <!-- off-screen content -->

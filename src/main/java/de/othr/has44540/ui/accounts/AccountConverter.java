@@ -13,7 +13,7 @@ import javax.inject.Inject;
 public class AccountConverter implements Converter {
 
     @Inject
-    AccountRepository accountRepository;
+    private AccountRepository accountRepository;
 
     @Override
     public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String s) {

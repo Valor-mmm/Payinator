@@ -1,13 +1,14 @@
 package de.othr.has44540.logic.services.auth.LoginInterceptor;
 
-import de.othr.has44540.logic.services.auth.service.factory.AuthServiceCase;
 import de.othr.has44540.logic.services.auth.service.AuthServiceIF;
-import de.othr.has44540.logic.services.exceptions.auth.AuthException;
+import de.othr.has44540.logic.services.auth.service.factory.AuthServiceCase;
 import de.othr.has44540.logic.services.auth.service.factory.AuthServiceQualifierImpl;
 import de.othr.has44540.logic.services.auth.token.AuthToken;
-import de.othr.has44540.logic.services.exceptions.auth.InvalidTokenException;
+import de.othr.has44540.logic.services.auth.updateService.ServiceUpdate;
+import de.othr.has44540.logic.services.exceptions.auth.AuthException;
 import org.jetbrains.annotations.Contract;
 
+import javax.enterprise.event.Event;
 import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.UnsatisfiedResolutionException;
@@ -29,6 +30,9 @@ public class CheckLoginInterceptor implements Serializable {
     @Any
     private Instance<AuthServiceIF> authServices;
 
+    @Inject
+    private Event<ServiceUpdate> serviceUpdateSender;
+
     private AuthServiceIF authService;
 
     @AroundInvoke
@@ -46,6 +50,8 @@ public class CheckLoginInterceptor implements Serializable {
         if (authService.getLoggedInUser() == null) {
             throw new AuthException("Method requires login.", "No login context was provided, but is necessary.");
         }
+
+        serviceUpdateSender.fire(new ServiceUpdate(authService));
 
         return context.proceed();
     }

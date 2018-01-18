@@ -40,7 +40,7 @@ public class SessionBasedAuthService extends AbstractAuthService {
 
     @Override
     public AbstractUser getExecutiveUser() {
-        return session.getOnBehalfOf();
+        return session.getExecutiveUser();
     }
 
     @Override

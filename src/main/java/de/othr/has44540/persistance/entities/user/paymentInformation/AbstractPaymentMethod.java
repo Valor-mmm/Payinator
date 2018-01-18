@@ -21,6 +21,14 @@ public abstract class AbstractPaymentMethod extends GeneratedIDEntity {
     private String name;
 
 
+    // Methods
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
+
     // Attributes -getter/setter
 
     public Boolean getDefault() {

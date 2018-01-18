@@ -2,11 +2,17 @@ package de.othr.has44540.persistance.repositories;
 
 import de.othr.has44540.logic.services.account.accountsvc.AccountCase;
 import de.othr.has44540.logic.services.auth.LoginInterceptor.CheckLogin;
+import de.othr.has44540.logic.services.auth.service.AuthServiceIF;
+import de.othr.has44540.logic.services.auth.service.factory.DetectAutomatically;
+import de.othr.has44540.logic.services.auth.updateService.ServiceUpdate;
+import de.othr.has44540.logic.services.auth.updateService.UpdatableAuthService;
 import de.othr.has44540.logic.services.exceptions.auth.AuthException;
 import de.othr.has44540.persistance.entities.account.AbstractAccount;
 import de.othr.has44540.persistance.util.SingleIdEntityRepository;
 
 import javax.enterprise.context.SessionScoped;
+import javax.enterprise.event.Observes;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -32,7 +38,8 @@ public class AccountRepository extends SingleIdEntityRepository<Long, AbstractAc
 
     @CheckLogin
     public List<AbstractAccount> getAccountsForCase(AccountCase accountCase) throws AuthException {
-        return findAll().stream().filter(accountCase::fitsAccout).collect(Collectors.toList());
+        List<AbstractAccount> allAccounts = findAll();
+        return allAccounts.stream().filter(accountCase::fitsAccount).collect(Collectors.toList());
     }
 
     public AbstractAccount findByAlias(String alias) {
@@ -45,5 +52,4 @@ public class AccountRepository extends SingleIdEntityRepository<Long, AbstractAc
             return null;
         }
     }
-
 }

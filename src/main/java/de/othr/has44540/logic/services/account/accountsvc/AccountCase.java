@@ -23,7 +23,7 @@ public enum  AccountCase {
         this.color = color;
     }
 
-    public boolean fitsAccout(AbstractAccount account) {
+    public boolean fitsAccount(AbstractAccount account) {
         if (this.relatedClass.isAssignableFrom(account.getClass())) {
             return true;
         }
