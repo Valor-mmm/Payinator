@@ -9,6 +9,52 @@
     <ui:composition template="../template/template.xhtml">
         <ui:define name="content_component">
             <h1>Payment</h1>
+
+            <div class="container">
+                <div class="columns">
+                    <div class="column">
+                        <h3>Outgoing</h3>Incoming
+                    </div>
+                    <div class="divider-vert"/>
+                    <div class="column">
+                        <h3>Incoming</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="off-canvas">
+                <!-- off-screen toggle button -->
+                <a class="off-canvas-toggle btn btn-primary centered" href="#sidebar-id">
+                    Create new Payment
+                </a>
+
+                <div id="sidebar-id" class="off-canvas-sidebar" style="width: 30%">
+                    <!-- off-screen sidebar -->
+                    <h:form styleClass="create-payment-form">
+                        <div class="form-group">
+                            <label for="amountInput" class="form-label">Amount</label>
+                            <h:inputText id="amountInput" styleClass="form-input" value="#{paymentModel.amount}"/>
+                            <label for="toAccountInput" class="form-label">To Account</label>
+                            <h:inputText id="toAccountInput" styleClass="form-input" value="#{paymentModel.toAccount}"/>
+                            <label for="fromAccountInput" class="form-label">To Account</label>
+                            <h:selectOneMenu id="fromAccountInput" value="#{paymentModel.defaultAccount}">
+                                <f:selectItems value="#{paymentModel.allFromAccounts}"/>
+                            </h:selectOneMenu>
+                            <label for="causeInput" class="form-label">Cause</label>
+                            <h:inputText id="causeInput" styleClass="form-input" value="#{paymentModel.cause}"/>
+                            <label for="amountInput" class="form-label">Message</label>
+                            <h:inputText id="messageInput" styleClass="form-input" value="#{paymentModel.message}"/>
+                        </div>
+                        <h:commandButton styleClass="btn" action="#{paymentModel.create}" value="Submit"/>
+                    </h:form>
+                </div>
+
+                <a class="off-canvas-overlay" href="#close"></a>
+
+                <div class="off-canvas-content">
+                    <!-- off-screen content -->
+                </div>
+            </div>
         </ui:define>
     </ui:composition>
 </h:body>
