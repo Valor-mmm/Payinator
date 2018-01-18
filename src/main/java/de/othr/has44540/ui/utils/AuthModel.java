@@ -85,6 +85,7 @@ public class AuthModel implements Serializable {
             return ErrorModel.pageName;
         }
 
+        this.message = "";
         loggedIn = true;
 
         if (prevPage != null) {
@@ -98,12 +99,12 @@ public class AuthModel implements Serializable {
         try {
             authService.logout(null);
             loggedIn = false;
+            return AuthModel.pageName;
         } catch (InvalidTokenException e) {
             logger.log(Level.WARNING, "Could not logout.", e);
             errorModel.setError(e.getTitle(), e.getDescription());
-            return "views/" + ErrorModel.pageName;
+            return ErrorModel.pageName;
         }
-        return "views/" + IndexModel.pageName;
     }
 
     public String getEmail() {
