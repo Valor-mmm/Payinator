@@ -7,14 +7,24 @@ import de.othr.has44540.persistance.entities.account.AbstractAccount;
 import de.othr.has44540.persistance.util.SingleIdEntityRepository;
 
 import javax.enterprise.context.SessionScoped;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @SessionScoped
 @Transactional
 public class AccountRepository extends SingleIdEntityRepository<Long, AbstractAccount> implements Serializable {
+
+    public static final Logger logger = Logger.getLogger(AccountRepository.class.getName());
+
+    @PersistenceContext(unitName = SingleIdEntityRepository.PERSISTANCE_UNIT_NAME)
+    private EntityManager em;
 
     public AccountRepository() {
         super(AbstractAccount.class);
@@ -22,10 +32,18 @@ public class AccountRepository extends SingleIdEntityRepository<Long, AbstractAc
 
     @CheckLogin
     public List<AbstractAccount> getAccountsForCase(AccountCase accountCase) throws AuthException {
-        return findAll()
-                .stream()
-                .filter(accountCase::fitsAccout)
-                .collect(Collectors.toList());
+        return findAll().stream().filter(accountCase::fitsAccout).collect(Collectors.toList());
+    }
+
+    public AbstractAccount findByAlias(String alias) {
+        TypedQuery<AbstractAccount> byAliasQuery = em
+                .createQuery("SELECT ac FROM AbstractAccount AS ac WHERE ac.alias = :alias", AbstractAccount.class)
+                .setParameter("alias", alias);
+        try {
+            return byAliasQuery.getSingleResult();
+        } catch (NoResultException ex) {
+            return null;
+        }
     }
 
 }

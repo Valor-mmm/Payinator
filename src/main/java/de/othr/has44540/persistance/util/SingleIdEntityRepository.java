@@ -10,7 +10,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class SingleIdEntityRepository<IdType, Entity extends SingleIdEntity<IdType>> {
+public abstract class SingleIdEntityRepository<IdType, Entity extends SingleIdEntity<IdType>> {
 
     public static final String PERSISTANCE_UNIT_NAME = "swPU";
 
@@ -23,18 +23,6 @@ public class SingleIdEntityRepository<IdType, Entity extends SingleIdEntity<IdTy
 
     public SingleIdEntityRepository(Class<Entity> entityClass) {
         this.entityClass = entityClass;
-    }
-
-    @SuppressWarnings("unchecked")
-    public SingleIdEntityRepository() {
-
-        // Determine class type during runtime.
-        Class<Entity> assumedClass = (Class<Entity>)
-                ((ParameterizedType)getClass()
-                        .getGenericSuperclass())
-                        .getActualTypeArguments()[0];
-        logger.info("Class of entity repository is: [" + assumedClass.getSimpleName() + "]");
-        this.entityClass = assumedClass;
     }
 
     public void persist(Entity entity) {
