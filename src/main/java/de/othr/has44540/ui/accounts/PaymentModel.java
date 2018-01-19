@@ -56,6 +56,9 @@ public class PaymentModel implements Serializable {
     private AccountConverter accountConverter;
 
     @Inject
+    private SimpleAccountConverter simpleAccountConverter;
+
+    @Inject
     private PaymentMethodConverter paymentMethodConverter;
 
     /*
@@ -262,5 +265,9 @@ public class PaymentModel implements Serializable {
 
     public PaymentMethodConverter getPaymentMethodConverter() {
         return paymentMethodConverter;
+    }
+
+    public SimpleAccountConverter getSimpleAccountConverter() {
+        return simpleAccountConverter;
     }
 }

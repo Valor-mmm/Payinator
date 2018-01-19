@@ -102,6 +102,7 @@ public class PaymentService implements PaymentServiceIF {
         AbstractAccount mergedFromAcc = em.merge(payment.getFromAccount());
         mergedToAcc.addPaymentIn(payment);
         mergedFromAcc.addPaymentOut(payment);
+
         em.persist(mergedToAcc);
         em.persist(mergedFromAcc);
 

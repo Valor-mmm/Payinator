@@ -32,7 +32,7 @@ public abstract class AbstractUser extends GeneratedIDEntity {
     @OneToOne(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     private Email email;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @Column(nullable = false)
     private Set<AbstractPaymentMethod> paymentMethods;
 

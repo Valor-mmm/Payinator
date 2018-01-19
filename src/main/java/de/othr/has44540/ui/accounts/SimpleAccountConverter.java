@@ -1,6 +1,6 @@
 package de.othr.has44540.ui.accounts;
 
-import de.othr.has44540.persistance.entities.account.AbstractAccount;
+import de.othr.has44540.persistance.entities.account.impl.SimpleAccount;
 import de.othr.has44540.persistance.repositories.AccountRepository;
 
 import javax.enterprise.context.SessionScoped;
@@ -12,7 +12,7 @@ import java.io.Serializable;
 import java.util.logging.Logger;
 
 @SessionScoped
-public class AccountConverter implements Converter, Serializable {
+public class SimpleAccountConverter implements Converter, Serializable {
 
     @Inject
     private AccountRepository accountRepository;
@@ -26,9 +26,13 @@ public class AccountConverter implements Converter, Serializable {
         }
 
         try {
-        Object account = accountRepository.findByAlias(s);
-        logger.info("Converting: [" + s + "] to object. Found: " + (account != null));
-        return account;
+            Object account = accountRepository.findByAlias(s);
+            if (!(account instanceof SimpleAccount)) {
+                logger.warning("Found account was no simple account");
+                account = null;
+            }
+            logger.info("Converting: [" + s + "] to object. Found: " + (account != null));
+            return account;
         } catch (Exception e) {
             return null;
         }
@@ -40,10 +44,10 @@ public class AccountConverter implements Converter, Serializable {
             return null;
         }
 
-        if (!(o instanceof AbstractAccount)) {
+        if (!(o instanceof SimpleAccount)) {
             return null;
         }
 
-        return ((AbstractAccount) o).getAlias();
+        return ((SimpleAccount) o).getAlias();
     }
 }

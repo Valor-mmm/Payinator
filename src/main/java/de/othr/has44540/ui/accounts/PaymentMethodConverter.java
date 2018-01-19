@@ -1,5 +1,6 @@
 package de.othr.has44540.ui.accounts;
 
+import de.othr.has44540.logic.services.exceptions.auth.AuthException;
 import de.othr.has44540.persistance.entities.user.paymentInformation.AbstractPaymentMethod;
 import de.othr.has44540.persistance.repositories.PaymentMethodRepository;
 
@@ -21,7 +22,12 @@ public class PaymentMethodConverter implements Converter, Serializable {
         if (s == null) {
             return null;
         }
-        return pmRepository.findByName(s);
+        try {
+            return pmRepository.findByNameInUser(null, s);
+        } catch (AuthException authEx) {
+            return null;
+
+        }
     }
 
     @Override

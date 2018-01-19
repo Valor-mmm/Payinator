@@ -11,4 +11,6 @@ public interface InternalAccountSvcIF extends AccountServiceIF {
     List<AbstractAccount> getAccountsByUserAndCase(AccountCase accountCase) throws AuthException;
 
     List<SimpleAccount> getAllSimpleAccountsForUser() throws AuthException;
+
+    List<AbstractAccount> getAllUserAccounts() throws AuthException;
 }

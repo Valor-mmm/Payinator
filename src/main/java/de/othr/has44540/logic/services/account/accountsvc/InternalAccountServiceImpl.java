@@ -51,6 +51,7 @@ public class InternalAccountServiceImpl extends AccountServiceImpl implements In
                                                              .collect(Collectors.toList());
     }
 
+    @Override
     @CheckLogin
     public List<AbstractAccount> getAllUserAccounts() throws AuthException {
 

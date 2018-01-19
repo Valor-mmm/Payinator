@@ -12,12 +12,15 @@ import javax.xml.bind.annotation.XmlTransient;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Set;
+import java.util.logging.Logger;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @XmlSeeAlso({DonorAccount.class, SimpleAccount.class})
 @XmlAccessorType(XmlAccessType.FIELD)
 public abstract class AbstractAccount extends GeneratedIDEntity {
+
+    private static Logger logger = Logger.getLogger(AbstractAccount.class.getName());
 
     // Attributes
 
@@ -35,6 +38,7 @@ public abstract class AbstractAccount extends GeneratedIDEntity {
 
     public BigDecimal addPaymentOut(Payment payment) {
         if (!paymentsOut.add(payment)) {
+            logger.warning("Could not insert payment: " + payment);
             return null;
         }
         return payment.getAmount();

@@ -43,10 +43,13 @@
                     <h:form styleClass="create-payment-form">
                         <div class="form-group">
                             <label for="amountInput" class="form-label">Amount</label>
-                            <h:inputText id="amountInput" converterId="javax.faces.Double" styleClass="form-input" value="#{paymentModel.amount}"/>
+                            <h:inputText id="amountInput" styleClass="form-input" value="#{paymentModel.amount}">
+                                <f:convertNumber/>
+                            </h:inputText>
+                            <h:message for="amountInput"/>
                             <label for="toAccountInput" class="form-label">To Account</label>
                             <h:inputText id="toAccountInput" styleClass="form-input" value="#{paymentModel.toAccount}">
-                                <f:converter binding="#{paymentModel.accountConverter}"/>
+                                <f:converter binding="#{paymentModel.simpleAccountConverter}"/>
                             </h:inputText>
                             <label for="fromAccountInput" class="form-label">From Account</label>
                             <h:selectOneMenu id="fromAccountInput" value="#{paymentModel.fromAccount}">

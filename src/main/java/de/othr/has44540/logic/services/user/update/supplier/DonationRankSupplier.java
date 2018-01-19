@@ -43,6 +43,7 @@ public class DonationRankSupplier implements Supplier<DonationRank> , Serializab
     @Override
     @Transactional
     public DonationRank get() {
+        initDonationRankSupplier();
         if (donationRank != null) {
             return donationRank;
         }
