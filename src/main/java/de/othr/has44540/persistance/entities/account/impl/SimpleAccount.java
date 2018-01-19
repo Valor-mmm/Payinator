@@ -29,17 +29,41 @@ public class SimpleAccount extends AbstractAccount {
     // References
 
     @XmlTransient
-    @ManyToOne
+    @ManyToOne(optional = true, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private DonorAccount donorAccount;
 
     @XmlTransient
     @OneToMany(mappedBy = "toAccount", fetch = FetchType.EAGER)
     private Set<Payment> paymentsIn;
 
+
+    public SimpleAccount() {
+        balance = new BigDecimal(0);
+    }
+
     // Methods
 
     public boolean addPaymentIn(Payment payment) {
-        return paymentsIn.add(payment);
+        boolean result = paymentsIn.add(payment);
+        if (result) {
+            balance = balance.add(payment.getAmount());
+        }
+        return result;
+    }
+
+    public BigDecimal addPaymentOut(Payment payment) {
+        BigDecimal result = super.addPaymentOut(payment);
+        if (result == null) {
+            return null;
+        }
+        if (balance.subtract(payment.getAmount()).compareTo(new BigDecimal(0)) >= 0) {
+            balance = balance.subtract(payment.getAmount());
+            return new BigDecimal(0);
+        } else {
+            BigDecimal rest = balance.subtract(payment.getAmount()).negate();
+            balance = new BigDecimal(0);
+            return rest;
+        }
     }
 
     // Attributes - getter/setter

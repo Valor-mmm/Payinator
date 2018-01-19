@@ -4,10 +4,7 @@ import de.othr.has44540.persistance.entities.account.AbstractAccount;
 import de.othr.has44540.persistance.entities.account.impl.CompanyAccount;
 import de.othr.has44540.persistance.entities.user.AbstractUser;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.Collections;
 import java.util.Set;
 
@@ -27,7 +24,7 @@ public class Company extends AbstractUser {
 
     // References
 
-    @OneToMany(mappedBy = "company", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "company", fetch = FetchType.EAGER, orphanRemoval = true, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private Set<CompanyAccount> companyAccounts;
 
     // Methods

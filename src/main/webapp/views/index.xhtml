@@ -11,6 +11,10 @@
 
             <div style="visibility: #{indexModel.showUsername()}">
                 <h4>Welcome #{indexModel.username}</h4>
+
+                <h:form>
+                    <h:commandButton action="#{indexModel.deleteUser()}" value="Delete User"/>
+                </h:form>
             </div>
             <div style="visibility: #{indexModel.showNotLoggedIn()}">
                 <div class="empty">

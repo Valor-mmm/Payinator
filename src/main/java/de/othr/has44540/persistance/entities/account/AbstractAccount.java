@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlTransient;
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Set;
 
@@ -32,8 +33,11 @@ public abstract class AbstractAccount extends GeneratedIDEntity {
 
     // Methods
 
-    public boolean addPaymentOut(Payment payment) {
-        return paymentsOut.add(payment);
+    public BigDecimal addPaymentOut(Payment payment) {
+        if (!paymentsOut.add(payment)) {
+            return null;
+        }
+        return payment.getAmount();
     }
 
     @Override

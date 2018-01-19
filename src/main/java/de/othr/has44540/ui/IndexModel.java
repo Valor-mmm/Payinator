@@ -3,6 +3,9 @@ package de.othr.has44540.ui;
 import de.othr.has44540.logic.services.auth.service.AuthServiceIF;
 import de.othr.has44540.logic.services.auth.service.factory.AuthServiceCase;
 import de.othr.has44540.logic.services.auth.service.factory.AuthServiceQualifier;
+import de.othr.has44540.logic.services.exceptions.auth.AuthException;
+import de.othr.has44540.logic.services.user.UserServiceIF;
+import de.othr.has44540.ui.utils.AuthModel;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -24,7 +27,13 @@ public class IndexModel implements Serializable {
     @AuthServiceQualifier(AuthServiceCase.SESSION_BASED)
     private AuthServiceIF authService;
 
+    @Inject
+    private UserServiceIF userService;
+
     private String username;
+
+    @Inject
+    private AuthModel authModel;
 
     public static final String pageName = "index";
 
@@ -62,5 +71,15 @@ public class IndexModel implements Serializable {
             return "hidden";
         }
         return "visible";
+    }
+
+    public String deleteUser() {
+        try {
+            userService.deleteUser(null);
+        } catch (AuthException e) {
+            authModel.requireLogin(pageName);
+            redirectToPage(AuthModel.pageName);
+        }
+        return authModel.logout();
     }
 }

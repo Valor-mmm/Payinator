@@ -2,6 +2,7 @@ package de.othr.has44540.persistance.entities.user.personalData;
 
 import de.othr.has44540.persistance.util.GeneratedIDEntity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -25,7 +26,7 @@ public class PersonalInformation extends GeneratedIDEntity{
 
     // References
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private Address address;
 
 

@@ -4,6 +4,7 @@ import de.othr.has44540.persistance.entities.account.AbstractAccount;
 import de.othr.has44540.persistance.entities.account.impl.CharityAccount;
 import de.othr.has44540.persistance.entities.user.AbstractUser;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -22,7 +23,7 @@ public class CharityOrganisation extends AbstractUser {
 
     // References
 
-    @OneToMany
+    @OneToMany(orphanRemoval = true, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private Set<CharityAccount> charityAccounts;
 
     // Methods

@@ -11,9 +11,14 @@
         <ui:define name="content_component">
             <h1>Readme</h1>
 
-            <p>Mein Projekt Payinator etwas ähnliches wie PayPal abbilden.<br/>
-                Allerdings soll bei meinem Projekt eine "Aufrunden bitte" Funktionalität wie aus Supermärkten geboten werden<br/>
+            <p>Mein Projekt Payinator soll etwas ähnliches wie PayPal abbilden.<br/>
+                Allerdings soll bei meinem Projekt eine <span
+                        class="text-italic">"Aufrunden bitte"-Funktionalität</span> wie aus Supermärkten angeboten werden.<br/>
                 Leider konnte ich alle Funktionen in diesem Zusammenhang aus Zeitgründen nicht fertig stellen.</p>
+
+            <p>Es ist Leider nicht möglich sich als Company (Partnerprojekt Webshop) anzumelden,<br/>
+                da dies vom OAuth System nicht Unterstützt wird. <br/> Deswegen wurde eine Company in die Datenbank geseedet.
+            Das Funktioniert über den Scheduler einer EJB.</p>
 
             <p>Für das Css Layout ist zu großen Teilen
                 <a href="https://picturepan2.github.io/spectre/index.html">Spectre Css</a> verantwortlich.</p>
@@ -25,15 +30,16 @@
                 <li>Ein neues Payment erstellen.
                     <div class="text-gray">Genutzt in Partnerprojekt</div>
                 </li>
+                <li>Nutzer durch Orphan removal Komplett löschen.</li>
             </ul>
             <h6>Funktionen im Hintergrund</h6>
             <ul>
-                <li>User mit OAuth System einloggen
+                <li>User mit OAuth System einloggen. Daraus folgt, dass nutzer erst nach einmaligen Login in der Datenbank erscheinen.
                     <div class="text-gray">Genutztes Partnerprojekt</div>
                 </li>
                 <li>Datenupdate des Users beim Login</li>
                 <li>Link der User session mit anderem Projekt</li>
-                <li>Automatischer wechsel zwischen Session/Token basierender Authentifizierung</li>
+                <li>Automatischer wechsel zwischen Session- und Tokenbasierender Authentifizierung</li>
             </ul>
         </ui:define>
     </ui:composition>

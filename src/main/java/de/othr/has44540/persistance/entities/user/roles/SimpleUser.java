@@ -4,6 +4,7 @@ import de.othr.has44540.persistance.entities.account.AbstractAccount;
 import de.othr.has44540.persistance.entities.account.impl.SimpleAccount;
 import de.othr.has44540.persistance.entities.user.AbstractUser;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
@@ -14,7 +15,7 @@ public class SimpleUser extends AbstractUser {
 
     // Relations
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private Set<SimpleAccount> simpleAccounts;
 
     // Methods
